@@ -520,8 +520,16 @@ function renderState(state, orders){
   $("kOrders").textContent = orders.length;
 
   if (!positions.length){
-    $("posWrap").innerHTML = "<div class='empty'><strong>No open positions.</strong><br>The account is flat. Any position opened on this account — by the bot or otherwise — appears here within one refresh.</div>";
-    $("posNote").textContent = "";
+    if (!lastOk){
+      /* Never connected live yet — the baked-in snapshot is from the live
+         start (account was flat then), so do NOT claim "no open positions"
+         from it. Show connecting until the first live refresh lands. */
+      $("posWrap").innerHTML = "<div class='empty'><strong>Connecting to live feed…</strong><br>Loading the account's current positions. If this stays up, the live feed is unreachable — the page retries on its own.</div>";
+      $("posNote").textContent = "";
+    } else {
+      $("posWrap").innerHTML = "<div class='empty'><strong>No open positions.</strong><br>The account is flat. Any position opened on this account — by the bot or otherwise — appears here within one refresh.</div>";
+      $("posNote").textContent = "";
+    }
   } else {
     $("posNote").textContent = positions.length + " live on Hyperliquid";
     curPositions = {};
@@ -854,6 +862,7 @@ function badgeBlob(cb){
 
 function refresh(){
   if (paused) return;
+  try {
   ctxCounter++;
   var jobs = [ post({type:"clearinghouseState", user:ADDR}), post({type:"openOrders", user:ADDR}), post({type:"userFills", user:ADDR}), post({type:"allMids"}) ];
   var wantCtx = ctxCounter % 4 === 0; /* market context every ~60s, account data every cycle */
@@ -873,8 +882,16 @@ function refresh(){
     if (lastOk){ setConn("stale", "STALE · RETRYING"); $("updatedAt").textContent = "Feed unreachable — showing last data from " + fmtClockET(lastOk) + " ET. Retrying…"; }
     else { setConn("error", "SNAPSHOT · FEED UNREACHABLE"); $("updatedAt").textContent = "Live feed unreachable — showing the snapshot taken when this page was built (" + fmtTimeET(SNAPSHOT.at) + " ET). Retrying…"; }
   }).then(function(){ schedule(); });
+  } catch(err){
+    /* A synchronous throw (e.g. fetch unavailable on first paint) must not
+       kill the retry loop — count it as a failure and schedule a retry. */
+    failCount++;
+    setConn("error", "SNAPSHOT · FEED UNREACHABLE");
+    schedule();
+  }
 }
-function schedule(){ if (timer) clearTimeout(timer); if (!paused){ var delay = failCount ? Math.min(60000, 15000 * Math.pow(2, failCount-1)) : 15000; timer = setTimeout(refresh, delay); } }
+function schedule(){ if (timer) clearTimeout(timer); if (!paused){ /* fast reconnect: 3s, 6s, 12s, 24s, 48s, then 60s cap — the old 15s-first backoff left a fresh load stuck on the stale snapshot long enough that the user had to click Refresh to see positions */
+  var delay = failCount ? Math.min(60000, 3000 * Math.pow(2, failCount-1)) : 15000; timer = setTimeout(refresh, delay); } }
 
 /* universe chips */
 $("uniChips").innerHTML = UNIVERSE.map(function(c){ return "<span class='chip'>"+esc(c)+"</span>"; }).join("");
@@ -1029,6 +1046,8 @@ $("shareNative").addEventListener("click", function(){
   });
 });
 document.addEventListener("visibilitychange", function(){ if (!document.hidden && !paused && Date.now() - lastOk > 15000){ failCount = 0; refresh(); } });
+/* iOS Safari restores pages from the back-forward cache without a fresh load — pageshow catches that return and reconnects. */
+window.addEventListener("pageshow", function(e){ if (e.persisted && !paused){ failCount = 0; refresh(); } });
 
 refresh();
 })();
