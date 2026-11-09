@@ -8,14 +8,14 @@
 <title>Trading Dashboard</title>
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Trading bot — live account dashboard" />
-<meta property="og:description" content="Live Hyperliquid account the trading bot trades on. All-time record +14.97R (38W / 39L, 77 trades). Streams live and refreshes every 15 seconds." />
+<meta property="og:description" content="Live Hyperliquid account the trading bot trades on. All-time record +11.27R (43W / 46L, 89 trades). Streams live and refreshes every 15 seconds." />
 <meta property="og:url" content="https://mknight2690-sys.github.io/trading-dashboard/" />
 <meta property="og:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Trading bot — live account dashboard" />
-<meta name="twitter:description" content="Live Hyperliquid account the trading bot trades on. All-time record +14.97R (38W / 39L, 77 trades). Streams live and refreshes every 15 seconds." />
+<meta name="twitter:description" content="Live Hyperliquid account the trading bot trades on. All-time record +11.27R (43W / 46L, 89 trades). Streams live and refreshes every 15 seconds." />
 <meta name="twitter:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -202,7 +202,7 @@
         </tbody>
       </table>
     </div>
-    <p class="sec-note" style="margin-top:8px">Seeded history is filtered to Hyperliquid coins only: the 15 feed coins with no Hyperliquid perp — VET, XTZ, EOS, MANA, GRT, FLOW, KAVA, YFI, LRC, ENJ, CHZ, 1INCH, ZRX, EGLD, KSM — are excluded. Those excluded coins accounted for 22 trades for +7.12R, so the seeded record (+14.90R) is lower than the full feed's +22.02R. Periods run on UTC, like the bot's overviews: today resets at UTC midnight, the week starts Monday 00:00 UTC, and the seeded Today / week / month amounts belong to the day, week and month of the Nov 8, 2026 snapshot. A live trade's R is its realized PnL divided by the bot's risk on that trade — 5% of account equity when the trade opened, with equity tracked forward from $16.27 at the live start — so live R adds to the seeded R on the same basis the bot itself uses.</p>
+    <p class="sec-note" style="margin-top:8px">Seeded history is filtered to Hyperliquid coins only: the 15 feed coins with no Hyperliquid perp — VET, XTZ, EOS, MANA, GRT, FLOW, KAVA, YFI, LRC, ENJ, CHZ, 1INCH, ZRX, EGLD, KSM — are excluded. Those excluded coins accounted for 22 trades for +7.12R, so the seeded record (+14.90R) is lower than the full feed's +22.02R. Periods run on UTC, like the bot's overviews: today resets at UTC midnight, the week starts Monday 00:00 UTC, and the seeded Today / week / month amounts belong to the day, week and month of the Nov 8, 2026 snapshot. A live trade's R is its realized PnL divided by the bot's risk on that trade — 1% of account equity when the trade opened (switched back from 5% on Nov 9, 2026), with equity tracked forward from $16.27 at the live start — so live R adds to the seeded R on the same basis the bot itself uses.</p>
   </section>
 
   <section aria-labelledby="posH">
@@ -238,8 +238,8 @@
           <li><span class="k">15m setup</span><span>1h trend + 15m EMA / RSI / MACD breakout · time exit 4h</span></li>
           <li><span class="k">1h setup</span><span>4h trend + 1h EMA / RSI / MACD breakout · time exit 12h</span></li>
           <li><span class="k">Stop / targets</span><span>Stop 1.5× ATR on every trade · TP1 +1.5R (close 50%, stop to breakeven) · TP2 +3R</span></li>
-          <li><span class="k">Risk</span><span>5% of equity per trade · max 6 open · 1 per coin · 90-min cooldown · margin capped at 95%</span></li>
-          <li><span class="k">Min order</span><span>Hyperliquid minimum is $10 notional — at $16.27 equity, 5% risk is $0.81, so only tight-stop setups can trade; the rest are skipped</span></li>
+          <li><span class="k">Risk</span><span>1% of equity per trade · max 6 open · 1 per coin · 90-min cooldown · margin capped at 95%</span></li>
+          <li><span class="k">Min order</span><span>Hyperliquid minimum is $10 notional — at $16.27 equity, 1% risk is $0.16, so only tight-stop setups can trade; the rest are skipped</span></li>
           <li><span class="k">Bot state</span><span id="botState">Last bot report (Nov 8, 7:45 PM ET): starting up, no open bot trades. Everything else on this page is the live exchange account, updated every 15 seconds.</span></li>
         </ul>
       </div>
@@ -401,7 +401,7 @@ function liveTrades(fills){
     var sz = num(f.sz), cp = num(f.closedPnl), coin = f.coin;
     var ep = open[coin];
     if (!ep && !isClose(f)){
-      ep = open[coin] = { pos:0, maxPos:0, pnl:0, riskUsd:0.05 * equity, closes:0 };
+      ep = open[coin] = { pos:0, maxPos:0, pnl:0, riskUsd:0.01 * equity, closes:0 };
     }
     if (ep){
       ep.pos += (f.side === "B" ? sz : -sz);
