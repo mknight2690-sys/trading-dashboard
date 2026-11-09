@@ -455,9 +455,31 @@ function renderState(state, orders){
   var eq = num(ms.accountValue), mg = num(ms.totalMarginUsed);
   var positions = (state.assetPositions || []).map(function(ap){ return ap.position; }).filter(function(p){ return num(p.szi) !== 0; });
   var upnl = positions.reduce(function(a,p){ return a + num(p.unrealizedPnl); }, 0);
-  /* price-chart rotation: open position coins -> entry prices */
-  pcEntry = {};
-  positions.forEach(function(p){ pcEntry[p.coin] = num(p.entryPx); });
+  /* price-chart rotation: open position coins -> entry / stop / TP levels.
+     The stop is the resting reduce-only order at or on the losing side of
+     the entry (below it for a long, above for a short — including a stop
+     moved to breakeven, which sits at the entry); the take-profits are the
+     resting reduce-only orders on the winning side, nearest to entry = TP1,
+     farthest = TP2. This reads the live orders, so it follows the stop
+     when the bot moves it to breakeven after TP1 fills. */
+  pcLevels = {};
+  positions.forEach(function(p){
+    pcLevels[p.coin] = { entry: num(p.entryPx), side: num(p.szi) > 0 ? 1 : -1, sl: 0, tp1: 0, tp2: 0 };
+  });
+  (orders || []).forEach(function(o){
+    var lv = pcLevels[o.coin];
+    if (!lv || !o.reduceOnly || !o.limitPx) return;
+    var px = num(o.limitPx);
+    if (lv.side > 0){ /* long: stop at/below entry, TPs above */
+      if (px <= lv.entry){ if (!lv.sl || px > lv.sl) lv.sl = px; }
+      else if (!lv.tp1 || px < lv.tp1){ lv.tp2 = lv.tp1; lv.tp1 = px; }
+      else if (!lv.tp2){ lv.tp2 = px; }
+    } else { /* short: stop at/above entry, TPs below */
+      if (px >= lv.entry){ if (!lv.sl || px < lv.sl) lv.sl = px; }
+      else if (!lv.tp1 || px > lv.tp1){ lv.tp2 = lv.tp1; lv.tp1 = px; }
+      else if (!lv.tp2){ lv.tp2 = px; }
+    }
+  });
   $("kEquity").textContent = fmtUSD(eq);
   $("kEquityD").textContent = "notional positions " + fmtUSD(ms.totalNtlPos);
   $("kWithdraw").textContent = fmtUSD(state.withdrawable);
@@ -553,12 +575,13 @@ function renderChart(fills, snap){
    exchange lists them) followed by BTC. If the account is flat, just BTC.
    Candles come from Hyperliquid's public candleSnapshot (1h, last ~100
    closed candles; the in-progress candle is dropped so the chart only
-   shows finished hours). Entry price (for an open position) is drawn as a
-   dashed line so you can see where the bot got in. */
-var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcEntry = {};
+   shows finished hours). Entry, stop and take-profit prices (for an open
+   position) are drawn as labelled lines so you can see where the bot got
+   in and where it gets out. */
+var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcLevels = {};
 var PC_ROTATE_MS = 10000, PC_N = 100;
 function pcList(){
-  var coins = Object.keys(pcEntry);
+  var coins = Object.keys(pcLevels);
   if (coins.indexOf("BTC") < 0) coins.push("BTC");
   return coins.length ? coins : ["BTC"];
 }
@@ -583,13 +606,20 @@ function pcDraw(){
     return "<button type='button' data-i='"+i+"' aria-pressed='"+(i===pcIdx)+"' aria-label='Show "+esc(c)+" chart' title='"+esc(c)+"'></button>";
   }).join("");
   $("pcDots").innerHTML = dots;
-  var entry = pcEntry[coin];
-  $("pcTitle").innerHTML = esc(coin) + " <span class='tf'>1h · " + (entry ? "open position, entry " + fmtPx(entry) : "Bitcoin") + "</span>";
+  var lv = pcLevels[coin] || {};
+  var entry = lv.entry;
+  $("pcTitle").innerHTML = esc(coin) + " <span class='tf'>1h · " + (entry ? (lv.side > 0 ? "LONG" : "SHORT") + ", entry " + fmtPx(entry) : "Bitcoin") + "</span>";
   pcFetch(coin).then(function(cs){
     if (!cs.length){ $("pcWrap").innerHTML = "<span style='color:var(--muted)'>No 1h candles returned for " + esc(coin) + " yet.</span>"; $("pcMeta").innerHTML = ""; return; }
     var lo = Math.min.apply(null, cs.map(function(c){ return c.l; }));
     var hi = Math.max.apply(null, cs.map(function(c){ return c.h; }));
-    if (entry){ lo = Math.min(lo, entry); hi = Math.max(hi, entry); }
+    /* levels drawn: entry, stop, TP1, TP2 — include them in the range */
+    var levels = [];
+    if (entry) levels.push({px: entry, label: "Entry " + fmtPx(entry), col: "var(--accent)", dash: "6 4"});
+    if (lv.sl) levels.push({px: lv.sl, label: "Stop " + fmtPx(lv.sl), col: "var(--down)", dash: "6 4"});
+    if (lv.tp1) levels.push({px: lv.tp1, label: "TP1 " + fmtPx(lv.tp1), col: "var(--up)", dash: "6 4"});
+    if (lv.tp2) levels.push({px: lv.tp2, label: "TP2 " + fmtPx(lv.tp2), col: "var(--up)", dash: "2 3"});
+    levels.forEach(function(L){ lo = Math.min(lo, L.px); hi = Math.max(hi, L.px); });
     if (hi - lo < 1e-12){ hi = lo + 1e-12; }
     var W = 880, H = 240, P = 8, n = cs.length, step = (W - 2*P) / n, bw = Math.max(2, step * 0.6);
     function Y(v){ return H - P - (H - 2*P) * (v - lo) / (hi - lo); }
@@ -601,9 +631,11 @@ function pcDraw(){
       var yO = Y(c.o), yC = Y(c.c);
       parts.push("<rect x='"+(x - bw/2).toFixed(1)+"' y='"+Math.min(yO, yC).toFixed(1)+"' width='"+bw.toFixed(1)+"' height='"+Math.max(1, Math.abs(yC - yO)).toFixed(1)+"' fill='"+col+"'/>");
     });
-    if (entry){
-      parts.push("<line x1='"+P+"' y1='"+Y(entry).toFixed(1)+"' x2='"+(W-P)+"' y2='"+Y(entry).toFixed(1)+"' stroke='var(--accent)' stroke-width='1.5' stroke-dasharray='6 4'/>");
-    }
+    levels.forEach(function(L){
+      var y = Y(L.px);
+      parts.push("<line x1='"+P+"' y1='"+y.toFixed(1)+"' x2='"+(W-P)+"' y2='"+y.toFixed(1)+"' stroke='"+L.col+"' stroke-width='1.5' stroke-dasharray='"+L.dash+"'/>");
+      parts.push("<text x='"+(W-P-4).toFixed(1)+"' y='"+(y-4).toFixed(1)+"' text-anchor='end' font-size='11' font-weight='600' fill='"+L.col+"'>"+esc(L.label)+"</text>");
+    });
     var last = cs[cs.length - 1], first = cs[0];
     var chg = first.c ? 100 * (last.c / first.c - 1) : 0;
     var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='"+esc(coin)+" 1-hour candlestick chart'>"+parts.join("")+"</svg>";
@@ -612,6 +644,9 @@ function pcDraw(){
       "<span>Range shown: "+fmtPx(lo)+" – "+fmtPx(hi)+"</span>"+
       "<span class='"+cls(chg)+"'>"+fmtPct(chg)+" over "+n+"h</span>"+
       (entry ? "<span>Entry: "+fmtPx(entry)+"</span>" : "") +
+      (lv.sl ? "<span class='neg'>Stop: "+fmtPx(lv.sl)+"</span>" : "") +
+      (lv.tp1 ? "<span class='pos'>TP1: "+fmtPx(lv.tp1)+"</span>" : "") +
+      (lv.tp2 ? "<span class='pos'>TP2: "+fmtPx(lv.tp2)+"</span>" : "") +
       "<span>"+fmtTimeET(first.t)+" → "+fmtTimeET(last.t)+"</span>";
   });
 }
