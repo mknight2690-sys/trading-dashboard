@@ -211,7 +211,7 @@
   </section>
 
   <section aria-labelledby="pcH">
-    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from Hyperliquid. Tap a dot to jump to a coin.</span></div>
+    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from Hyperliquid. The current hour's candle ticks live with the mid price every refresh (15s) — the dot marks the live price. Tap a dot to jump to a coin.</span></div>
     <div class="chart-box">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
         <span class="pc-title" id="pcTitle">Loading chart… <span class="tf">1h</span></span>
@@ -573,12 +573,15 @@ function renderChart(fills, snap){
 /* ---- Price charts: 1h candles, cycling through open positions + BTC ---- */
 /* Rotation list = the account's open position coins (in the order the
    exchange lists them) followed by BTC. If the account is flat, just BTC.
-   Candles come from Hyperliquid's public candleSnapshot (1h, last ~100
-   closed candles; the in-progress candle is dropped so the chart only
-   shows finished hours). Entry, stop and take-profit prices (for an open
-   position) are drawn as labelled lines so you can see where the bot got
-   in and where it gets out. */
+   Candles come from Hyperliquid's public candleSnapshot (1h, last ~100).
+   The in-progress candle is kept and ticked live: pcDraw updates its
+   close/high/low with the latest mid (from allMids, refreshed every
+   15s) on every draw, so the chart moves in real time instead of only
+   changing once an hour when a candle closes. Entry, stop and
+   take-profit prices (for an open position) are drawn as labelled lines
+   so you can see where the bot got in and where it gets out. */
 var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcLevels = {};
+var liveMids = {}; /* latest allMids, refreshed every 15s by refresh() */
 var PC_ROTATE_MS = 10000, PC_N = 100;
 function pcList(){
   var coins = Object.keys(pcLevels);
@@ -591,7 +594,11 @@ function pcFetch(coin){
   if (cached && now - cached.at < 60000) return Promise.resolve(cached.candles);
   return post({type:"candleSnapshot", req:{coin:coin, interval:"1h", startTime: now - PC_N * 3600000, endTime: now}})
     .then(function(rows){
-      var cs = (rows || []).filter(function(c){ return num(c.t) + 3600000 <= now; })
+      /* Keep the in-progress candle too (the last one) — pcDraw updates
+         its close/high/low with the live mid on every refresh, so the
+         chart ticks in real time instead of only changing once an hour
+         when a candle closes. */
+      var cs = (rows || [])
         .map(function(c){ return { t:num(c.t), o:num(c.o), h:num(c.h), l:num(c.l), c:num(c.c) }; })
         .slice(-PC_N);
       pcCache[coin] = { candles: cs, at: Date.now() };
@@ -611,6 +618,22 @@ function pcDraw(){
   $("pcTitle").innerHTML = esc(coin) + " <span class='tf'>1h · " + (entry ? (lv.side > 0 ? "LONG" : "SHORT") + ", entry " + fmtPx(entry) : "Bitcoin") + "</span>";
   pcFetch(coin).then(function(cs){
     if (!cs.length){ $("pcWrap").innerHTML = "<span style='color:var(--muted)'>No 1h candles returned for " + esc(coin) + " yet.</span>"; $("pcMeta").innerHTML = ""; return; }
+    /* Real-time: if the last candle is still in progress (its hour
+       hasn't closed), tick it with the live mid so the chart moves
+       every refresh instead of freezing between hours. Copy the
+       array + the last candle so the cache is not mutated. */
+    cs = cs.slice();
+    var lastC = cs[cs.length - 1];
+    var isLive = lastC && lastC.t + 3600000 > Date.now();
+    var livePx = 0;
+    if (isLive && liveMids && liveMids[coin]){
+      livePx = num(liveMids[coin]);
+      if (livePx > 0){
+        lastC = { t:lastC.t, o:lastC.o, h:Math.max(lastC.h, livePx),
+                  l:Math.min(lastC.l, livePx), c:livePx };
+        cs[cs.length - 1] = lastC;
+      } else { livePx = 0; }
+    }
     var lo = Math.min.apply(null, cs.map(function(c){ return c.l; }));
     var hi = Math.max.apply(null, cs.map(function(c){ return c.h; }));
     /* levels drawn: entry, stop, TP1, TP2 — include them in the range */
@@ -638,9 +661,17 @@ function pcDraw(){
     });
     var last = cs[cs.length - 1], first = cs[0];
     var chg = first.c ? 100 * (last.c / first.c - 1) : 0;
+    /* Mark the in-progress candle: a live-price dot at its close so
+       it is clear the rightmost candle is still ticking. */
+    if (isLive && livePx > 0){
+      var lx = P + step * (n - 1) + step / 2, ly = Y(last.c);
+      parts.push("<circle cx='"+lx.toFixed(1)+"' cy='"+ly.toFixed(1)+"' r='4' fill='var(--accent)' stroke='#fff' stroke-width='1.5'/>");
+    }
     var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='"+esc(coin)+" 1-hour candlestick chart'>"+parts.join("")+"</svg>";
     $("pcWrap").innerHTML = svg;
-    $("pcMeta").innerHTML = "<span>Last close: <strong>"+fmtPx(last.c)+"</strong></span>"+
+    $("pcMeta").innerHTML = (isLive && livePx > 0
+      ? "<span style='display:inline-flex;align-items:center;gap:5px'><span class='live-dot'></span>Live: <strong>"+fmtPx(livePx)+"</strong></span>"
+      : "<span>Last close: <strong>"+fmtPx(last.c)+"</strong></span>")+
       "<span>Range shown: "+fmtPx(lo)+" – "+fmtPx(hi)+"</span>"+
       "<span class='"+cls(chg)+"'>"+fmtPct(chg)+" over "+n+"h</span>"+
       (entry ? "<span>Entry: "+fmtPx(entry)+"</span>" : "") +
@@ -709,6 +740,7 @@ function refresh(){
   Promise.all(jobs).then(function(res){
     failCount = 0; lastOk = Date.now();
     fillsCache = (res[2] && res[2].length) ? res[2] : fillsCache;
+    liveMids = res[3] || liveMids; /* latest mids — the price charts tick the in-progress candle with these */
     applyAll(res[0], res[1] || [], fillsCache);
     announceUpdates(fillsCache);
     renderMarket(wantCtx ? res[4] : null, res[3]);
