@@ -115,6 +115,11 @@
   .chart-box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;box-shadow:var(--shadow)}
   .chart-box svg{width:100%;height:auto;display:block}
   .chart-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+  .pc-dots{display:inline-flex;gap:6px;align-items:center}
+  .pc-dots button{width:11px;height:11px;border-radius:50%;border:1px solid var(--line-strong);background:var(--panel);padding:0;cursor:pointer}
+  .pc-dots button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+  .pc-title{font-size:15px;font-weight:700}
+  .pc-title .tf{color:var(--muted);font-weight:600;font-size:13px}
 
   .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:6px;overflow:hidden}
   .seg button{border:none;background:var(--panel);color:var(--muted);padding:6px 12px;font-size:13px;font-weight:600;min-height:36px}
@@ -203,6 +208,18 @@
   <section aria-labelledby="posH">
     <div class="sec-head"><h2 id="posH">Open positions</h2><span class="sec-note" id="posNote"></span></div>
     <div id="posWrap"></div>
+  </section>
+
+  <section aria-labelledby="pcH">
+    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from Hyperliquid. Tap a dot to jump to a coin.</span></div>
+    <div class="chart-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="pc-title" id="pcTitle">Loading chart… <span class="tf">1h</span></span>
+        <span class="pc-dots" id="pcDots" role="group" aria-label="Chart coin"></span>
+      </div>
+      <div id="pcWrap"><span style="color:var(--muted)">Loading 1h candles…</span></div>
+      <div class="chart-meta" id="pcMeta"></div>
+    </div>
   </section>
 
   <section aria-labelledby="ordH">
@@ -438,6 +455,9 @@ function renderState(state, orders){
   var eq = num(ms.accountValue), mg = num(ms.totalMarginUsed);
   var positions = (state.assetPositions || []).map(function(ap){ return ap.position; }).filter(function(p){ return num(p.szi) !== 0; });
   var upnl = positions.reduce(function(a,p){ return a + num(p.unrealizedPnl); }, 0);
+  /* price-chart rotation: open position coins -> entry prices */
+  pcEntry = {};
+  positions.forEach(function(p){ pcEntry[p.coin] = num(p.entryPx); });
   $("kEquity").textContent = fmtUSD(eq);
   $("kEquityD").textContent = "notional positions " + fmtUSD(ms.totalNtlPos);
   $("kWithdraw").textContent = fmtUSD(state.withdrawable);
@@ -528,6 +548,85 @@ function renderChart(fills, snap){
     "<span>"+pts.length+" closed trades · "+fmtTimeET(pts[0].t)+" → "+fmtTimeET(pts[pts.length-1].t)+"</span>";
 }
 
+/* ---- Price charts: 1h candles, cycling through open positions + BTC ---- */
+/* Rotation list = the account's open position coins (in the order the
+   exchange lists them) followed by BTC. If the account is flat, just BTC.
+   Candles come from Hyperliquid's public candleSnapshot (1h, last ~100
+   closed candles; the in-progress candle is dropped so the chart only
+   shows finished hours). Entry price (for an open position) is drawn as a
+   dashed line so you can see where the bot got in. */
+var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcEntry = {};
+var PC_ROTATE_MS = 10000, PC_N = 100;
+function pcList(){
+  var coins = Object.keys(pcEntry);
+  if (coins.indexOf("BTC") < 0) coins.push("BTC");
+  return coins.length ? coins : ["BTC"];
+}
+function pcFetch(coin){
+  var now = Date.now();
+  var cached = pcCache[coin];
+  if (cached && now - cached.at < 60000) return Promise.resolve(cached.candles);
+  return post({type:"candleSnapshot", req:{coin:coin, interval:"1h", startTime: now - PC_N * 3600000, endTime: now}})
+    .then(function(rows){
+      var cs = (rows || []).filter(function(c){ return num(c.t) + 3600000 <= now; })
+        .map(function(c){ return { t:num(c.t), o:num(c.o), h:num(c.h), l:num(c.l), c:num(c.c) }; })
+        .slice(-PC_N);
+      pcCache[coin] = { candles: cs, at: Date.now() };
+      return cs;
+    }).catch(function(){ return cached ? cached.candles : []; });
+}
+function pcDraw(){
+  var coins = pcList();
+  if (pcIdx >= coins.length) pcIdx = 0;
+  var coin = coins[pcIdx];
+  var dots = coins.map(function(c, i){
+    return "<button type='button' data-i='"+i+"' aria-pressed='"+(i===pcIdx)+"' aria-label='Show "+esc(c)+" chart' title='"+esc(c)+"'></button>";
+  }).join("");
+  $("pcDots").innerHTML = dots;
+  var entry = pcEntry[coin];
+  $("pcTitle").innerHTML = esc(coin) + " <span class='tf'>1h · " + (entry ? "open position, entry " + fmtPx(entry) : "Bitcoin") + "</span>";
+  pcFetch(coin).then(function(cs){
+    if (!cs.length){ $("pcWrap").innerHTML = "<span style='color:var(--muted)'>No 1h candles returned for " + esc(coin) + " yet.</span>"; $("pcMeta").innerHTML = ""; return; }
+    var lo = Math.min.apply(null, cs.map(function(c){ return c.l; }));
+    var hi = Math.max.apply(null, cs.map(function(c){ return c.h; }));
+    if (entry){ lo = Math.min(lo, entry); hi = Math.max(hi, entry); }
+    if (hi - lo < 1e-12){ hi = lo + 1e-12; }
+    var W = 880, H = 240, P = 8, n = cs.length, step = (W - 2*P) / n, bw = Math.max(2, step * 0.6);
+    function Y(v){ return H - P - (H - 2*P) * (v - lo) / (hi - lo); }
+    var parts = [];
+    cs.forEach(function(c, i){
+      var x = P + step * i + step / 2;
+      var up = c.c >= c.o, col = up ? "var(--up)" : "var(--down)";
+      parts.push("<line x1='"+x.toFixed(1)+"' y1='"+Y(c.h).toFixed(1)+"' x2='"+x.toFixed(1)+"' y2='"+Y(c.l).toFixed(1)+"' stroke='"+col+"' stroke-width='1'/>");
+      var yO = Y(c.o), yC = Y(c.c);
+      parts.push("<rect x='"+(x - bw/2).toFixed(1)+"' y='"+Math.min(yO, yC).toFixed(1)+"' width='"+bw.toFixed(1)+"' height='"+Math.max(1, Math.abs(yC - yO)).toFixed(1)+"' fill='"+col+"'/>");
+    });
+    if (entry){
+      parts.push("<line x1='"+P+"' y1='"+Y(entry).toFixed(1)+"' x2='"+(W-P)+"' y2='"+Y(entry).toFixed(1)+"' stroke='var(--accent)' stroke-width='1.5' stroke-dasharray='6 4'/>");
+    }
+    var last = cs[cs.length - 1], first = cs[0];
+    var chg = first.c ? 100 * (last.c / first.c - 1) : 0;
+    var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='"+esc(coin)+" 1-hour candlestick chart'>"+parts.join("")+"</svg>";
+    $("pcWrap").innerHTML = svg;
+    $("pcMeta").innerHTML = "<span>Last close: <strong>"+fmtPx(last.c)+"</strong></span>"+
+      "<span>Range shown: "+fmtPx(lo)+" – "+fmtPx(hi)+"</span>"+
+      "<span class='"+cls(chg)+"'>"+fmtPct(chg)+" over "+n+"h</span>"+
+      (entry ? "<span>Entry: "+fmtPx(entry)+"</span>" : "") +
+      "<span>"+fmtTimeET(first.t)+" → "+fmtTimeET(last.t)+"</span>";
+  });
+}
+function pcAdvance(){ var coins = pcList(); if (!coins.length) return; pcIdx = (pcIdx + 1) % coins.length; pcDraw(); }
+function pcStart(){
+  if (pcTimer) clearInterval(pcTimer);
+  pcTimer = setInterval(function(){ if (!paused && !document.hidden) pcAdvance(); }, PC_ROTATE_MS);
+}
+$("pcDots").addEventListener("click", function(e){
+  var b = e.target.closest ? e.target.closest("button[data-i]") : null;
+  if (!b) return;
+  pcIdx = parseInt(b.getAttribute("data-i"), 10) || 0;
+  pcDraw();
+});
+
 function renderMarket(metaCtx, mids){
   if (!metaCtx){ return; }
   var meta = metaCtx[0], ctxs = metaCtx[1];
@@ -578,6 +677,7 @@ function refresh(){
     applyAll(res[0], res[1] || [], fillsCache);
     announceUpdates(fillsCache);
     renderMarket(wantCtx ? res[4] : null, res[3]);
+    pcDraw();
     setConn("live", "LIVE · STREAMING");
     $("updatedAt").textContent = "Updated " + fmtClockET(lastOk) + " ET · refreshes every 15s";
   }).catch(function(){
@@ -667,6 +767,8 @@ function announceUpdates(fills){
 applyAll(SNAPSHOT.state, SNAPSHOT.orders, SNAPSHOT.fills, true);
 setConn("stale", "CONNECTING");
 $("updatedAt").textContent = "Snapshot from page build (" + fmtTimeET(SNAPSHOT.at) + " ET) — connecting to live feed…";
+pcDraw();
+pcStart();
 
 /* controls */
 $("refreshBtn").addEventListener("click", function(){ failCount = 0; refresh(); });
