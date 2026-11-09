@@ -153,7 +153,9 @@
   .share-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
   .share-check{display:flex;align-items:center;gap:7px;font-size:13.5px;cursor:pointer}
   .share-check input{width:17px;height:17px;accent-color:var(--accent)}
-  .share-status{font-size:13px;color:var(--muted);min-height:18px;margin-top:8px}
+  .share-status{font-size:14.5px;font-weight:700;min-height:20px;margin-top:10px}
+  .share-status.ok{color:var(--up)}
+  .share-status.err{color:var(--down)}
 
   @media (max-width:1020px){ .kpis{grid-template-columns:repeat(3,1fr)} }
   @media (max-width:720px){
@@ -315,6 +317,25 @@
   </footer>
 </div>
 
+<!-- PnL badge sharer preview -->
+<div class="share-overlay" id="shareOverlay" hidden>
+  <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <h3 id="shareTitle">Share PnL badge</h3>
+    <p class="share-sub" id="shareSub">Preview your position's PnL badge. Copy the image or share it.</p>
+    <div class="share-canvas-wrap"><canvas id="shareCanvas" width="1080" height="1080"></canvas></div>
+    <div class="share-row">
+      <label class="share-check"><input type="checkbox" id="shareDollars" checked> Show dollar amounts</label>
+      <span class="share-sub" style="margin:0">Uncheck to show the PnL % only — no dollar figures on the badge.</span>
+    </div>
+    <div class="share-row">
+      <button class="btn" id="shareCopy" type="button">Copy image</button>
+      <button class="btn" id="shareDownload" type="button">Download PNG</button>
+      <button class="btn" id="shareNative" type="button">Share…</button>
+      <button class="btn" id="shareClose" type="button">Close</button>
+    </div>
+    <div class="share-status" id="shareStatus"></div>
+  </div>
+</div>
 <script>
 (function(){
 "use strict";
@@ -845,7 +866,8 @@ function drawBadge(){
   ctx.fillStyle = "#93a198"; ctx.font = "500 40px 'IBM Plex Sans', sans-serif";
   ctx.fillText("Live  ·  Hyperliquid  ·  " + new Date().toLocaleString("en-US", {month: "short", day: "numeric", hour: "numeric", minute: "2-digit"}), W / 2, H - 70);
 }
-function setShareStatus(t){ $("shareStatus").textContent = t; }
+function setShareStatus(t, ok){ var el = $("shareStatus"); el.textContent = t; el.className = "share-status" + (ok === true ? " ok" : ok === false ? " err" : ""); }
+function flashBtn(id, label){ var b = $(id); if (!b) return; var old = b.textContent; b.textContent = label; setTimeout(function(){ b.textContent = old; }, 2000); }
 function openShare(coin){
   var p = curPositions[coin]; if (!p) return;
   shareCoin = coin;
@@ -1014,34 +1036,34 @@ $("shareClose").addEventListener("click", closeShare);
 $("shareOverlay").addEventListener("click", function(e){ if (e.target === this) closeShare(); });
 $("shareCopy").addEventListener("click", function(){
   badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
     if (navigator.clipboard && window.ClipboardItem){
-      navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){ setShareStatus("Copied — paste it anywhere."); }).catch(function(){ setShareStatus("Copy blocked by the browser — try Download PNG instead."); });
-    } else { setShareStatus("Copy image isn't supported here — try Download PNG."); }
+      navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){ setShareStatus("Image copied — paste it anywhere.", true); flashBtn("shareCopy", "Copied!"); }).catch(function(){ setShareStatus("Copy blocked by the browser — try Download PNG instead.", false); });
+    } else { setShareStatus("Copy image isn't supported here — try Download PNG.", false); }
   });
 });
 $("shareDownload").addEventListener("click", function(){
   badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "pnl-" + (shareCoin || "badge") + ".png";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
-    setShareStatus("Downloaded.");
+    setShareStatus("Image downloaded.", true); flashBtn("shareDownload", "Downloaded!");
   });
 });
 $("shareNative").addEventListener("click", function(){
   badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
     var file = new File([blob], "pnl-" + (shareCoin || "badge") + ".png", {type: "image/png"});
     if (navigator.canShare && navigator.canShare({files: [file]})){
-      navigator.share({files: [file], title: "PnL badge"}).then(function(){ setShareStatus("Shared."); }).catch(function(){ /* user cancelled */ });
+      navigator.share({files: [file], title: "PnL badge"}).then(function(){ setShareStatus("Shared.", true); flashBtn("shareNative", "Shared!"); }).catch(function(){ /* user cancelled */ });
     } else if (navigator.share){
       navigator.share({title: "PnL badge", text: "PnL badge"}).catch(function(){});
-      setShareStatus("This browser can't share the image directly — use Copy image or Download PNG.");
+      setShareStatus("This browser can't share the image directly — use Copy image or Download PNG.", false);
     } else {
-      setShareStatus("Sharing isn't supported here — use Copy image or Download PNG.");
+      setShareStatus("Sharing isn't supported here — use Copy image or Download PNG.", false);
     }
   });
 });
@@ -1052,24 +1074,5 @@ window.addEventListener("pageshow", function(e){ if (e.persisted && !paused){ fa
 refresh();
 })();
 </script>
-<!-- PnL badge sharer preview -->
-<div class="share-overlay" id="shareOverlay" hidden>
-  <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
-    <h3 id="shareTitle">Share PnL badge</h3>
-    <p class="share-sub" id="shareSub">Preview your position's PnL badge. Copy the image or share it.</p>
-    <div class="share-canvas-wrap"><canvas id="shareCanvas" width="1080" height="1080"></canvas></div>
-    <div class="share-row">
-      <label class="share-check"><input type="checkbox" id="shareDollars" checked> Show dollar amounts</label>
-      <span class="share-sub" style="margin:0">Uncheck to show the PnL % only — no dollar figures on the badge.</span>
-    </div>
-    <div class="share-row">
-      <button class="btn" id="shareCopy" type="button">Copy image</button>
-      <button class="btn" id="shareDownload" type="button">Download PNG</button>
-      <button class="btn" id="shareNative" type="button">Share…</button>
-      <button class="btn" id="shareClose" type="button">Close</button>
-    </div>
-    <div class="share-status" id="shareStatus"></div>
-  </div>
-</div>
 </body>
 </html>
