@@ -133,6 +133,22 @@
   footer{margin-top:30px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:12.5px;display:grid;gap:6px}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
+  /* PnL badge sharer */
+  .share-btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:5px;padding:3px 9px;font-size:12px;line-height:1.3;font-weight:600;white-space:nowrap}
+  .share-btn:hover{color:var(--ink);border-color:var(--line-strong)}
+  .share-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .share-overlay{position:fixed;inset:0;background:rgba(10,13,12,.72);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+  .share-overlay[hidden]{display:none}
+  .share-modal{background:var(--panel);color:var(--ink);border:1px solid var(--line-strong);border-radius:12px;max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+  .share-modal h3{margin:0 0 4px;font-size:17px}
+  .share-modal .share-sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+  .share-canvas-wrap{background:#0a0d0c;border-radius:10px;padding:10px;display:flex;justify-content:center}
+  .share-canvas-wrap canvas{width:100%;max-width:420px;height:auto;display:block;border-radius:6px}
+  .share-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .share-check{display:flex;align-items:center;gap:7px;font-size:13.5px;cursor:pointer}
+  .share-check input{width:17px;height:17px;accent-color:var(--accent)}
+  .share-status{font-size:13px;color:var(--muted);min-height:18px;margin-top:8px}
+
   @media (max-width:1020px){ .kpis{grid-template-columns:repeat(3,1fr)} }
   @media (max-width:720px){
     .cols{grid-template-columns:1fr}
@@ -495,6 +511,8 @@ function renderState(state, orders){
     $("posNote").textContent = "";
   } else {
     $("posNote").textContent = positions.length + " live on Hyperliquid";
+    curPositions = {};
+    positions.forEach(function(p){ curPositions[p.coin] = p; });
     var rows = positions.map(function(p){
       var sz = num(p.szi), side = sz > 0 ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
       var lev = p.leverage ? (p.leverage.value + "× " + esc(p.leverage.type)) : "—";
@@ -504,9 +522,12 @@ function renderState(state, orders){
         "<td class='num' data-label='Mark / value'>"+fmtUSD(p.positionValue)+"</td>"+
         "<td class='num' data-label='Leverage'>"+lev+"</td>"+
         "<td class='num "+cls(p.unrealizedPnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(p.unrealizedPnl)+"</strong></td>"+
-        "<td class='num' data-label='Liq. price'>"+(p.liquidationPx ? fmtPx(p.liquidationPx) : "—")+"</td></tr>";
+        "<td class='num' data-label='Liq. price'>"+(p.liquidationPx ? fmtPx(p.liquidationPx) : "—")+"</td>"+
+        "<td class='num' data-label='Share'><button class='share-btn' type='button' data-coin='"+esc(p.coin)+"' title='Share PnL badge'>Share</button></td></tr>";
     }).join("");
-    $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Position value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Liq. price</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
+    $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Position value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Liq. price</th><th class='num'>Share</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
+    /* keep an open badge preview live as prices refresh */
+    if (shareCoin && !$("shareOverlay").hidden) drawBadge();
   }
 
   if (!orders.length){
@@ -582,6 +603,8 @@ function renderChart(fills, snap){
    so you can see where the bot got in and where it gets out. */
 var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcLevels = {};
 var liveMids = {}; /* latest allMids, refreshed every 15s by refresh() */
+var curPositions = {}; /* coin -> position object, for the PnL share badge */
+var shareCoin = null; /* coin whose badge preview is open, or null */
 var PC_ROTATE_MS = 10000, PC_N = 100;
 function pcList(){
   var coins = Object.keys(pcLevels);
@@ -731,6 +754,74 @@ function applyAll(state, orders, fills, snap){ renderState(state, orders); rende
 function setConn(kind, text){ var b=$("connBadge"); b.className = "live-badge" + (kind==="live" ? "" : " " + kind); $("connText").textContent = text; }
 
 var ctxCounter = 99;
+/* ---- PnL badge sharer: share icon per open position -> preview modal
+   with a canvas badge image, a $ / % toggle, and copy / download /
+   native-share actions. The badge is drawn on a canvas (1080x1080) so
+   it is a real PNG the user can copy or share anywhere. PnL % is the
+   return on margin (unrealized PnL / marginUsed); in % mode no dollar
+   figure appears on the badge at all. ---- */
+function pnlPct(p){
+  var up = num(p.unrealizedPnl);
+  var m = num(p.marginUsed);
+  if (m > 0) return up / m * 100;
+  var v = num(p.positionValue);
+  return v > 0 ? up / v * 100 : 0;
+}
+function drawBadge(){
+  var p = curPositions[shareCoin];
+  var cv = $("shareCanvas"); if (!cv || !p) return;
+  var ctx = cv.getContext("2d");
+  var W = cv.width, H = cv.height;
+  var showDollars = $("shareDollars").checked;
+  var up = num(p.unrealizedPnl);
+  var pct = pnlPct(p);
+  var good = up >= 0;
+  var col = good ? "#3ecf8e" : "#ff6b7a";
+  var pctTxt = (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%";
+  ctx.fillStyle = "#0a0d0c"; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#2a332e"; ctx.lineWidth = 6; ctx.strokeRect(14, 14, W - 28, H - 28);
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#93a198"; ctx.font = "600 34px 'IBM Plex Sans', sans-serif";
+  ctx.fillText("T R A D I N G   B O T S   E U T O P I A", W / 2, 120);
+  var sz = num(p.szi), side = sz > 0 ? "LONG" : "SHORT";
+  ctx.fillStyle = "#e8ece8"; ctx.font = "700 104px 'IBM Plex Sans', sans-serif";
+  ctx.fillText(p.coin + "  ·  " + side, W / 2, 300);
+  ctx.fillStyle = col;
+  if (showDollars){
+    ctx.font = "700 168px 'IBM Plex Mono', monospace";
+    ctx.fillText(fmtSigned(up), W / 2, 520);
+    ctx.font = "600 64px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = "#93a198";
+    ctx.fillText(pctTxt, W / 2, 612);
+  } else {
+    ctx.font = "700 168px 'IBM Plex Mono', monospace";
+    ctx.fillText(pctTxt, W / 2, 520);
+  }
+  ctx.fillStyle = "#e8ece8"; ctx.font = "500 52px 'IBM Plex Sans', sans-serif";
+  var y = showDollars ? 724 : 664;
+  ctx.fillText("Entry " + fmtPx(p.entryPx) + "   ·   " + (p.leverage ? p.leverage.value + "× " + p.leverage.type : "—"), W / 2, y);
+  if (showDollars){
+    ctx.fillStyle = "#93a198"; ctx.font = "500 48px 'IBM Plex Sans', sans-serif";
+    ctx.fillText("Position value " + fmtUSD(p.positionValue), W / 2, 804);
+  }
+  ctx.fillStyle = "#93a198"; ctx.font = "500 40px 'IBM Plex Sans', sans-serif";
+  ctx.fillText("Live  ·  Hyperliquid  ·  " + new Date().toLocaleString("en-US", {month: "short", day: "numeric", hour: "numeric", minute: "2-digit"}), W / 2, H - 70);
+}
+function setShareStatus(t){ $("shareStatus").textContent = t; }
+function openShare(coin){
+  var p = curPositions[coin]; if (!p) return;
+  shareCoin = coin;
+  $("shareSub").textContent = "Preview your " + coin + " PnL badge. Copy the image or share it.";
+  setShareStatus("");
+  $("shareOverlay").hidden = false;
+  drawBadge();
+}
+function closeShare(){ $("shareOverlay").hidden = true; shareCoin = null; }
+function badgeBlob(cb){
+  var cv = $("shareCanvas");
+  if (cv.toBlob){ cv.toBlob(cb, "image/png"); } else { cb(null); }
+}
+
 function refresh(){
   if (paused) return;
   ctxCounter++;
@@ -865,10 +956,71 @@ $("copyAddr").addEventListener("click", function(){
 });
 $("fAll").addEventListener("click", function(){ closesOnly = false; this.setAttribute("aria-pressed","true"); $("fCloses").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
 $("fCloses").addEventListener("click", function(){ closesOnly = true; this.setAttribute("aria-pressed","true"); $("fAll").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
+
+/* PnL badge sharer controls */
+$("posWrap").addEventListener("click", function(e){
+  var b = e.target && e.target.closest ? e.target.closest(".share-btn") : null;
+  if (b && b.getAttribute("data-coin")) openShare(b.getAttribute("data-coin"));
+});
+$("shareDollars").addEventListener("change", drawBadge);
+$("shareClose").addEventListener("click", closeShare);
+$("shareOverlay").addEventListener("click", function(e){ if (e.target === this) closeShare(); });
+$("shareCopy").addEventListener("click", function(){
+  badgeBlob(function(blob){
+    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    if (navigator.clipboard && window.ClipboardItem){
+      navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){ setShareStatus("Copied — paste it anywhere."); }).catch(function(){ setShareStatus("Copy blocked by the browser — try Download PNG instead."); });
+    } else { setShareStatus("Copy image isn't supported here — try Download PNG."); }
+  });
+});
+$("shareDownload").addEventListener("click", function(){
+  badgeBlob(function(blob){
+    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "pnl-" + (shareCoin || "badge") + ".png";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+    setShareStatus("Downloaded.");
+  });
+});
+$("shareNative").addEventListener("click", function(){
+  badgeBlob(function(blob){
+    if (!blob){ setShareStatus("Could not make the image in this browser."); return; }
+    var file = new File([blob], "pnl-" + (shareCoin || "badge") + ".png", {type: "image/png"});
+    if (navigator.canShare && navigator.canShare({files: [file]})){
+      navigator.share({files: [file], title: "PnL badge"}).then(function(){ setShareStatus("Shared."); }).catch(function(){ /* user cancelled */ });
+    } else if (navigator.share){
+      navigator.share({title: "PnL badge", text: "PnL badge"}).catch(function(){});
+      setShareStatus("This browser can't share the image directly — use Copy image or Download PNG.");
+    } else {
+      setShareStatus("Sharing isn't supported here — use Copy image or Download PNG.");
+    }
+  });
+});
 document.addEventListener("visibilitychange", function(){ if (!document.hidden && !paused && Date.now() - lastOk > 15000){ failCount = 0; refresh(); } });
 
 refresh();
 })();
 </script>
+<!-- PnL badge sharer preview -->
+<div class="share-overlay" id="shareOverlay" hidden>
+  <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <h3 id="shareTitle">Share PnL badge</h3>
+    <p class="share-sub" id="shareSub">Preview your position's PnL badge. Copy the image or share it.</p>
+    <div class="share-canvas-wrap"><canvas id="shareCanvas" width="1080" height="1080"></canvas></div>
+    <div class="share-row">
+      <label class="share-check"><input type="checkbox" id="shareDollars" checked> Show dollar amounts</label>
+      <span class="share-sub" style="margin:0">Uncheck to show the PnL % only — no dollar figures on the badge.</span>
+    </div>
+    <div class="share-row">
+      <button class="btn" id="shareCopy" type="button">Copy image</button>
+      <button class="btn" id="shareDownload" type="button">Download PNG</button>
+      <button class="btn" id="shareNative" type="button">Share…</button>
+      <button class="btn" id="shareClose" type="button">Close</button>
+    </div>
+    <div class="share-status" id="shareStatus"></div>
+  </div>
+</div>
 </body>
 </html>
