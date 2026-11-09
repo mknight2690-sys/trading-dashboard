@@ -597,14 +597,40 @@ $("uniChips").innerHTML = UNIVERSE.map(function(c){ return "<span class='chip'>"
    it opens or closes. Only future trades are announced — turning voice on
    marks everything already known as seen. */
 var voiceOn = false, seenVoiceCloses = {}, seenVoiceOpens = {};
+/* Female announcer voice: prefer a warm female voice (Samantha on iOS,
+   Google US English on Chrome, Zira on Windows), fall back to any voice
+   whose name reads female, then the default. Pitch slightly low and rate
+   slightly slow for a smooth announcer delivery. */
+var announcerVoice = null;
+function pickAnnouncerVoice(){
+  if (!("speechSynthesis" in window)) return null;
+  var voices = window.speechSynthesis.getVoices() || [];
+  if (!voices.length) return null;
+  var prefer = ["Samantha", "Google US English", "Microsoft Zira", "Karen", "Moira", "Tessa", "Google UK English Female"];
+  for (var i = 0; i < prefer.length; i++){
+    for (var j = 0; j < voices.length; j++){
+      if (voices[j].name.indexOf(prefer[i]) >= 0) return voices[j];
+    }
+  }
+  for (var k = 0; k < voices.length; k++){
+    if (/female|samantha|zira|karen|moira|tessa|victoria|ava|allison|joana/i.test(voices[k].name)) return voices[k];
+  }
+  return voices[0];
+}
 function speak(text){
   if (!voiceOn || !("speechSynthesis" in window)) return;
   try {
+    if (!announcerVoice) announcerVoice = pickAnnouncerVoice();
     window.speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.05;
+    if (announcerVoice) u.voice = announcerVoice;
+    u.pitch = 0.9;
+    u.rate = 0.95;
     window.speechSynthesis.speak(u);
   } catch(e){}
+}
+if ("speechSynthesis" in window){
+  window.speechSynthesis.onvoiceschanged = function(){ announcerVoice = pickAnnouncerVoice(); };
 }
 function markVoiceSeen(fills){
   var live = liveTrades(fills || []);
