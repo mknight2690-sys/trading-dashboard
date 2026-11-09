@@ -157,6 +157,7 @@
       <span class="updated" id="updatedAt">Loading live data…</span>
       <button class="btn" id="pauseBtn" type="button" aria-pressed="false">Pause</button>
       <button class="btn" id="refreshBtn" type="button">Refresh now</button>
+      <button class="btn" id="voiceBtn" type="button" aria-pressed="false" title="Speak live-bot trade opens and closes out loud">Voice: off</button>
     </div>
   </div>
 
@@ -226,7 +227,7 @@
   </div>
 
   <section aria-labelledby="chartH">
-    <div class="sec-head"><h2 id="chartH">Cumulative realized PnL — account history</h2><span class="sec-note">Summed from every closing fill on this account, oldest to newest — including trading from before this bot. Trading PnL only; deposits and withdrawals are not included.</span></div>
+    <div class="sec-head"><h2 id="chartH">Cumulative R — bot record</h2><span class="sec-note">Bot's record in R, oldest to newest: the seeded crypto-feed history on Hyperliquid coins only (76 trades, +14.90R), then only the live bot's own closed trades since live trading began. Same basis as the score above. The account's raw fills are not used here — they include pre-bot manual trading.</span></div>
     <div class="chart-box">
       <div id="chartWrap"><span style="color:var(--muted)">Loading fills…</span></div>
       <div class="chart-meta" id="chartMeta"></div>
@@ -344,6 +345,15 @@ var SEED = {
   month: {w:37, l:39, r:14.90, n:76},
   all:   {w:37, l:39, r:14.90, n:76}
 };
+
+/* Seeded R curve: the 76 filtered feed trades (Hyperliquid coins only) in
+   chronological order — [close time ms, R]. They sum to +14.90R, matching the
+   seeded month/all-time score. The chart plots cumulative R from this curve,
+   then adds only the live bot's own closed trades (liveTrades) after the
+   live start. This is the bot's record; the account's raw fills are NOT used
+   for the curve, because they include pre-bot manual trading and end at
+   -$6.93 while the record is +14.90R. */
+var SEED_R_CURVE = [[1793874791000,-1.0],[1793875215000,-1.0],[1793880317000,-1.0],[1793889445000,2.25],[1793889445000,2.25],[1793889505000,2.25],[1793889680000,2.25],[1793890101000,2.25],[1793891238000,2.25],[1793891540000,2.25],[1793891658000,2.25],[1793892318000,2.25],[1793892502000,2.25],[1793894054000,2.25],[1793896638000,-1.0],[1793904979000,-1.0],[1793906000000,0.91],[1793908038000,-1.0],[1793923635000,-1.0],[1793924596000,-1.0],[1793926532000,0.75],[1793935575000,0.97],[1793936416000,-1.0],[1793943015000,0.91],[1793946735000,-1.0],[1793952616000,-1.0],[1793952915000,0.68],[1793958873000,1.65],[1793958875000,-0.75],[1793958875000,-1.0],[1793962477000,0.32],[1793962637000,-0.57],[1793976880000,-1.0],[1793976881000,-1.0],[1793987686000,0.44],[1793987687000,-1.0],[1793993000000,-1.0],[1793996899000,-1.0],[1794002115000,-0.82],[1794006254000,-1.0],[1794009436000,1.25],[1794012885000,-0.36],[1794012885000,-0.15],[1794012886000,0.53],[1794020100000,0.87],[1794030890000,-1.0],[1794031577000,-1.0],[1794034465000,-1.0],[1794041678000,-1.0],[1794058334000,-1.0],[1794059776000,1.45],[1794059777000,1.3],[1794066882000,1.07],[1794066883000,-1.0],[1794070481000,0.16],[1794074353000,0.09],[1794081308000,0.31],[1794095687000,-1.0],[1794099554000,0.75],[1794107835000,-1.0],[1794110086000,0.3],[1794120974000,-0.75],[1794124515000,0.43],[1794124516000,-0.09],[1794131684000,-1.0],[1794144283000,-1.0],[1794146107000,-1.0],[1794174976000,2.25],[1794175035000,2.25],[1794175036000,2.25],[1794175155000,-1.0],[1794175156000,0.75],[1794175156000,2.25],[1794178935000,-1.0],[1794178996000,-1.0],[1794185691000,0.75]];
 function pad2(n){ return (n < 10 ? "0" : "") + n; }
 function dayKey(ms){ var d = new Date(ms); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1) + "-" + pad2(d.getUTCDate()); }
 function monthKey(ms){ var d = new Date(ms); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1); }
@@ -481,10 +491,13 @@ function renderFills(fills){
 }
 
 function renderChart(fills, snap){
-  var closes = snap ? SNAP_CLOSES.map(function(p){ return {time:p[0], closedPnl:p[1]}; })
-                     : fills.filter(isClose).slice().sort(function(a,b){ return a.time - b.time; });
-  if (closes.length < 2){ $("chartWrap").innerHTML = "<span style='color:var(--muted)'>Not enough closing fills to draw the curve yet.</span>"; $("chartMeta").innerHTML=""; return; }
-  var cum = 0, pts = closes.map(function(f){ cum += num(f.closedPnl); return {t:f.time, v:cum}; });
+  /* Bot record curve in R: seeded feed history, then live bot trades only.
+     Do NOT use the account's raw fills here — they include pre-bot manual
+     trading and sum to -$6.93, while the bot's record is +14.90R. */
+  var pts = [], cum = 0;
+  SEED_R_CURVE.forEach(function(pr){ cum += pr[1]; pts.push({t:pr[0], v:cum}); });
+  liveTrades(fills || []).forEach(function(tr){ cum += tr.r; pts.push({t:tr.closeTime, v:cum}); });
+  if (pts.length < 2){ $("chartWrap").innerHTML = "<span style='color:var(--muted)'>Not enough closed trades to draw the curve yet.</span>"; $("chartMeta").innerHTML=""; return; }
   var min = Math.min(0, Math.min.apply(null, pts.map(function(p){return p.v;})));
   var max = Math.max(0, Math.max.apply(null, pts.map(function(p){return p.v;})));
   if (max - min < 0.01){ max = min + 0.01; }
@@ -494,14 +507,14 @@ function renderChart(fills, snap){
   var d = pts.map(function(p,i){ return (i?"L":"M") + X(i).toFixed(1) + " " + Y(p.v).toFixed(1); }).join(" ");
   var last = pts[pts.length-1].v;
   var lineCol = last >= 0 ? "var(--up)" : "var(--down)";
-  var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Cumulative realized PnL line chart'>"+
+  var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Cumulative R line chart'>"+
     "<line x1='"+P+"' y1='"+Y(0).toFixed(1)+"' x2='"+(W-P)+"' y2='"+Y(0).toFixed(1)+"' stroke='var(--line-strong)' stroke-width='1' stroke-dasharray='4 4'/>"+
     "<path d='"+d+"' fill='none' stroke='"+lineCol+"' stroke-width='2'/>"+
     "<circle cx='"+X(pts.length-1).toFixed(1)+"' cy='"+Y(last).toFixed(1)+"' r='3.5' fill='"+lineCol+"'/></svg>";
   $("chartWrap").innerHTML = svg;
-  $("chartMeta").innerHTML = "<span>All-time realized: <strong class='"+cls(last)+"'>"+fmtSigned(last)+"</strong></span>"+
-    "<span>Best point: "+fmtSigned(max)+"</span><span>Worst point: "+fmtSigned(min)+"</span>"+
-    "<span>"+pts.length+" closing fills · "+fmtTimeET(pts[0].t)+" → "+fmtTimeET(pts[pts.length-1].t)+"</span>";
+  $("chartMeta").innerHTML = "<span>All-time: <strong class='"+cls(last)+"'>"+fmtR(last)+"</strong></span>"+
+    "<span>Best point: "+fmtR(max)+"</span><span>Worst point: "+fmtR(min)+"</span>"+
+    "<span>"+pts.length+" closed trades · "+fmtTimeET(pts[0].t)+" → "+fmtTimeET(pts[pts.length-1].t)+"</span>";
 }
 
 function renderMarket(metaCtx, mids){
@@ -552,6 +565,7 @@ function refresh(){
     failCount = 0; lastOk = Date.now();
     fillsCache = (res[2] && res[2].length) ? res[2] : fillsCache;
     applyAll(res[0], res[1] || [], fillsCache);
+    announceUpdates(fillsCache);
     renderMarket(wantCtx ? res[4] : null, res[3]);
     setConn("live", "LIVE · STREAMING");
     $("updatedAt").textContent = "Updated " + fmtClockET(lastOk) + " ET · refreshes every 15s";
@@ -566,6 +580,52 @@ function schedule(){ if (timer) clearTimeout(timer); if (!paused){ var delay = f
 /* universe chips */
 $("uniChips").innerHTML = UNIVERSE.map(function(c){ return "<span class='chip'>"+esc(c)+"</span>"; }).join("");
 
+/* Voice announcements (text-to-speech) for live-bot trade opens and closes.
+   Browsers block speech until a user gesture, so voice stays off until the
+   Voice button is tapped. Once on, it announces each new live-bot trade as
+   it opens or closes. Only future trades are announced — turning voice on
+   marks everything already known as seen. */
+var voiceOn = false, seenVoiceCloses = {}, seenVoiceOpens = {};
+function speak(text){
+  if (!voiceOn || !("speechSynthesis" in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.05;
+    window.speechSynthesis.speak(u);
+  } catch(e){}
+}
+function markVoiceSeen(fills){
+  var live = liveTrades(fills || []);
+  live.forEach(function(tr){ seenVoiceCloses[tr.coin + "@" + tr.closeTime] = true; });
+  (fills || []).forEach(function(f){
+    if (!f || f.time <= LIVE_START_MS) return;
+    var d = f.dir || "";
+    if (d.indexOf("Open") === 0) seenVoiceOpens[f.coin + "@" + f.time + "@" + d] = true;
+  });
+}
+function announceUpdates(fills){
+  if (!voiceOn) return;
+  var live = liveTrades(fills || []);
+  live.forEach(function(tr){
+    var key = tr.coin + "@" + tr.closeTime;
+    if (seenVoiceCloses[key]) return;
+    seenVoiceCloses[key] = true;
+    var outcome = tr.r > 0 ? "Winner" : (tr.r < 0 ? "Loser" : "Breakeven");
+    speak("Trade closed. " + tr.coin + ", " + outcome + ", " + fmtR(tr.r) + ".");
+  });
+  (fills || []).forEach(function(f){
+    if (!f || f.time <= LIVE_START_MS) return;
+    var d = f.dir || "";
+    if (d.indexOf("Open") !== 0) return;
+    var key = f.coin + "@" + f.time + "@" + d;
+    if (seenVoiceOpens[key]) return;
+    seenVoiceOpens[key] = true;
+    var side = d.indexOf("Long") >= 0 ? "long" : (d.indexOf("Short") >= 0 ? "short" : "");
+    speak("New trade opened. " + f.coin + " " + side + ".");
+  });
+}
+
 /* snapshot first paint */
 applyAll(SNAPSHOT.state, SNAPSHOT.orders, SNAPSHOT.fills, true);
 setConn("stale", "CONNECTING");
@@ -579,6 +639,17 @@ $("pauseBtn").addEventListener("click", function(){
   this.textContent = paused ? "Resume" : "Pause";
   if (paused){ if (timer) clearTimeout(timer); setConn("stale", "PAUSED"); }
   else { setConn("stale", "CONNECTING"); refresh(); }
+});
+$("voiceBtn").addEventListener("click", function(){
+  voiceOn = !voiceOn;
+  this.setAttribute("aria-pressed", voiceOn ? "true" : "false");
+  this.textContent = voiceOn ? "Voice: on" : "Voice: off";
+  if (voiceOn){
+    markVoiceSeen(fillsCache);
+    speak("Voice announcements on.");
+  } else {
+    try { window.speechSynthesis.cancel(); } catch(e){}
+  }
 });
 $("copyAddr").addEventListener("click", function(){
   var btn = this;
