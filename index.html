@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" href="data:," />
-<title>Trading Dashboard</title>
+<title>KnightTrader-Muse — Trading Dashboard</title>
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Trading bot — live account dashboard" />
+<meta property="og:title" content="KnightTrader-Muse — live trading dashboard" />
 <meta property="og:description" content="Live Hyperliquid account the trading bot trades on. All-time record +11.27R (43W / 46L, 89 trades). Streams live and refreshes every 15 seconds." />
 <meta property="og:url" content="https://mknight2690-sys.github.io/trading-dashboard/" />
 <meta property="og:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Trading bot — live account dashboard" />
+<meta name="twitter:title" content="KnightTrader-Muse — live trading dashboard" />
 <meta name="twitter:description" content="Live Hyperliquid account the trading bot trades on. All-time record +11.27R (43W / 46L, 89 trades). Streams live and refreshes every 15 seconds." />
 <meta name="twitter:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -71,6 +71,12 @@
   .btn:focus-visible,.copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   h1{font-size:24px;line-height:1.2;margin:20px 0 2px;font-weight:700;letter-spacing:-.01em}
+  /* KnightTrader-Muse brand lockup */
+  .brand{display:flex;align-items:center;gap:12px;margin:20px 0 2px}
+  .brand .knight{font-size:34px;line-height:1;color:#d4a017;flex:none;text-shadow:0 0 18px rgba(212,160,23,.45)}
+  .brand .word{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+  .brand .word .muse{background:linear-gradient(90deg,#3ecf8e,#7dd8a8);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand .tagline{font-size:12.5px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-top:2px}
   .sub{color:var(--muted);margin:0 0 16px;font-size:14px;max-width:70ch}
 
   /* KPI grid */
@@ -193,7 +199,14 @@
     </div>
   </div>
 
-  <h1>Trading bot — live account dashboard</h1>
+  <div class="brand">
+    <span class="knight" aria-hidden="true">♞</span>
+    <div>
+      <div class="word">KnightTrader-<span class="muse">Muse</span></div>
+      <div class="tagline">Live trading dashboard</div>
+    </div>
+  </div>
+  <h1 class="sr-only">KnightTrader-Muse — live account dashboard</h1>
   <p class="sub">Live view of the Hyperliquid account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The main score is the seeded crypto-feed history on Hyperliquid coins only, plus only the live bot's own closed trades since live trading began (Nov 8, 2026, 7:57 PM ET) — the feed's paper trades no longer add to it. The account data — balances, positions, orders, fills and market prices — streams from Hyperliquid's public info API, refreshing every 15 seconds, so any trade the bot places shows up here within one refresh. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
 
   <div class="kpis" id="kpis">
@@ -778,31 +791,48 @@ function drawBadge(){
   var good = up >= 0;
   var col = good ? "#3ecf8e" : "#ff6b7a";
   var pctTxt = (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%";
-  ctx.fillStyle = "#0a0d0c"; ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = "#2a332e"; ctx.lineWidth = 6; ctx.strokeRect(14, 14, W - 28, H - 28);
   ctx.textAlign = "center";
-  ctx.fillStyle = "#93a198"; ctx.font = "600 34px 'IBM Plex Sans', sans-serif";
-  ctx.fillText("T R A D I N G   B O T S   E U T O P I A", W / 2, 120);
+  /* KnightTrader-Muse badge: deep green radial glow on near-black,
+     gold knight + wordmark, glowing PnL. */
+  var bg = ctx.createRadialGradient(W/2, 300, 60, W/2, H/2, 720);
+  bg.addColorStop(0, "#12291e"); bg.addColorStop(0.55, "#0b120e"); bg.addColorStop(1, "#070a08");
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#d4a017"; ctx.lineWidth = 5; ctx.strokeRect(20, 20, W - 40, H - 40);
+  ctx.strokeStyle = "rgba(212,160,23,.35)"; ctx.lineWidth = 2; ctx.strokeRect(34, 34, W - 68, H - 68);
+  /* brand */
+  ctx.fillStyle = "#d4a017"; ctx.font = "700 74px 'IBM Plex Sans', sans-serif";
+  ctx.fillText("♞", W / 2, 128);
+  ctx.fillStyle = "#e8ece8"; ctx.font = "800 58px 'IBM Plex Sans', sans-serif";
+  ctx.fillText("KNIGHTTRADER", W / 2, 196);
+  ctx.fillStyle = "#3ecf8e"; ctx.font = "800 58px 'IBM Plex Sans', sans-serif";
+  ctx.fillText("— MUSE —", W / 2, 262);
+  ctx.fillStyle = "#d4a017"; ctx.fillRect(W/2 - 130, 292, 260, 4);
   var sz = num(p.szi), side = sz > 0 ? "LONG" : "SHORT";
   ctx.fillStyle = "#e8ece8"; ctx.font = "700 104px 'IBM Plex Sans', sans-serif";
-  ctx.fillText(p.coin + "  ·  " + side, W / 2, 300);
+  ctx.fillText(p.coin + "  ·  " + side, W / 2, 440);
+  /* PnL, glowing */
+  ctx.save();
+  ctx.shadowColor = col; ctx.shadowBlur = 46;
   ctx.fillStyle = col;
   if (showDollars){
     ctx.font = "700 168px 'IBM Plex Mono', monospace";
-    ctx.fillText(fmtSigned(up), W / 2, 520);
-    ctx.font = "600 64px 'IBM Plex Sans', sans-serif";
-    ctx.fillStyle = "#93a198";
-    ctx.fillText(pctTxt, W / 2, 612);
+    ctx.fillText(fmtSigned(up), W / 2, 640);
   } else {
     ctx.font = "700 168px 'IBM Plex Mono', monospace";
-    ctx.fillText(pctTxt, W / 2, 520);
+    ctx.fillText(pctTxt, W / 2, 640);
+  }
+  ctx.restore();
+  if (showDollars){
+    ctx.font = "600 64px 'IBM Plex Sans', sans-serif";
+    ctx.fillStyle = "#93a198";
+    ctx.fillText(pctTxt, W / 2, 732);
   }
   ctx.fillStyle = "#e8ece8"; ctx.font = "500 52px 'IBM Plex Sans', sans-serif";
-  var y = showDollars ? 724 : 664;
+  var y = showDollars ? 836 : 776;
   ctx.fillText("Entry " + fmtPx(p.entryPx) + "   ·   " + (p.leverage ? p.leverage.value + "× " + p.leverage.type : "—"), W / 2, y);
   if (showDollars){
     ctx.fillStyle = "#93a198"; ctx.font = "500 48px 'IBM Plex Sans', sans-serif";
-    ctx.fillText("Position value " + fmtUSD(p.positionValue), W / 2, 804);
+    ctx.fillText("Position value " + fmtUSD(p.positionValue), W / 2, 916);
   }
   ctx.fillStyle = "#93a198"; ctx.font = "500 40px 'IBM Plex Sans', sans-serif";
   ctx.fillText("Live  ·  Hyperliquid  ·  " + new Date().toLocaleString("en-US", {month: "short", day: "numeric", hour: "numeric", minute: "2-digit"}), W / 2, H - 70);
