@@ -206,7 +206,7 @@
     </div>
   </div>
   <h1 class="sr-only">KnightTrader-Muse — live account dashboard</h1>
-  <p class="sub">Live view of the BloFin account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The score is the BloFin bot's own record only — it went live Nov 10, 2026 with a fresh record, so there is no seeded history here. The account data — balances, positions, orders, fills and stats — comes from a snapshot the bot publishes every cycle; BloFin has no public account endpoint, so account figures are only as fresh as the last deploy (the page says how old the snapshot is), while prices and 1h candles stream live from BloFin's public market API every 15 seconds. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
+  <p class="sub">Live view of the BloFin account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The score is the BloFin bot's own record only — it went live Nov 10, 2026 with a fresh record, so there is no seeded history here. The account data — positions, orders, fills and stats — comes from a snapshot the bot publishes every cycle; BloFin has no public account endpoint, so those are only as fresh as the last deploy (the page says how old the snapshot is), while the equity number is re-priced live from prices every 15 seconds and prices and 1h candles stream live from BloFin's public market API. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
 
   <div class="kpis" id="kpis">
     <div class="kpi"><div class="label">Account value</div><div class="value" id="kEquity">—</div><div class="detail" id="kEquityD">perps equity, USDT</div></div>
@@ -268,7 +268,7 @@
           <li><span class="k">Stop / targets</span><span>Stop 1.5× ATR on every trade, sized so a stop hit is exactly −1R after fees · TP1 +1.5R net of fees (close 50%, stop to breakeven) · TP2 +3R net of fees</span></li>
           <li><span class="k">Risk</span><span>1% of equity per trade · max 6 open · 1 per coin · 90-min cooldown · margin capped at 95%</span></li>
           <li><span class="k">Min order</span><span>BloFin minimums are per-coin, typically $0.50–$2 notional (BTC ~$7.47, ETH ~$3, XRP $1.10, SOL $0.86) — at $6.56 equity, 1% risk is $0.07, so only tight-stop setups can trade; the rest are skipped</span></li>
-          <li><span class="k">Bot state</span><span id="botState">Live on BloFin since Nov 10, 2026. Account figures come from the bot's published snapshot, updated on deploy; prices stream live every 15 seconds.</span></li>
+          <li><span class="k">Bot state</span><span id="botState">Live on BloFin since Nov 10, 2026. Account figures come from the bot's published snapshot, updated on deploy; the equity number is re-priced live from prices every 15 seconds.</span></li>
         </ul>
       </div>
     </section>
@@ -346,7 +346,7 @@
    No keys or secrets are on this page; it is read-only. */
 var BF_API = "https://openapi.blofin.com";
 var SNAP_URL = "blofin_state.json";
-var BAKED_SNAP = {"venue":"BloFin","updated_at_ms":1794287969624,"updated_at":"2026-11-10T05:19:29Z","account":{"equity":6.45,"withdrawable":0.32,"used_margin":6.13,"notional":33.8},"positions":[{"coin":"NIL","inst":"NIL-USDT","side":"SHORT","timeframe":"15m","size":122.0,"entry":0.0568,"mark":0.0567,"lev":6,"margin":1.1549,"notional":6.9174,"upnl":0.0122,"upnl_pct":1.06,"sl":0.057210000000000004,"tp1":0.056060000000000006,"tp2":0.05544,"tp1_hit":false,"open_ms":1794286477016},{"coin":"AAVE","inst":"AAVE-USDT","side":"SHORT","timeframe":"1h","size":0.020000000000000004,"entry":126.59,"mark":126.76,"lev":2,"margin":1.2659,"notional":2.5352,"upnl":-0.0034,"upnl_pct":-0.27,"sl":129.09,"tp1":122.57000000000001,"tp2":118.82000000000001,"tp1_hit":false,"open_ms":1794286800000},{"coin":"MON","inst":"MON-USDT","side":"LONG","timeframe":"15m","size":370.0,"entry":0.01684,"mark":0.01682,"lev":5,"margin":1.2462,"notional":6.2234,"upnl":-0.0074,"upnl_pct":-0.59,"sl":0.016700000000000003,"tp1":0.01709,"tp2":0.017300000000000003,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PIXEL","inst":"PIXEL-USDT","side":"LONG","timeframe":"15m","size":2040.0,"entry":0.004133,"mark":0.004116,"lev":7,"margin":1.2045,"notional":8.3966,"upnl":-0.0347,"upnl_pct":-2.88,"sl":0.00411,"tp1":0.004176,"tp2":0.00421,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PENGU","inst":"PENGU-USDT","side":"LONG","timeframe":"15m","size":1200.0,"entry":0.006365,"mark":0.006346,"lev":6,"margin":1.273,"notional":7.6152,"upnl":-0.0228,"upnl_pct":-1.79,"sl":0.006325,"tp1":0.006438999999999999,"tp2":0.0064979999999999994,"tp1_hit":false,"open_ms":1794287745321}],"orders":[{"coin":"NIL","kind":"tp2","side":"buy","type":"limit","px":0.05544,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"tp1","side":"buy","type":"limit","px":0.05606,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"sl","side":"buy","type":"tpsl","px":0.05721,"size":122.0,"reduce_only":true},{"coin":"AAVE","kind":"tp1","side":"buy","type":"limit","px":122.57,"size":0.020000000000000004,"reduce_only":true},{"coin":"AAVE","kind":"sl","side":"buy","type":"tpsl","px":129.09,"size":0.020000000000000004,"reduce_only":true},{"coin":"MON","kind":"tp2","side":"sell","type":"limit","px":0.0173,"size":190.0,"reduce_only":true},{"coin":"MON","kind":"tp1","side":"sell","type":"limit","px":0.01709,"size":180.0,"reduce_only":true},{"coin":"MON","kind":"sl","side":"sell","type":"tpsl","px":0.0167,"size":370.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp2","side":"sell","type":"limit","px":0.00421,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp1","side":"sell","type":"limit","px":0.004176,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"sl","side":"sell","type":"tpsl","px":0.00411,"size":2040.0,"reduce_only":true},{"coin":"PENGU","kind":"tp2","side":"sell","type":"limit","px":0.006498,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"tp1","side":"sell","type":"limit","px":0.006439,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"sl","side":"sell","type":"tpsl","px":0.006325,"size":1200.0,"reduce_only":true}],"fills":[{"coin":"PENGU","time":1794287785863,"dir":"Open Long","px":0.006365,"sz":1200.0,"pnl":0.0,"fee":0.0045828},{"coin":"PIXEL","time":1794287782474,"dir":"Open Long","px":0.004128,"sz":2040.0,"pnl":0.0,"fee":0.005052672},{"coin":"MON","time":1794287778266,"dir":"Open Long","px":0.01686,"sz":370.0,"pnl":0.0,"fee":0.00374292},{"coin":"AAVE","time":1794286812584,"dir":"Open Short","px":126.51,"sz":0.020000000000000004,"pnl":0.0,"fee":0.00151812},{"coin":"NIL","time":1794286489558,"dir":"Open Short","px":0.05678,"sz":122.0,"pnl":0.0,"fee":0.004156296},{"coin":"XRP","time":1794286100411,"dir":"Close Long","px":1.0915,"sz":5.0,"pnl":-0.0015,"fee":0.0032745},{"coin":"XRP","time":1794286090278,"dir":"Open Long","px":1.0918,"sz":5.0,"pnl":0.0,"fee":0.0032754},{"coin":"XRP","time":1794285996007,"dir":"Close Long","px":1.0918,"sz":5.0,"pnl":-0.0025,"fee":0.0032754},{"coin":"XRP","time":1794285966445,"dir":"Open Long","px":1.0923,"sz":5.0,"pnl":0.0,"fee":0.0032769},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0918,"sz":2.0,"pnl":-0.00376,"fee":0.00131016},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.092,"sz":1.0,"pnl":-0.00168,"fee":0.0006552},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0937,"sz":4.0,"pnl":0.0,"fee":0.00262488},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0936,"sz":1.0,"pnl":0.0,"fee":0.00065616}],"stats":{"today":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"week":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"month":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"all_time":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"feed_start":"2026-11-10"},"closed":[],"universe":{"tradable":153,"hl_total":235,"coins":["0G","AAVE","ACE","ADA","AERO","AIXBT","ALGO","ALT","APE","APT","AR","ARB","ASTER","ATOM","AVAX","AVNT","AXS","BANANA","BCH","BERA","BIGTIME","BIO","BLUR","BNB","BOME","BSV","BTC","CAKE","CASHCAT","CATI","CC","CHIP","COMP","CRV","CYBER","DASH","DOGE","DOT","DYDX","EIGEN","ENA","ENS","ETC","ETH","ETHFI","FARTCOIN","FET","FIL","FTM","GALA","GAS","GMX","GRAM","GRASS","HBAR","HEMI","HYPE","HYPER","ICP","ILV","IMX","INIT","INJ","IO","IOTA","JTO","JUP","KAITO","KAS","LAYER","LDO","LINEA","LINK","LIT","LTC","MANTA","MATIC","ME","MEGA","MELANIA","MEME","MERL","MET","MINA","MNT","MON","MOODENG","MORPHO","MOVE","NEAR","NEO","NIL","NOT","ONDO","OP","ORDI","PENDLE","PENGU","PEOPLE","PIXEL","POL","POLYX","PONS","POPCAT","PUMP","PYTH","RENDER","REZ","RNDR","RSR","RUNE","S","SAGA","SAND","SEI","SKY","SNX","SOL","SPX","STABLE","STRK","STX","SUI","SUPER","SUSHI","SYRUP","TAO","TIA","TRB","TRUMP","TRX","TURBO","UMA","UNI","USELESS","VIRTUAL","VVV","WCT","WIF","WLD","WLFI","XAI","XLM","XMR","XPL","XRP","ZEC","ZEN","ZETA","ZK","ZRO","kPEPE","kSHIB"]},"bot":{"risk_pct":0.01,"max_open":6,"max_margin":0.95,"fee_taker":0.0006,"live_start_ms":1794284568601,"feed_start":"2026-11-10"}};
+var BAKED_SNAP = {"venue":"BloFin","updated_at_ms":1794289232658,"updated_at":"2026-11-10T05:40:32Z","account":{"equity":6.47,"withdrawable":0.33,"used_margin":6.15,"notional":33.94},"positions":[{"coin":"NIL","inst":"NIL-USDT","side":"SHORT","timeframe":"15m","size":122.0,"entry":0.0568,"mark":0.05684,"lev":6,"margin":1.1549,"notional":6.9345,"upnl":-0.0049,"upnl_pct":-0.42,"sl":0.057210000000000004,"tp1":0.056060000000000006,"tp2":0.05544,"tp1_hit":false,"open_ms":1794286477016},{"coin":"AAVE","inst":"AAVE-USDT","side":"SHORT","timeframe":"1h","size":0.020000000000000004,"entry":126.59,"mark":127.37,"lev":2,"margin":1.2659,"notional":2.5474,"upnl":-0.0156,"upnl_pct":-1.23,"sl":129.09,"tp1":122.57000000000001,"tp2":118.82000000000001,"tp1_hit":false,"open_ms":1794286800000},{"coin":"MON","inst":"MON-USDT","side":"LONG","timeframe":"15m","size":370.0,"entry":0.01684,"mark":0.01686,"lev":5,"margin":1.2462,"notional":6.2382,"upnl":0.0074,"upnl_pct":0.59,"sl":0.016700000000000003,"tp1":0.01709,"tp2":0.017300000000000003,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PIXEL","inst":"PIXEL-USDT","side":"LONG","timeframe":"15m","size":2040.0,"entry":0.004133,"mark":0.00413,"lev":7,"margin":1.2045,"notional":8.4252,"upnl":-0.0061,"upnl_pct":-0.51,"sl":0.00411,"tp1":0.004176,"tp2":0.00421,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PENGU","inst":"PENGU-USDT","side":"LONG","timeframe":"15m","size":1200.0,"entry":0.006365,"mark":0.006349,"lev":6,"margin":1.273,"notional":7.6188,"upnl":-0.0192,"upnl_pct":-1.51,"sl":0.006325,"tp1":0.006438999999999999,"tp2":0.0064979999999999994,"tp1_hit":false,"open_ms":1794287745321}],"orders":[{"coin":"NIL","kind":"tp2","side":"buy","type":"limit","px":0.05544,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"tp1","side":"buy","type":"limit","px":0.05606,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"sl","side":"buy","type":"tpsl","px":0.05721,"size":122.0,"reduce_only":true},{"coin":"AAVE","kind":"tp1","side":"buy","type":"limit","px":122.57,"size":0.020000000000000004,"reduce_only":true},{"coin":"AAVE","kind":"sl","side":"buy","type":"tpsl","px":129.09,"size":0.020000000000000004,"reduce_only":true},{"coin":"MON","kind":"tp2","side":"sell","type":"limit","px":0.0173,"size":190.0,"reduce_only":true},{"coin":"MON","kind":"tp1","side":"sell","type":"limit","px":0.01709,"size":180.0,"reduce_only":true},{"coin":"MON","kind":"sl","side":"sell","type":"tpsl","px":0.0167,"size":370.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp2","side":"sell","type":"limit","px":0.00421,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp1","side":"sell","type":"limit","px":0.004176,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"sl","side":"sell","type":"tpsl","px":0.00411,"size":2040.0,"reduce_only":true},{"coin":"PENGU","kind":"tp2","side":"sell","type":"limit","px":0.006498,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"tp1","side":"sell","type":"limit","px":0.006439,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"sl","side":"sell","type":"tpsl","px":0.006325,"size":1200.0,"reduce_only":true}],"fills":[{"coin":"PENGU","time":1794287785863,"dir":"Open Long","px":0.006365,"sz":1200.0,"pnl":0.0,"fee":0.0045828},{"coin":"PIXEL","time":1794287782474,"dir":"Open Long","px":0.004128,"sz":2040.0,"pnl":0.0,"fee":0.005052672},{"coin":"MON","time":1794287778266,"dir":"Open Long","px":0.01686,"sz":370.0,"pnl":0.0,"fee":0.00374292},{"coin":"AAVE","time":1794286812584,"dir":"Open Short","px":126.51,"sz":0.020000000000000004,"pnl":0.0,"fee":0.00151812},{"coin":"NIL","time":1794286489558,"dir":"Open Short","px":0.05678,"sz":122.0,"pnl":0.0,"fee":0.004156296},{"coin":"XRP","time":1794286100411,"dir":"Close Long","px":1.0915,"sz":5.0,"pnl":-0.0015,"fee":0.0032745},{"coin":"XRP","time":1794286090278,"dir":"Open Long","px":1.0918,"sz":5.0,"pnl":0.0,"fee":0.0032754},{"coin":"XRP","time":1794285996007,"dir":"Close Long","px":1.0918,"sz":5.0,"pnl":-0.0025,"fee":0.0032754},{"coin":"XRP","time":1794285966445,"dir":"Open Long","px":1.0923,"sz":5.0,"pnl":0.0,"fee":0.0032769},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0918,"sz":2.0,"pnl":-0.00376,"fee":0.00131016},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.092,"sz":1.0,"pnl":-0.00168,"fee":0.0006552},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0937,"sz":4.0,"pnl":0.0,"fee":0.00262488},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0936,"sz":1.0,"pnl":0.0,"fee":0.00065616}],"stats":{"today":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"week":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"month":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"all_time":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"feed_start":"2026-11-10"},"closed":[],"universe":{"tradable":153,"hl_total":235,"coins":["0G","AAVE","ACE","ADA","AERO","AIXBT","ALGO","ALT","APE","APT","AR","ARB","ASTER","ATOM","AVAX","AVNT","AXS","BANANA","BCH","BERA","BIGTIME","BIO","BLUR","BNB","BOME","BSV","BTC","CAKE","CASHCAT","CATI","CC","CHIP","COMP","CRV","CYBER","DASH","DOGE","DOT","DYDX","EIGEN","ENA","ENS","ETC","ETH","ETHFI","FARTCOIN","FET","FIL","FTM","GALA","GAS","GMX","GRAM","GRASS","HBAR","HEMI","HYPE","HYPER","ICP","ILV","IMX","INIT","INJ","IO","IOTA","JTO","JUP","KAITO","KAS","LAYER","LDO","LINEA","LINK","LIT","LTC","MANTA","MATIC","ME","MEGA","MELANIA","MEME","MERL","MET","MINA","MNT","MON","MOODENG","MORPHO","MOVE","NEAR","NEO","NIL","NOT","ONDO","OP","ORDI","PENDLE","PENGU","PEOPLE","PIXEL","POL","POLYX","PONS","POPCAT","PUMP","PYTH","RENDER","REZ","RNDR","RSR","RUNE","S","SAGA","SAND","SEI","SKY","SNX","SOL","SPX","STABLE","STRK","STX","SUI","SUPER","SUSHI","SYRUP","TAO","TIA","TRB","TRUMP","TRX","TURBO","UMA","UNI","USELESS","VIRTUAL","VVV","WCT","WIF","WLD","WLFI","XAI","XLM","XMR","XPL","XRP","ZEC","ZEN","ZETA","ZK","ZRO","kPEPE","kSHIB"]},"bot":{"risk_pct":0.01,"max_open":6,"max_margin":0.95,"fee_taker":0.0006,"live_start_ms":1794284568601,"feed_start":"2026-11-10"}};
 
 var $ = function(id){ return document.getElementById(id); };
 var paused = false, failCount = 0, timer = null, lastOk = 0;
@@ -355,6 +355,17 @@ var liveMids = {}; /* instId -> last price, refreshed every 15s */
 var curPositions = {}; /* coin -> HL-like position object, for the PnL share badge */
 var pcLevels = {}; /* coin -> {entry, side, sl, tp1, tp2} for chart lines */
 var shareCoin = null;
+var liveEquity = null, liveEquityIsLive = false, liveEquityPrev = null;
+/* Live mid for a coin, from the tickers refresh (every 15s). */
+function liveMidFor(coin){ var m = liveMids[instFor(coin)]; return (m && isFinite(m) && m > 0) ? m : null; }
+/* Live unrealized PnL for a snapshot position, re-priced from the live
+   mid. Falls back to the snapshot upnl when no live price is available. */
+function liveUpnlFor(p){
+  var mid = liveMidFor(p.coin);
+  if (mid == null) return num(p.upnl);
+  var dir = p.side === "LONG" ? 1 : -1;
+  return dir * (mid - num(p.entry)) * num(p.size);
+}
 var UNIVERSE = (BAKED_SNAP && BAKED_SNAP.universe) ? BAKED_SNAP.universe.coins : [];
 
 function num(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
@@ -407,7 +418,19 @@ function renderState(snap){
   var eq = num(acct.equity), mg = num(acct.used_margin);
   var positions = (snap && snap.positions) || [];
   var orders = (snap && snap.orders) || [];
-  var upnl = positions.reduce(function(a,p){ return a + num(p.upnl); }, 0);
+  /* Live equity: the snapshot equity is frozen at deploy time, so
+     re-price every position from the live mid (tickers, every 15s).
+     liveEquity = snapshot equity - snapshot upnl + live upnl. This is
+     what makes the equity number slide with the market between
+     snapshot deploys; a fresh snapshot re-bases it. */
+  var snapUpnl = positions.reduce(function(a,p){ return a + num(p.upnl); }, 0);
+  var upnl = 0, usedLive = false;
+  positions.forEach(function(p){
+    if (liveMidFor(p.coin) != null) usedLive = true;
+    upnl += liveUpnlFor(p);
+  });
+  liveEquity = eq - snapUpnl + upnl;
+  liveEquityIsLive = usedLive;
   pcLevels = {};
   curPositions = {};
   positions.forEach(function(p){
@@ -415,17 +438,30 @@ function renderState(snap){
       sl: num(p.sl), tp1: num(p.tp1), tp2: num(p.tp2) };
     curPositions[p.coin] = { coin: p.coin, szi: (p.side === "LONG" ? 1 : -1) * num(p.size),
       entryPx: num(p.entry), leverage: { value: num(p.lev), type: "cross" },
-      unrealizedPnl: num(p.upnl), positionValue: num(p.notional), marginUsed: num(p.margin) };
+      unrealizedPnl: liveUpnlFor(p), positionValue: num(p.notional), marginUsed: num(p.margin) };
   });
-  $("kEquity").textContent = fmtUSD(eq);
-  $("kEquityD").textContent = "notional positions " + fmtUSD(acct.notional);
+  var eqTxt = fmtUSD(liveEquity);
+  $("kEquity").textContent = eqTxt;
+  $("kEquityD").textContent = (usedLive ? "live · " : "") + "notional positions " + fmtUSD(acct.notional);
+  /* Brief direction flash so a moving equity is visible as it slides. */
+  if (liveEquityPrev != null && liveEquity !== liveEquityPrev){
+    var eqEl = $("kEquity");
+    eqEl.style.color = liveEquity > liveEquityPrev ? "var(--up)" : "var(--down)";
+    setTimeout(function(){ eqEl.style.color = ""; }, 700);
+  }
+  liveEquityPrev = liveEquity;
   $("kWithdraw").textContent = fmtUSD(acct.withdrawable);
   $("kMargin").textContent = fmtUSD(mg);
-  $("kMarginD").textContent = eq ? (100*mg/eq).toFixed(1)+"% of equity · cap 95%" : "of equity";
+  $("kMarginD").textContent = liveEquity ? (100*mg/liveEquity).toFixed(1)+"% of equity · cap 95%" : "of equity";
   var up = $("kUpnl"); up.textContent = positions.length ? fmtSigned(upnl) : "$0.00"; up.className = "value " + (positions.length ? cls(upnl) : "");
   $("kPos").textContent = positions.length;
   $("kPosD").textContent = positions.length ? "see table below" : "account is flat";
   $("kOrders").textContent = orders.length;
+  var bs = $("botState");
+  if (bs && snap && snap.account){
+    var posN = positions.length;
+    bs.textContent = "Bot state: live — last snapshot " + fmtTimeET(num(snap.updated_at_ms)) + " ET · equity " + fmtUSD(liveEquity) + (liveEquityIsLive ? " (live)" : "") + " · " + posN + " open position" + (posN === 1 ? "" : "s") + " · margin " + fmtUSD(mg) + " · fee 0.06% taker.";
+  }
 
   if (!positions.length){
     if (!lastOk){
@@ -440,12 +476,14 @@ function renderState(snap){
     var rows = positions.map(function(p){
       var side = p.side === "LONG" ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
       var lev = p.lev ? (p.lev + "× cross") : "—";
+      var lvUpnl = liveUpnlFor(p);
+      var lvMark = liveMidFor(p.coin);
       return "<tr><td data-label='Coin'><strong>"+esc(p.coin)+"</strong> "+side+"</td>"+
         "<td class='num' data-label='Size'>"+esc(String(p.size))+"</td>"+
         "<td class='num' data-label='Entry'>"+fmtPx(p.entry)+"</td>"+
-        "<td class='num' data-label='Mark / value'>"+fmtPx(p.mark)+" · "+fmtUSD(p.notional)+"</td>"+
+        "<td class='num' data-label='Mark / value'>"+fmtPx(lvMark != null ? lvMark : p.mark)+" · "+fmtUSD(p.notional)+"</td>"+
         "<td class='num' data-label='Leverage'>"+lev+"</td>"+
-        "<td class='num "+cls(p.upnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(p.upnl)+"</strong></td>"+
+        "<td class='num "+cls(lvUpnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(lvUpnl)+"</strong></td>"+
         "<td class='num' data-label='Share'><button class='share-btn' type='button' data-coin='"+esc(p.coin)+"' title='Share PnL badge'>Share</button></td></tr>";
     }).join("");
     $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Mark / value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Share</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
@@ -518,7 +556,7 @@ function renderChart(snap){
    rows: [ts, open, high, low, close, vol, volCcy, volQuoteCcy, confirm],
    newest first. Entry / stop / TP1 / TP2 lines come from the trade
    record in the snapshot (pcLevels). */
-var pcCoins = [], pcData = {}, pcIdx = 0, pcTimer = null;
+var pcCoins = [], pcData = {}, pcIdx = 0, pcTimer = null, pcRetry = {};
 function pcFetch(coin){
   return fetch(BF_API + "/api/v1/market/candles?instId=" + encodeURIComponent(instFor(coin)) + "&bar=1H&limit=100")
     .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
@@ -542,9 +580,15 @@ function pcDraw(){
     wrap.innerHTML = "<span style='color:var(--muted)'>Loading "+esc(coin)+" 1h candles…</span>";
     $("pcTitle").textContent = coin + " · 1h candles";
     $("pcMeta").innerHTML = "<span>" + priceLabel + "</span>";
-    pcFetch(coin).then(function(){ pcDraw(); });
+    var n = (pcRetry[coin] || 0) + 1;
+    pcRetry[coin] = n;
+    /* Bound the retry: if the candles endpoint keeps returning no
+       bars, stop after 3 tries instead of fetching forever. */
+    if (n <= 3) pcFetch(coin).then(function(){ pcDraw(); });
+    else wrap.innerHTML = "<span style='color:var(--muted)'>No 1h candles available for "+esc(coin)+" right now.</span>";
     return;
   }
+  pcRetry[coin] = 0;
   var bars2 = bars.slice();
   var last = bars2[bars2.length-1];
   if (mid && last){
@@ -625,6 +669,9 @@ function renderMarket(tickers){
     "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Mid</th><th class='num'>24h change</th><th class='num'>24h volume</th></tr></thead><tbody>"+rows+"</tbody></table></div>" :
     "<div class='empty'>Market data failed to load — retrying.</div>";
   $("mktNote").textContent = "Mid price, 24h change and 24h volume from BloFin's public tickers. BloFin tickers carry no funding or open interest, so those columns are not shown.";
+  /* Fresh mids re-price the account: refresh equity/positions so the
+     equity number slides with the market on every 15s refresh. */
+  if (snapCache) renderState(snapCache);
 }
 
 /* ---- Fetching / refresh ---- */
@@ -659,13 +706,8 @@ function applyAll(snap){
   var stale = age > 3600e3;
   if (upd){
     $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd) + " ET" +
-      (stale ? " — STALE (snapshot is " + Math.round(age/60000) + " min old; account figures lag the last deploy)" : "") +
-      " · prices live · refreshes every 15s";
-  }
-  var bs = $("botState");
-  if (bs && snap && snap.account){
-    var posN = (snap.positions || []).length;
-    bs.textContent = "Bot state: live — last snapshot " + fmtTimeET(upd) + " ET · equity " + fmtUSD(snap.account.equity) + " · " + posN + " open position" + (posN === 1 ? "" : "s") + " · margin " + fmtUSD(snap.account.used_margin) + " · fee 0.06% taker.";
+      (stale ? " — STALE (snapshot is " + Math.round(age/60000) + " min old; positions, orders and closes lag the last deploy)" : "") +
+      " · equity re-priced live from prices · refreshes every 15s";
   }
   setConn(stale ? "stale" : (lastOk ? "ok" : "connecting"));
   announceUpdates(snap);
