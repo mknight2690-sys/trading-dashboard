@@ -1,33 +1,14 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794289350248,
-  "updated_at": "2026-11-10T05:42:30Z",
+  "updated_at_ms": 1794318451012,
+  "updated_at": "2026-11-10T13:47:31Z",
   "account": {
-    "equity": 6.47,
-    "withdrawable": 0.33,
-    "used_margin": 6.15,
-    "notional": 33.93
+    "equity": 6.09,
+    "withdrawable": 0.13,
+    "used_margin": 5.97,
+    "notional": 161.7
   },
   "positions": [
-    {
-      "coin": "NIL",
-      "inst": "NIL-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 122.0,
-      "entry": 0.0568,
-      "mark": 0.05684,
-      "lev": 6,
-      "margin": 1.1549,
-      "notional": 6.9345,
-      "upnl": -0.0049,
-      "upnl_pct": -0.42,
-      "sl": 0.057210000000000004,
-      "tp1": 0.056060000000000006,
-      "tp2": 0.05544,
-      "tp1_hit": false,
-      "open_ms": 1794286477016
-    },
     {
       "coin": "AAVE",
       "inst": "AAVE-USDT",
@@ -35,12 +16,12 @@
       "timeframe": "1h",
       "size": 0.020000000000000004,
       "entry": 126.59,
-      "mark": 127.34,
+      "mark": 125.45,
       "lev": 2,
       "margin": 1.2659,
-      "notional": 2.5468,
-      "upnl": -0.015,
-      "upnl_pct": -1.18,
+      "notional": 2.509,
+      "upnl": 0.0228,
+      "upnl_pct": 1.8,
       "sl": 129.09,
       "tp1": 122.57000000000001,
       "tp2": 118.82000000000001,
@@ -48,91 +29,83 @@
       "open_ms": 1794286800000
     },
     {
-      "coin": "MON",
-      "inst": "MON-USDT",
-      "side": "LONG",
+      "coin": "ADA",
+      "inst": "ADA-USDT",
+      "side": "SHORT",
       "timeframe": "15m",
-      "size": 370.0,
-      "entry": 0.01684,
-      "mark": 0.01687,
+      "size": 36.0,
+      "entry": 0.1758,
+      "mark": 0.1761,
       "lev": 5,
-      "margin": 1.2462,
-      "notional": 6.2419,
-      "upnl": 0.0111,
-      "upnl_pct": 0.89,
-      "sl": 0.016700000000000003,
-      "tp1": 0.01709,
-      "tp2": 0.017300000000000003,
+      "margin": 1.2658,
+      "notional": 6.3396,
+      "upnl": -0.0108,
+      "upnl_pct": -0.85,
+      "sl": 0.1772,
+      "tp1": 0.1733,
+      "tp2": 0.17120000000000002,
       "tp1_hit": false,
-      "open_ms": 1794287745321
+      "open_ms": 1794318300000
     },
     {
-      "coin": "PIXEL",
-      "inst": "PIXEL-USDT",
-      "side": "LONG",
+      "coin": "BANANA",
+      "inst": "BANANA-USDT",
+      "side": "SHORT",
       "timeframe": "15m",
-      "size": 2040.0,
-      "entry": 0.004133,
-      "mark": 0.00413,
+      "size": 2.9000000000000004,
+      "entry": 2.869,
+      "mark": 2.874,
       "lev": 7,
-      "margin": 1.2045,
-      "notional": 8.4252,
-      "upnl": -0.0061,
-      "upnl_pct": -0.51,
-      "sl": 0.00411,
-      "tp1": 0.004176,
-      "tp2": 0.00421,
+      "margin": 1.1886,
+      "notional": 8.3346,
+      "upnl": -0.0145,
+      "upnl_pct": -1.22,
+      "sl": 2.8850000000000002,
+      "tp1": 2.839,
+      "tp2": 2.815,
       "tp1_hit": false,
-      "open_ms": 1794287745321
+      "open_ms": 1794318300000
     },
     {
-      "coin": "PENGU",
-      "inst": "PENGU-USDT",
-      "side": "LONG",
+      "coin": "BCH",
+      "inst": "BCH-USDT",
+      "side": "SHORT",
       "timeframe": "15m",
-      "size": 1200.0,
-      "entry": 0.006365,
-      "mark": 0.006349,
-      "lev": 6,
-      "margin": 1.273,
-      "notional": 7.6188,
-      "upnl": -0.0192,
-      "upnl_pct": -1.51,
-      "sl": 0.006325,
-      "tp1": 0.006438999999999999,
-      "tp2": 0.0064979999999999994,
+      "size": 0.020000000000000004,
+      "entry": 233.34,
+      "mark": 234.01,
+      "lev": 4,
+      "margin": 1.1667,
+      "notional": 4.6802,
+      "upnl": -0.0134,
+      "upnl_pct": -1.15,
+      "sl": 235.66,
+      "tp1": 229.35,
+      "tp2": 225.87,
       "tp1_hit": false,
-      "open_ms": 1794287745321
+      "open_ms": 1794318300000
+    },
+    {
+      "coin": "BSV",
+      "inst": "BSV-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 0.4,
+      "entry": 16.22,
+      "mark": 16.23,
+      "lev": 6,
+      "margin": 1.0813,
+      "notional": 6.492,
+      "upnl": -0.004,
+      "upnl_pct": -0.37,
+      "sl": 16.330000000000002,
+      "tp1": 16.03,
+      "tp2": 15.870000000000001,
+      "tp1_hit": false,
+      "open_ms": 1794318300000
     }
   ],
   "orders": [
-    {
-      "coin": "NIL",
-      "kind": "tp2",
-      "side": "buy",
-      "type": "limit",
-      "px": 0.05544,
-      "size": 61.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "NIL",
-      "kind": "tp1",
-      "side": "buy",
-      "type": "limit",
-      "px": 0.05606,
-      "size": 61.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "NIL",
-      "kind": "sl",
-      "side": "buy",
-      "type": "tpsl",
-      "px": 0.05721,
-      "size": 122.0,
-      "reduce_only": true
-    },
     {
       "coin": "AAVE",
       "kind": "tp1",
@@ -152,88 +125,259 @@
       "reduce_only": true
     },
     {
-      "coin": "MON",
+      "coin": "ADA",
       "kind": "tp2",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.0173,
-      "size": 190.0,
+      "px": 0.1712,
+      "size": 18.0,
       "reduce_only": true
     },
     {
-      "coin": "MON",
+      "coin": "ADA",
       "kind": "tp1",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.01709,
-      "size": 180.0,
+      "px": 0.1733,
+      "size": 18.0,
       "reduce_only": true
     },
     {
-      "coin": "MON",
+      "coin": "ADA",
       "kind": "sl",
-      "side": "sell",
+      "side": "buy",
       "type": "tpsl",
-      "px": 0.0167,
-      "size": 370.0,
+      "px": 0.1772,
+      "size": 36.0,
       "reduce_only": true
     },
     {
-      "coin": "PIXEL",
+      "coin": "BANANA",
       "kind": "tp2",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.00421,
-      "size": 1020.0,
+      "px": 2.815,
+      "size": 1.5,
       "reduce_only": true
     },
     {
-      "coin": "PIXEL",
+      "coin": "BANANA",
       "kind": "tp1",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.004176,
-      "size": 1020.0,
+      "px": 2.839,
+      "size": 1.4000000000000001,
       "reduce_only": true
     },
     {
-      "coin": "PIXEL",
+      "coin": "BANANA",
       "kind": "sl",
-      "side": "sell",
+      "side": "buy",
       "type": "tpsl",
-      "px": 0.00411,
-      "size": 2040.0,
+      "px": 2.885,
+      "size": 2.9000000000000004,
       "reduce_only": true
     },
     {
-      "coin": "PENGU",
+      "coin": "BCH",
+      "kind": "tp1",
+      "side": "buy",
+      "type": "limit",
+      "px": 229.35,
+      "size": 0.020000000000000004,
+      "reduce_only": true
+    },
+    {
+      "coin": "BCH",
+      "kind": "sl",
+      "side": "buy",
+      "type": "tpsl",
+      "px": 235.66,
+      "size": 0.020000000000000004,
+      "reduce_only": true
+    },
+    {
+      "coin": "BSV",
       "kind": "tp2",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.006498,
-      "size": 600.0,
+      "px": 15.87,
+      "size": 0.2,
       "reduce_only": true
     },
     {
-      "coin": "PENGU",
+      "coin": "BSV",
       "kind": "tp1",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.006439,
-      "size": 600.0,
+      "px": 16.03,
+      "size": 0.2,
       "reduce_only": true
     },
     {
-      "coin": "PENGU",
+      "coin": "BSV",
       "kind": "sl",
-      "side": "sell",
+      "side": "buy",
       "type": "tpsl",
-      "px": 0.006325,
-      "size": 1200.0,
+      "px": 16.33,
+      "size": 0.4,
       "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "BSV",
+      "time": 1794318343481,
+      "dir": "Open Short",
+      "px": 16.22,
+      "sz": 0.4,
+      "pnl": 0.0,
+      "fee": 0.0038928
+    },
+    {
+      "coin": "BCH",
+      "time": 1794318339647,
+      "dir": "Open Short",
+      "px": 233.39,
+      "sz": 0.020000000000000004,
+      "pnl": 0.0,
+      "fee": 0.00280068
+    },
+    {
+      "coin": "BANANA",
+      "time": 1794318335631,
+      "dir": "Open Short",
+      "px": 2.871,
+      "sz": 2.9000000000000004,
+      "pnl": 0.0,
+      "fee": 0.00499554
+    },
+    {
+      "coin": "ADA",
+      "time": 1794318331324,
+      "dir": "Open Short",
+      "px": 0.176,
+      "sz": 36.0,
+      "pnl": 0.0,
+      "fee": 0.0038016
+    },
+    {
+      "coin": "SUPER",
+      "time": 1794317485363,
+      "dir": "Close Long",
+      "px": 0.15988,
+      "sz": 43.0,
+      "pnl": -0.07826,
+      "fee": 0.004124904
+    },
+    {
+      "coin": "IO",
+      "time": 1794317367661,
+      "dir": "Close Long",
+      "px": 0.1156,
+      "sz": 68.0,
+      "pnl": -0.034,
+      "fee": 0.00471648
+    },
+    {
+      "coin": "SUPER",
+      "time": 1794317125220,
+      "dir": "Open Long",
+      "px": 0.1617,
+      "sz": 43.0,
+      "pnl": 0.0,
+      "fee": 0.00417186
+    },
+    {
+      "coin": "IO",
+      "time": 1794317120706,
+      "dir": "Open Long",
+      "px": 0.1161,
+      "sz": 68.0,
+      "pnl": 0.0,
+      "fee": 0.00473688
+    },
+    {
+      "coin": "NIL",
+      "time": 1794313089935,
+      "dir": "Close Short",
+      "px": 0.05732,
+      "sz": 61.0,
+      "pnl": -0.03294,
+      "fee": 0.002097912
+    },
+    {
+      "coin": "NIL",
+      "time": 1794305102645,
+      "dir": "Close Short",
+      "px": 0.05606,
+      "sz": 61.0,
+      "pnl": 0.04392,
+      "fee": 0.000683932
+    },
+    {
+      "coin": "AVNT",
+      "time": 1794301397826,
+      "dir": "Close Long",
+      "px": 0.08184,
+      "sz": 80.0,
+      "pnl": -0.0464,
+      "fee": 0.00392832
+    },
+    {
+      "coin": "DASH",
+      "time": 1794301179562,
+      "dir": "Close Short",
+      "px": 46.13,
+      "sz": 0.1,
+      "pnl": -0.045,
+      "fee": 0.0027678
+    },
+    {
+      "coin": "PENGU",
+      "time": 1794298807568,
+      "dir": "Close Long",
+      "px": 0.006324,
+      "sz": 1200.0,
+      "pnl": -0.0492,
+      "fee": 0.00455328
+    },
+    {
+      "coin": "DASH",
+      "time": 1794291335238,
+      "dir": "Open Short",
+      "px": 45.68,
+      "sz": 0.1,
+      "pnl": 0.0,
+      "fee": 0.0027408
+    },
+    {
+      "coin": "PIXEL",
+      "time": 1794291328073,
+      "dir": "Close Long",
+      "px": 0.004105,
+      "sz": 2040.0,
+      "pnl": -0.04692,
+      "fee": 0.00502452
+    },
+    {
+      "coin": "AVNT",
+      "time": 1794291274853,
+      "dir": "Open Long",
+      "px": 0.08242,
+      "sz": 80.0,
+      "pnl": 0.0,
+      "fee": 0.00395616
+    },
+    {
+      "coin": "MON",
+      "time": 1794291256537,
+      "dir": "Close Long",
+      "px": 0.0167,
+      "sz": 370.0,
+      "pnl": -0.0592,
+      "fee": 0.0037074
+    },
     {
       "coin": "PENGU",
       "time": 1794287785863,
@@ -350,54 +494,101 @@
       "sz": 1.0,
       "pnl": -0.00168,
       "fee": 0.0006552
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285861411,
-      "dir": "Open Long",
-      "px": 1.0937,
-      "sz": 4.0,
-      "pnl": 0.0,
-      "fee": 0.00262488
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285861411,
-      "dir": "Open Long",
-      "px": 1.0936,
-      "sz": 1.0,
-      "pnl": 0.0,
-      "fee": 0.00065616
     }
   ],
   "stats": {
     "today": {
-      "wins": 0,
-      "losses": 0,
-      "total_r": 0.0,
-      "trades": 0
+      "wins": 1,
+      "losses": 7,
+      "total_r": -5.31,
+      "trades": 8
     },
     "week": {
-      "wins": 0,
-      "losses": 0,
-      "total_r": 0.0,
-      "trades": 0
+      "wins": 1,
+      "losses": 7,
+      "total_r": -5.31,
+      "trades": 8
     },
     "month": {
-      "wins": 0,
-      "losses": 0,
-      "total_r": 0.0,
-      "trades": 0
+      "wins": 1,
+      "losses": 7,
+      "total_r": -5.31,
+      "trades": 8
     },
     "all_time": {
-      "wins": 0,
-      "losses": 0,
-      "total_r": 0.0,
-      "trades": 0
+      "wins": 1,
+      "losses": 7,
+      "total_r": -5.31,
+      "trades": 8
     },
     "feed_start": "2026-11-10"
   },
-  "closed": [],
+  "closed": [
+    {
+      "coin": "MON",
+      "close_ms": 1794291240000,
+      "r": -0.9024,
+      "pnl": -0.0592,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "PIXEL",
+      "close_ms": 1794291300000,
+      "r": -0.7152,
+      "pnl": -0.0469,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "PENGU",
+      "close_ms": 1794317084482,
+      "r": -0.75,
+      "pnl": -0.0492,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "AVNT",
+      "close_ms": 1794317084482,
+      "r": -0.7073,
+      "pnl": -0.0464,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "DASH",
+      "close_ms": 1794317084482,
+      "r": -0.686,
+      "pnl": -0.045,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "NIL",
+      "close_ms": 1794317160000,
+      "r": 0.1674,
+      "pnl": 0.011,
+      "win": true,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "IO",
+      "close_ms": 1794317340000,
+      "r": -0.5183,
+      "pnl": -0.034,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "SUPER",
+      "close_ms": 1794317460000,
+      "r": -1.193,
+      "pnl": -0.0783,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    }
+  ],
   "universe": {
     "tradable": 153,
     "hl_total": 235,
