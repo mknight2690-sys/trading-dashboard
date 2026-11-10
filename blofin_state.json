@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794318451012,
-  "updated_at": "2026-11-10T13:47:31Z",
+  "updated_at_ms": 1794322353398,
+  "updated_at": "2026-11-10T14:52:33Z",
   "account": {
-    "equity": 6.09,
-    "withdrawable": 0.13,
-    "used_margin": 5.97,
-    "notional": 161.7
+    "equity": 5.92,
+    "withdrawable": 0.05,
+    "used_margin": 5.87,
+    "notional": 32.11
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 0.020000000000000004,
       "entry": 126.59,
-      "mark": 125.45,
+      "mark": 124.42,
       "lev": 2,
       "margin": 1.2659,
-      "notional": 2.509,
-      "upnl": 0.0228,
-      "upnl_pct": 1.8,
+      "notional": 2.4884,
+      "upnl": 0.0434,
+      "upnl_pct": 3.43,
       "sl": 129.09,
       "tp1": 122.57000000000001,
       "tp2": 118.82000000000001,
@@ -29,80 +29,61 @@
       "open_ms": 1794286800000
     },
     {
-      "coin": "ADA",
-      "inst": "ADA-USDT",
+      "coin": "ALGO",
+      "inst": "ALGO-USDT",
       "side": "SHORT",
-      "timeframe": "15m",
-      "size": 36.0,
-      "entry": 0.1758,
-      "mark": 0.1761,
-      "lev": 5,
-      "margin": 1.2658,
-      "notional": 6.3396,
-      "upnl": -0.0108,
-      "upnl_pct": -0.85,
-      "sl": 0.1772,
-      "tp1": 0.1733,
-      "tp2": 0.17120000000000002,
+      "timeframe": "1h",
+      "size": 40.0,
+      "entry": 0.09178,
+      "mark": 0.09108,
+      "lev": 2,
+      "margin": 1.8356,
+      "notional": 3.6432,
+      "upnl": 0.028,
+      "upnl_pct": 1.53,
+      "sl": 0.09293000000000001,
+      "tp1": 0.08986000000000001,
+      "tp2": 0.08814000000000001,
       "tp1_hit": false,
-      "open_ms": 1794318300000
+      "open_ms": 1794321360000
     },
     {
-      "coin": "BANANA",
-      "inst": "BANANA-USDT",
+      "coin": "CAKE",
+      "inst": "CAKE-USDT",
       "side": "SHORT",
-      "timeframe": "15m",
-      "size": 2.9000000000000004,
-      "entry": 2.869,
-      "mark": 2.874,
-      "lev": 7,
-      "margin": 1.1886,
-      "notional": 8.3346,
-      "upnl": -0.0145,
-      "upnl_pct": -1.22,
-      "sl": 2.8850000000000002,
-      "tp1": 2.839,
-      "tp2": 2.815,
+      "timeframe": "1h",
+      "size": 2.0,
+      "entry": 1.8505,
+      "mark": 1.8556,
+      "lev": 3,
+      "margin": 1.2337,
+      "notional": 3.7112,
+      "upnl": -0.0102,
+      "upnl_pct": -0.83,
+      "sl": 1.8693000000000002,
+      "tp1": 1.8182,
+      "tp2": 1.79,
       "tp1_hit": false,
-      "open_ms": 1794318300000
+      "open_ms": 1794321360000
     },
     {
-      "coin": "BCH",
-      "inst": "BCH-USDT",
+      "coin": "LINK",
+      "inst": "LINK-USDT",
       "side": "SHORT",
-      "timeframe": "15m",
-      "size": 0.020000000000000004,
-      "entry": 233.34,
-      "mark": 234.01,
-      "lev": 4,
-      "margin": 1.1667,
-      "notional": 4.6802,
-      "upnl": -0.0134,
-      "upnl_pct": -1.15,
-      "sl": 235.66,
-      "tp1": 229.35,
-      "tp2": 225.87,
+      "timeframe": "1h",
+      "size": 0.30000000000000004,
+      "entry": 10.506,
+      "mark": 10.444,
+      "lev": 2,
+      "margin": 1.5759,
+      "notional": 3.1332,
+      "upnl": 0.0186,
+      "upnl_pct": 1.18,
+      "sl": 10.674,
+      "tp1": 10.231,
+      "tp2": 9.978,
       "tp1_hit": false,
-      "open_ms": 1794318300000
-    },
-    {
-      "coin": "BSV",
-      "inst": "BSV-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 0.4,
-      "entry": 16.22,
-      "mark": 16.23,
-      "lev": 6,
-      "margin": 1.0813,
-      "notional": 6.492,
-      "upnl": -0.004,
-      "upnl_pct": -0.37,
-      "sl": 16.330000000000002,
-      "tp1": 16.03,
-      "tp2": 15.870000000000001,
-      "tp1_hit": false,
-      "open_ms": 1794318300000
+      "open_ms": 1794321420000
     }
   ],
   "orders": [
@@ -125,106 +106,133 @@
       "reduce_only": true
     },
     {
-      "coin": "ADA",
+      "coin": "ALGO",
       "kind": "tp2",
       "side": "buy",
       "type": "limit",
-      "px": 0.1712,
-      "size": 18.0,
+      "px": 0.08814,
+      "size": 20.0,
       "reduce_only": true
     },
     {
-      "coin": "ADA",
+      "coin": "ALGO",
       "kind": "tp1",
       "side": "buy",
       "type": "limit",
-      "px": 0.1733,
-      "size": 18.0,
+      "px": 0.08986,
+      "size": 20.0,
       "reduce_only": true
     },
     {
-      "coin": "ADA",
+      "coin": "ALGO",
       "kind": "sl",
       "side": "buy",
       "type": "tpsl",
-      "px": 0.1772,
-      "size": 36.0,
+      "px": 0.09293,
+      "size": 40.0,
       "reduce_only": true
     },
     {
-      "coin": "BANANA",
-      "kind": "tp2",
-      "side": "buy",
-      "type": "limit",
-      "px": 2.815,
-      "size": 1.5,
-      "reduce_only": true
-    },
-    {
-      "coin": "BANANA",
+      "coin": "CAKE",
       "kind": "tp1",
       "side": "buy",
       "type": "limit",
-      "px": 2.839,
-      "size": 1.4000000000000001,
+      "px": 1.8182,
+      "size": 2.0,
       "reduce_only": true
     },
     {
-      "coin": "BANANA",
+      "coin": "CAKE",
       "kind": "sl",
       "side": "buy",
       "type": "tpsl",
-      "px": 2.885,
-      "size": 2.9000000000000004,
+      "px": 1.8693,
+      "size": 2.0,
       "reduce_only": true
     },
     {
-      "coin": "BCH",
+      "coin": "LINK",
       "kind": "tp1",
       "side": "buy",
       "type": "limit",
-      "px": 229.35,
-      "size": 0.020000000000000004,
+      "px": 10.231,
+      "size": 0.3,
       "reduce_only": true
     },
     {
-      "coin": "BCH",
+      "coin": "LINK",
       "kind": "sl",
       "side": "buy",
       "type": "tpsl",
-      "px": 235.66,
-      "size": 0.020000000000000004,
-      "reduce_only": true
-    },
-    {
-      "coin": "BSV",
-      "kind": "tp2",
-      "side": "buy",
-      "type": "limit",
-      "px": 15.87,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "BSV",
-      "kind": "tp1",
-      "side": "buy",
-      "type": "limit",
-      "px": 16.03,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "BSV",
-      "kind": "sl",
-      "side": "buy",
-      "type": "tpsl",
-      "px": 16.33,
-      "size": 0.4,
+      "px": 10.674,
+      "size": 0.3,
       "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "LINK",
+      "time": 1794321451340,
+      "dir": "Open Short",
+      "px": 10.487,
+      "sz": 0.3,
+      "pnl": 0.0,
+      "fee": 0.00188766
+    },
+    {
+      "coin": "CAKE",
+      "time": 1794321404218,
+      "dir": "Open Short",
+      "px": 1.853,
+      "sz": 2.0,
+      "pnl": 0.0,
+      "fee": 0.0022236
+    },
+    {
+      "coin": "BANANA",
+      "time": 1794321400565,
+      "dir": "Close Short",
+      "px": 2.898,
+      "sz": 2.9000000000000004,
+      "pnl": -0.0783,
+      "fee": 0.00504252
+    },
+    {
+      "coin": "ALGO",
+      "time": 1794321399829,
+      "dir": "Open Short",
+      "px": 0.09186,
+      "sz": 40.0,
+      "pnl": 0.0,
+      "fee": 0.00220464
+    },
+    {
+      "coin": "BCH",
+      "time": 1794321385699,
+      "dir": "Close Short",
+      "px": 235.82,
+      "sz": 0.020000000000000004,
+      "pnl": -0.0486,
+      "fee": 0.00282984
+    },
+    {
+      "coin": "BSV",
+      "time": 1794321373189,
+      "dir": "Close Short",
+      "px": 16.35,
+      "sz": 0.4,
+      "pnl": -0.052,
+      "fee": 0.003924
+    },
+    {
+      "coin": "ADA",
+      "time": 1794321366708,
+      "dir": "Close Short",
+      "px": 0.1772,
+      "sz": 36.0,
+      "pnl": -0.0432,
+      "fee": 0.00382752
+    },
     {
       "coin": "BSV",
       "time": 1794318343481,
@@ -431,95 +439,32 @@
       "sz": 5.0,
       "pnl": -0.0015,
       "fee": 0.0032745
-    },
-    {
-      "coin": "XRP",
-      "time": 1794286090278,
-      "dir": "Open Long",
-      "px": 1.0918,
-      "sz": 5.0,
-      "pnl": 0.0,
-      "fee": 0.0032754
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285996007,
-      "dir": "Close Long",
-      "px": 1.0918,
-      "sz": 5.0,
-      "pnl": -0.0025,
-      "fee": 0.0032754
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285966445,
-      "dir": "Open Long",
-      "px": 1.0923,
-      "sz": 5.0,
-      "pnl": 0.0,
-      "fee": 0.0032769
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285956193,
-      "dir": "Close Long",
-      "px": 1.0914,
-      "sz": 1.0,
-      "pnl": -0.00228,
-      "fee": 0.00065484
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285956193,
-      "dir": "Close Long",
-      "px": 1.0914,
-      "sz": 1.0,
-      "pnl": -0.00228,
-      "fee": 0.00065484
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285956193,
-      "dir": "Close Long",
-      "px": 1.0918,
-      "sz": 2.0,
-      "pnl": -0.00376,
-      "fee": 0.00131016
-    },
-    {
-      "coin": "XRP",
-      "time": 1794285956193,
-      "dir": "Close Long",
-      "px": 1.092,
-      "sz": 1.0,
-      "pnl": -0.00168,
-      "fee": 0.0006552
     }
   ],
   "stats": {
     "today": {
       "wins": 1,
-      "losses": 7,
-      "total_r": -5.31,
-      "trades": 8
+      "losses": 11,
+      "total_r": -8.69,
+      "trades": 12
     },
     "week": {
       "wins": 1,
-      "losses": 7,
-      "total_r": -5.31,
-      "trades": 8
+      "losses": 11,
+      "total_r": -8.69,
+      "trades": 12
     },
     "month": {
       "wins": 1,
-      "losses": 7,
-      "total_r": -5.31,
-      "trades": 8
+      "losses": 11,
+      "total_r": -8.69,
+      "trades": 12
     },
     "all_time": {
       "wins": 1,
-      "losses": 7,
-      "total_r": -5.31,
-      "trades": 8
+      "losses": 11,
+      "total_r": -8.69,
+      "trades": 12
     },
     "feed_start": "2026-11-10"
   },
@@ -584,6 +529,38 @@
       "coin": "SUPER",
       "close_ms": 1794317460000,
       "r": -1.193,
+      "pnl": -0.0783,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "ADA",
+      "close_ms": 1794321360000,
+      "r": -0.6585,
+      "pnl": -0.0432,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "BCH",
+      "close_ms": 1794321360000,
+      "r": -0.7409,
+      "pnl": -0.0486,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "BSV",
+      "close_ms": 1794321360000,
+      "r": -0.7927,
+      "pnl": -0.052,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "BANANA",
+      "close_ms": 1794321420000,
+      "r": -1.1936,
       "pnl": -0.0783,
       "win": false,
       "reason": "Position closed (fill not observed)"
