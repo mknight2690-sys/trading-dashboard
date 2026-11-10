@@ -8,14 +8,14 @@
 <title>KnightTrader-Muse — Trading Dashboard</title>
 <meta property="og:type" content="website" />
 <meta property="og:title" content="KnightTrader-Muse — live trading dashboard" />
-<meta property="og:description" content="Live Hyperliquid account the trading bot trades on. All-time record +14.53R (44W / 49L, 93 trades). Streams live and refreshes every 15 seconds." />
+<meta property="og:description" content="Live BloFin account the trading bot trades on. All-time record +0.00R (0W / 0L, 0 trades). Streams live and refreshes every 15 seconds." />
 <meta property="og:url" content="https://mknight2690-sys.github.io/trading-dashboard/" />
 <meta property="og:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="KnightTrader-Muse — live trading dashboard" />
-<meta name="twitter:description" content="Live Hyperliquid account the trading bot trades on. All-time record +14.53R (44W / 49L, 93 trades). Streams live and refreshes every 15 seconds." />
+<meta name="twitter:description" content="Live BloFin account the trading bot trades on. All-time record +0.00R (0W / 0L, 0 trades). Streams live and refreshes every 15 seconds." />
 <meta name="twitter:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -187,11 +187,8 @@
   <div class="statusbar" role="status">
     <div class="status-left">
       <span class="live-badge" id="connBadge"><span class="live-dot" aria-hidden="true"></span><span id="connText">CONNECTING</span></span>
-      <span class="acct">Master account
-        <span class="mono" id="acctAddr">0x7b4c…5400</span>
-        <button class="copy-btn" id="copyAddr" type="button">Copy address</button>
-      </span>
-      <span class="acct">Venue: <strong style="color:var(--ink)">Hyperliquid perps</strong></span>
+      <span class="acct">BloFin account <span class="mono">USDT perps</span></span>
+      <span class="acct">Venue: <strong style="color:var(--ink)">BloFin perps</strong></span>
     </div>
     <div class="controls">
       <span class="updated" id="updatedAt">Loading live data…</span>
@@ -209,10 +206,10 @@
     </div>
   </div>
   <h1 class="sr-only">KnightTrader-Muse — live account dashboard</h1>
-  <p class="sub">Live view of the Hyperliquid account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The main score is the seeded crypto-feed history on Hyperliquid coins only, plus only the live bot's own closed trades since live trading began (Nov 8, 2026, 7:57 PM ET) — the feed's paper trades no longer add to it. The account data — balances, positions, orders, fills and market prices — streams from Hyperliquid's public info API, refreshing every 15 seconds, so any trade the bot places shows up here within one refresh. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
+  <p class="sub">Live view of the BloFin account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The score is the BloFin bot's own record only — it went live Nov 10, 2026 with a fresh record, so there is no seeded history here. The account data — balances, positions, orders, fills and stats — comes from a snapshot the bot publishes every cycle; BloFin has no public account endpoint, so account figures are only as fresh as the last deploy (the page says how old the snapshot is), while prices and 1h candles stream live from BloFin's public market API every 15 seconds. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
 
   <div class="kpis" id="kpis">
-    <div class="kpi"><div class="label">Account value</div><div class="value" id="kEquity">—</div><div class="detail" id="kEquityD">perps equity, USDC</div></div>
+    <div class="kpi"><div class="label">Account value</div><div class="value" id="kEquity">—</div><div class="detail" id="kEquityD">perps equity, USDT</div></div>
     <div class="kpi"><div class="label">Withdrawable</div><div class="value" id="kWithdraw">—</div><div class="detail">available to withdraw</div></div>
     <div class="kpi"><div class="label">Margin used</div><div class="value" id="kMargin">—</div><div class="detail" id="kMarginD">of equity</div></div>
     <div class="kpi"><div class="label">Unrealized PnL</div><div class="value" id="kUpnl">—</div><div class="detail">open positions</div></div>
@@ -221,19 +218,19 @@
   </div>
 
   <section aria-labelledby="scoreH">
-    <div class="sec-head"><h2 id="scoreH">Score — seeded feed history + live bot trades only</h2><span class="sec-note">Seeded history: the crypto feed's paper record on Hyperliquid coins only, as specified (snapshot Nov 8, 2026). From the bot's live start (Nov 8, 2026, 7:57 PM ET) onward, only the live bot's own closed trades add to it — the feed's later paper trades are never counted. The live portion is read from this account's closing fills after that start time, so the manual test trade just before it, and all earlier account activity, are excluded. The bot's own live record is also kept separate in the Bot panel.</span></div>
+    <div class="sec-head"><h2 id="scoreH">Score — BloFin bot record</h2><span class="sec-note">The BloFin bot's own closed trades only, since it went live (Nov 10, 2026). No seeded history: this bot started fresh, so Today / This week / This month / All-time are all its own record. The bot's live record is also kept in the Bot panel.</span></div>
     <div class="panel score-wrap" style="padding:6px 6px 2px">
       <table>
-        <thead><tr><th>Period</th><th class="num">Record</th><th class="num">Win rate</th><th class="num">Total R</th><th class="num">Trades</th><th class="num">Of which live bot</th></tr></thead>
+        <thead><tr><th>Period</th><th class="num">Record</th><th class="num">Win rate</th><th class="num">Total R</th><th class="num">Trades</th></tr></thead>
         <tbody>
-          <tr><td data-label="Period"><strong>Today</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-today">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-today">0%</td><td class="num pos" data-label="Total R" id="scoreR-today"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-today">0</td><td class="num" data-label="Of which live bot" id="scoreLive-today">+0 live</td></tr>
-          <tr><td data-label="Period"><strong>This week</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-week">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-week">0%</td><td class="num pos" data-label="Total R" id="scoreR-week"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-week">0</td><td class="num" data-label="Of which live bot" id="scoreLive-week">+0 live</td></tr>
-          <tr><td data-label="Period"><strong>This month</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-month">37W / 39L</span></td><td class="num" data-label="Win rate" id="scoreWR-month">48.7%</td><td class="num pos" data-label="Total R" id="scoreR-month"><strong>+14.90R</strong></td><td class="num" data-label="Trades" id="scoreN-month">76</td><td class="num" data-label="Of which live bot" id="scoreLive-month">+0 live</td></tr>
-          <tr><td data-label="Period"><strong>All-time</strong> <span style="color:var(--muted);font-weight:400">since Nov 5, 2026</span></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-all">37W / 39L</span></td><td class="num" data-label="Win rate" id="scoreWR-all">48.7%</td><td class="num pos" data-label="Total R" id="scoreR-all"><strong>+14.90R</strong></td><td class="num" data-label="Trades" id="scoreN-all">76</td><td class="num" data-label="Of which live bot" id="scoreLive-all">+0 live</td></tr>
+          <tr><td data-label="Period"><strong>Today</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-today">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-today">—</td><td class="num pos" data-label="Total R" id="scoreR-today"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-today">0</td></tr>
+          <tr><td data-label="Period"><strong>This week</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-week">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-week">—</td><td class="num pos" data-label="Total R" id="scoreR-week"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-week">0</td></tr>
+          <tr><td data-label="Period"><strong>This month</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-month">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-month">—</td><td class="num pos" data-label="Total R" id="scoreR-month"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-month">0</td></tr>
+          <tr><td data-label="Period"><strong>All-time</strong> <span style="color:var(--muted);font-weight:400">since Nov 10, 2026</span></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-all">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-all">—</td><td class="num pos" data-label="Total R" id="scoreR-all"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-all">0</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="sec-note" style="margin-top:8px">Seeded history is filtered to Hyperliquid coins only: the 15 feed coins with no Hyperliquid perp — VET, XTZ, EOS, MANA, GRT, FLOW, KAVA, YFI, LRC, ENJ, CHZ, 1INCH, ZRX, EGLD, KSM — are excluded. Those excluded coins accounted for 22 trades for +7.12R, so the seeded record (+14.90R) is lower than the full feed's +22.02R. Periods run on UTC, like the bot's overviews: today resets at UTC midnight, the week starts Monday 00:00 UTC, and the seeded Today / week / month amounts belong to the day, week and month of the Nov 8, 2026 snapshot. A live trade's R is its realized PnL divided by the bot's risk on that trade — 1% of account equity when the trade opened (switched back from 5% on Nov 9, 2026), with equity tracked forward from $16.27 at the live start — so live R adds to the seeded R on the same basis the bot itself uses.</p>
+    <p class="sec-note" style="margin-top:8px">Periods run on UTC, like the bot's overviews: today resets at UTC midnight, the week starts Monday 00:00 UTC. A trade's R is its realized PnL divided by the bot's risk on that trade — 1% of account equity when the trade opened — on the same basis the bot itself uses, with the stop sized so a stop hit is exactly −1R after fees. The test trade that confirmed the order flow (XRP, Nov 10, 2026) is not in the score — only the live bot's own recorded trades count.</p>
   </section>
 
   <section aria-labelledby="posH">
@@ -242,7 +239,7 @@
   </section>
 
   <section aria-labelledby="pcH">
-    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from Hyperliquid. The current hour's candle ticks live with the mid price every refresh (15s) — the dot marks the live price. Tap a dot to jump to a coin.</span></div>
+    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from BloFin. The current hour's candle ticks live with the mid price every refresh (15s) — the dot marks the live price. Tap a dot to jump to a coin.</span></div>
     <div class="chart-box">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
         <span class="pc-title" id="pcTitle">Loading chart… <span class="tf">1h</span></span>
@@ -265,28 +262,28 @@
         <h3>Live configuration</h3>
         <ul class="rules">
           <li><span class="k">Mode</span><span><strong>LIVE</strong> — configured for real orders on this account, no paper mode</span></li>
-          <li><span class="k">Bot's record</span><span id="botRecord">0 live trades so far (0W / 0L, +0.00R) — counting only this account's closing fills after live trading began (Nov 8, 2026, 7:57 PM ET); the manual test trade just before that start and all earlier account activity are excluded. Kept separate from the seeded feed history, and also the only thing that adds to the main score above from here on.</span></li>
+          <li><span class="k">Bot's record</span><span id="botRecord">0 live trades so far (0W / 0L, +0.00R) — the BloFin bot's own closed trades since it went live (Nov 10, 2026). No seeded history: this is a fresh bot, so the score above is entirely its own record.</span></li>
           <li><span class="k">15m setup</span><span>1h trend + 15m EMA / RSI / MACD breakout · time exit 4h</span></li>
           <li><span class="k">1h setup</span><span>4h trend + 1h EMA / RSI / MACD breakout · time exit 12h</span></li>
-          <li><span class="k">Stop / targets</span><span>Stop 1.5× ATR on every trade · TP1 +1.5R (close 50%, stop to breakeven) · TP2 +3R</span></li>
+          <li><span class="k">Stop / targets</span><span>Stop 1.5× ATR on every trade, sized so a stop hit is exactly −1R after fees · TP1 +1.5R net of fees (close 50%, stop to breakeven) · TP2 +3R net of fees</span></li>
           <li><span class="k">Risk</span><span>1% of equity per trade · max 6 open · 1 per coin · 90-min cooldown · margin capped at 95%</span></li>
-          <li><span class="k">Min order</span><span>Hyperliquid minimum is $10 notional — at $16.27 equity, 1% risk is $0.16, so only tight-stop setups can trade; the rest are skipped</span></li>
-          <li><span class="k">Bot state</span><span id="botState">Last bot report (Nov 8, 7:45 PM ET): starting up, no open bot trades. Everything else on this page is the live exchange account, updated every 15 seconds.</span></li>
+          <li><span class="k">Min order</span><span>BloFin minimums are per-coin, typically $0.50–$2 notional (BTC ~$7.47, ETH ~$3, XRP $1.10, SOL $0.86) — at $6.56 equity, 1% risk is $0.07, so only tight-stop setups can trade; the rest are skipped</span></li>
+          <li><span class="k">Bot state</span><span id="botState">Live on BloFin since Nov 10, 2026. Account figures come from the bot's published snapshot, updated on deploy; prices stream live every 15 seconds.</span></li>
         </ul>
       </div>
     </section>
     <section aria-labelledby="uniH" style="margin-top:0">
       <div class="sec-head"><h2 id="uniH">Tradable universe</h2></div>
       <div class="panel">
-        <h3>38 of the feed's 53 coins have Hyperliquid perps</h3>
+        <h3>153 of the feed's 235 coins have BloFin perps</h3>
         <div class="chips" id="uniChips"></div>
-        <p style="margin:12px 0 0;font-size:13px;color:var(--muted)">The other 15 feed coins (VET, XTZ, EOS, MANA, GRT, FLOW, KAVA, YFI, LRC, ENJ, CHZ, 1INCH, ZRX, EGLD, KSM) have no Hyperliquid perp and can't trade here. PEPE and SHIB trade as kPEPE / kSHIB (1 unit = 1,000 underlying).</p>
+        <p style="margin:12px 0 0;font-size:13px;color:var(--muted)">The other 82 feed coins have no BloFin perp (69) or are reduce-only via the BloFin API (13: APEX, AZTEC, BABY, BRETT, CELO, CHILLGUY, GOAT, GRIFFAIN, PNUT, RESOLV, SKR, STBL, ZEREBRO) and can't be opened here. PEPE and SHIB trade as kPEPE / kSHIB on the Hyperliquid side (1 unit = 1,000 underlying).</p>
       </div>
     </section>
   </div>
 
   <section aria-labelledby="chartH">
-    <div class="sec-head"><h2 id="chartH">Cumulative R — bot record</h2><span class="sec-note">Bot's record in R, oldest to newest: the seeded crypto-feed history on Hyperliquid coins only (76 trades, +14.90R), then only the live bot's own closed trades since live trading began. Same basis as the score above. The account's raw fills are not used here — they include pre-bot manual trading.</span></div>
+    <div class="sec-head"><h2 id="chartH">Cumulative R — BloFin bot record</h2><span class="sec-note">The BloFin bot's own record in R, oldest to newest: only its own closed trades since it went live (Nov 10, 2026). Same basis as the score above. The curve starts at 0 — there is no seeded history on this bot.</span></div>
     <div class="chart-box">
       <div id="chartWrap"><span style="color:var(--muted)">Loading fills…</span></div>
       <div class="chart-meta" id="chartMeta"></div>
@@ -306,12 +303,12 @@
   </section>
 
   <section aria-labelledby="mktH">
-    <div class="sec-head"><h2 id="mktH">Bot universe — live market</h2><span class="sec-note" id="mktNote">Mid price, 24h change, funding and open interest from Hyperliquid. Sorted by 24h volume.</span></div>
+    <div class="sec-head"><h2 id="mktH">Bot universe — live market</h2><span class="sec-note" id="mktNote">Mid price, 24h change and 24h volume from BloFin's public tickers.</span></div>
     <div id="mktWrap"></div>
   </section>
 
   <footer>
-    <span>Data source: Hyperliquid public info API (<span class="mono">api.hyperliquid.xyz/info</span>) for master account <span class="mono">0x7b4c095d9f5e23fae21f6d6a3052dd4c422b5400</span>. The API wallet holds $0 by design — funds and positions sit on the master account. No keys or secrets are on this page; it is read-only.</span>
+    <span>Data source: the BloFin bot's published snapshot (account, positions, orders, fills, stats) plus BloFin's public market API (<span class="mono">openapi.blofin.com</span>) for live prices and candles. No keys or secrets are on this page; it is read-only.</span>
     <span id="snapNote">If the live feed can't be reached, the page keeps the last values it loaded and labels them — it never invents numbers.</span>
     <span>Not financial advice. Perpetual futures are leveraged and can lose more than the margin posted on a trade.</span>
   </footer>
@@ -337,52 +334,28 @@
   </div>
 </div>
 <script>
-(function(){
 "use strict";
-var ADDR = "0x7b4c095d9f5e23fae21f6d6a3052dd4c422b5400";
-var API = "https://api.hyperliquid.xyz/info";
-var UNIVERSE = ["BTC","ETH","SOL","XRP","DOGE","ADA","AVAX","LINK","DOT","LTC","BCH","NEAR","ATOM","UNI","AAVE","APT","ARB","OP","SUI","TAO","ONDO","ENA","CRV","ALGO","XLM","FIL","ICP","HBAR","SAND","FET","STX","COMP","MKR","SNX","SUSHI","RENDER","kPEPE","kSHIB"];
-
-/* Baked snapshot, fetched from the Hyperliquid public API at build time
-   (2026-11-09 00:52 UTC). Live refresh replaces it within seconds of open;
-   it only stays on screen, clearly labelled, if the feed is unreachable. */
-var SNAPSHOT = {
-  at: 1794185541220,
-  state: { marginSummary:{accountValue:"16.271251", totalNtlPos:"0.0", totalMarginUsed:"0.0"}, withdrawable:"16.271251", assetPositions:[] },
-  orders: [],
-  fills: [
-    {coin:"ASTER",px:"0.64442",sz:"16.0",side:"B",time:1794184145133,dir:"Close Short",closedPnl:"0.57584",fee:"0.004639"},
-    {coin:"AAVE",px:"127.24",sz:"0.09",side:"A",time:1794184145133,dir:"Close Long",closedPnl:"-0.3429",fee:"0.005153"},
-    {coin:"LINK",px:"10.467",sz:"1.0",side:"A",time:1794184145133,dir:"Close Long",closedPnl:"-0.392",fee:"0.00471"},
-    {coin:"INJ",px:"8.0683",sz:"1.7",side:"A",time:1794184145133,dir:"Close Long",closedPnl:"-0.411111",fee:"0.006172"},
-    {coin:"BNB",px:"687.1",sz:"0.016",side:"B",time:1794184145133,dir:"Close Short",closedPnl:"0.04224",fee:"0.004947"},
-    {coin:"ASTER",px:"0.65685",sz:"16.0",side:"B",time:1794176424161,dir:"Close Short",closedPnl:"0.37696",fee:"0.004729"},
-    {coin:"XPL",px:"0.051878",sz:"214.0",side:"A",time:1794174925460,dir:"Close Long",closedPnl:"-0.506966",fee:"0.004995"},
-    {coin:"INJ",px:"7.8468",sz:"0.4",side:"B",time:1794174922717,dir:"Open Long",closedPnl:"0.0",fee:"0.001412"},
-    {coin:"TAO",px:"215.28",sz:"0.016",side:"A",time:1794174919838,dir:"Close Long",closedPnl:"-0.12032",fee:"0.00155"},
-    {coin:"TAO",px:"222.8",sz:"0.016",side:"B",time:1794161094693,dir:"Open Long",closedPnl:"0.0",fee:"0.001604"},
-    {coin:"XPL",px:"0.054247",sz:"214.0",side:"B",time:1794161091569,dir:"Open Long",closedPnl:"0.0",fee:"0.005223"},
-    {coin:"TRX",px:"0.32002",sz:"32.0",side:"A",time:1794158584654,dir:"Close Long",closedPnl:"-0.00928",fee:"0.004608"},
-    {coin:"XLM",px:"0.1514",sz:"69.0",side:"B",time:1794143566111,dir:"Close Short",closedPnl:"0.15111",fee:"0.0047"},
-    {coin:"TRX",px:"0.32031",sz:"32.0",side:"B",time:1794114333828,dir:"Open Long",closedPnl:"0.0",fee:"0.004612"},
-    {coin:"AAVE",px:"131.05",sz:"0.09",side:"B",time:1794099626448,dir:"Open Long",closedPnl:"0.0",fee:"0.005307"},
-    {coin:"TAO",px:"223.22",sz:"0.047",side:"B",time:1794095006505,dir:"Close Short",closedPnl:"0.09823",fee:"0.004721"},
-    {coin:"TAO",px:"225.31",sz:"0.047",side:"A",time:1794033169999,dir:"Open Short",closedPnl:"0.0",fee:"0.004765"},
-    {coin:"XRP",px:"1.1666",sz:"9.0",side:"B",time:1794033121543,dir:"Close Short",closedPnl:"0.1719",fee:"0.004724"},
-    {coin:"ASTER",px:"0.68051",sz:"16.0",side:"A",time:1794027619015,dir:"Open Short",closedPnl:"0.0",fee:"0.004899"},
-    {coin:"BCH",px:"263.03",sz:"0.04",side:"B",time:1794026148527,dir:"Close Short",closedPnl:"0.0996",fee:"0.004734"}
-  ]
-};
-
-
-/* Full-history aggregates baked at build time from all 836 fills, so the
-   snapshot fallback shows true month / all-time numbers, not just the
-   recent fills above. Live refresh recomputes these from the full feed. */
-var SNAP_SCORES = { today:{w:2,l:3,pnl:-0.5279,fees:0.0256,n:5}, month:{w:12,l:27,pnl:-2.0449,fees:0.2597,n:39}, all:{w:186,l:231,pnl:-6.9336,fees:4.0397,n:417} };
-var SNAP_CLOSES = [[1793080195978,0.12642],[1793082685746,0.03078],[1793082872463,-0.2743],[1793083823589,-0.234975],[1793084958169,0.03213],[1793087431752,0.1363],[1793087436792,-0.0884],[1793090131491,-0.11115],[1793092571309,-0.0867],[1793092583996,-0.04312],[1793092584793,-0.062491],[1793097584430,-0.433],[1793098189766,0.10248],[1793104114822,-0.0816],[1793104648859,-0.1026],[1793105410509,0.04272],[1793106300939,0.14742],[1793106317186,-0.0804],[1793107741753,-0.0832],[1793107989815,-0.0828],[1793108044483,0.0336],[1793108752792,-0.01056],[1793108752792,-0.01815],[1793109550306,0.0288],[1793109788280,0.07134],[1793109823605,0.0852],[1793112407296,-0.232288],[1793112407296,-0.06222],[1793112407296,-0.091256],[1793113490866,0.00044],[1793114771317,0.064],[1793124062504,-0.0696],[1793126147870,-0.0648],[1793128157666,-0.0205],[1793128157666,-0.041],[1793128676552,-0.08109],[1793136833808,0.0286],[1793137025131,0.0882],[1793137251288,0.078],[1793137347203,0.17472],[1793141165958,0.06006],[1793142460835,0.16641],[1793142460835,0.03096],[1793145080517,0.0444],[1793149515535,0.0714],[1793154003711,0.06],[1793154009475,0.0384],[1793154044941,0.0552],[1793155520814,0.0252],[1793158407233,0.0552],[1793158413421,0.0416],[1793161888808,0.0416],[1793161889805,0.0684],[1793174590175,0.0288],[1793176106065,0.06786],[1793176540007,0.2484],[1793188841701,-0.1416],[1793188973395,-0.176],[1793189521977,-0.0455],[1793189521977,-0.1001],[1793189679043,0.24969],[1793189748756,0.05655],[1793189763783,0.06],[1793194248987,0.0697],[1793195372652,0.03471],[1793195372652,0.0445],[1793195479183,0.07503],[1793205983196,-0.1416],[1793209615627,0.01568],[1793209615627,0.03599],[1793210255465,0.0165],[1793210255465,0.0363],[1793212473809,0.0348],[1793212764714,0.18122],[1793213703217,-0.3126],[1793217614210,0.072],[1793218544321,0.08352],[1793222483827,-0.1424],[1793226484159,0.033],[1793235954100,0.08091],[1793236222294,0.126],[1793236337023,0.0288],[1793238051043,0.0612],[1793241063361,0.0768],[1793248596326,0.0882],[1793249224255,0.06768],[1793250201662,-0.1248],[1793254866591,0.08366],[1793265014441,-0.1701],[1793284296966,-0.152],[1793284347318,0.14268],[1793284362653,0.08448],[1793284578815,-0.156],[1793285379405,0.1488],[1793286587723,-0.2288],[1793287025947,0.08],[1793294087225,-0.322],[1793294500360,0.02772],[1793294500360,0.0385],[1793295775148,0.0468],[1793296228865,0.066],[1793304183962,0.14608],[1793304219971,-0.1548],[1793304440633,0.18318],[1793306054672,0.1368],[1793306209407,0.0788],[1793315001044,-0.1612],[1793317697182,0.14883],[1793319470001,0.0559],[1793319821466,0.0091],[1793323860084,0.23157],[1793324070212,-0.2071],[1793325815231,-0.19872],[1793327173910,0.0975],[1793329768443,-0.1508],[1793331254934,0.11921],[1793334062008,0.09635],[1793336843547,-0.15952],[1793341735160,0.09],[1793344748050,-0.078],[1793344774367,-0.09348],[1793345840928,-0.05632],[1793346341095,0.03575],[1793352145695,0.14368],[1793352346848,0.04544],[1793353299414,-0.038],[1793355866164,-0.041],[1793355876491,-0.04004],[1793357856124,0.036],[1793360582188,-0.0476],[1793362184015,-0.04082],[1793365974900,0.01121],[1793365974900,0.03068],[1793367122771,0.1392],[1793367258367,-0.05239],[1793367667367,-0.04544],[1793370305513,-0.04017],[1793371257457,0.08294],[1793372673266,0.08946],[1793373610328,0.0518],[1793373640098,0.031],[1793373917443,-0.038],[1793374285147,-0.08288],[1793374296846,-0.051],[1793374303370,-0.04473],[1793374934838,-0.038],[1793375615093,0.037],[1793376033387,-0.0483],[1793376104019,-0.032],[1793376678415,0.04459],[1793376799383,0.0889],[1793378774043,-0.028],[1793378774043,-0.0076],[1793378779357,-0.02125],[1793378779357,-0.0378],[1793378884961,-0.039728],[1793380819392,0.0333],[1793381530028,-0.03523],[1793382623366,-0.03627],[1793384331625,-0.04623],[1793384372016,-0.03757],[1793384482176,0.0648],[1793384885353,-0.03484],[1793385101673,-0.114544],[1793385189273,-0.194184],[1793385242916,0.2592],[1793385303469,0.088885],[1793385333907,-0.0612],[1793385363910,-0.20216],[1793385389038,-0.11985],[1793385393897,-0.04008],[1793385450120,-0.11856],[1793385454509,0.05244],[1793385455493,-0.052],[1793385461236,-0.03154],[1793385462240,-0.02736],[1793385474766,-0.115568],[1793385540574,-0.115115],[1793385545228,0.17955],[1793385546229,-0.0035],[1793385579051,-0.14674],[1793385600606,0.0984],[1793385606119,-0.07],[1793385607218,-0.0582],[1793385636610,-0.03404],[1793385657190,0.213192],[1793385708600,-0.1232],[1793385746722,0.10549],[1793385802051,0.059911],[1793385817791,-0.06656],[1793385823272,-0.128928],[1793385824282,-0.099568],[1793385830004,-0.03402],[1793385833160,0.0234],[1793385857663,-0.041087],[1793385862380,-0.057708],[1793385877232,-0.0312],[1793385909270,-0.05621],[1793385958448,-0.03582],[1793386013842,0.010035],[1793386040110,0.055],[1793386075435,-0.032132],[1793386080404,-0.09072],[1793386099885,0.14322],[1793386104123,-0.1456],[1793386109440,0.214104],[1793386134408,0.204135],[1793386217228,-0.060465],[1793386220165,0.01632],[1793386225875,0.127332],[1793386226949,-0.036874],[1793386264879,-0.093198],[1793386268587,-0.03196],[1793386276155,0.214592],[1793386277285,-0.25974],[1793386277285,-0.03404],[1793386285226,0.19448],[1793386312389,-0.06466],[1793386326492,-0.118932],[1793386346801,-0.084],[1793386352811,-0.10769],[1793386353942,-0.2565],[1793386371870,0.002012],[1793386372904,0.005808],[1793386381533,0.19422],[1793386382750,0.000549],[1793386391711,0.0231],[1793386398730,0.041],[1793386399803,0.00053],[1793386401111,0.0198],[1793386406786,0.09589],[1793386433003,0.17878],[1793386437851,-0.0864],[1793386443000,-0.09891],[1793386457242,-0.03792],[1793386458248,-0.12129],[1793386459253,-0.000548],[1793386459253,-0.058464],[1793386467842,-0.000558],[1793386468973,0.00061],[1793386469971,0.0575],[1793386471001,-0.0069],[1793386472133,0.0054],[1793386503440,-0.20418],[1793386504439,-0.0165],[1793386513890,-0.054],[1793386514896,-0.19425],[1793386515966,-0.08136],[1793386517173,0.126],[1793386518249,-0.06695],[1793386524514,-0.04664],[1793386524514,-0.14455],[1793386531137,-0.180692],[1793386544040,-0.058922],[1793386553747,-0.092483],[1793386554748,-0.0335],[1793386554748,-0.0715],[1793386554748,-0.252],[1793386555755,-0.126728],[1793386556827,-0.0624],[1793386565285,0.06624],[1793386565285,0.36096],[1793386566500,-0.70455],[1793386603210,-0.4508],[1793386619556,0.216597],[1793386631612,-0.0665],[1793386632637,0.027],[1793386634674,-0.112091],[1793386635813,0.0846],[1793386639354,0.0066],[1793386641461,-0.0009],[1793386641461,0.0012],[1793386644542,-0.055926],[1793386650000,0.06678],[1793386653120,0.04206],[1793386657354,0.01422],[1793386657354,0.14651],[1793386668432,-0.024173],[1793386697011,-0.06066],[1793386788496,-0.066267],[1793386789510,0.03672],[1793386790558,-0.11956],[1793386791574,-0.03315],[1793386793588,0.152388],[1793386796193,-0.013915],[1793386798273,-0.172272],[1793386799464,-0.03249],[1793386800479,-0.117678],[1793386802245,-0.02135],[1793386803571,-0.05088],[1793396363516,0.7293],[1793409862268,0.04199],[1793418583704,-0.09272],[1793421303345,-0.19061],[1793422855457,0.03971],[1793426819857,0.01425],[1793426828207,-0.0615],[1793431980096,0.00528],[1793431981184,-0.04408],[1793462415465,-0.07215],[1793462422412,-0.045],[1793462430015,-0.239733],[1793462437414,-0.14652],[1793462444360,0.5088],[1793462451030,-0.0011],[1793462483113,-0.24344],[1793462491996,-0.12311],[1793476115358,-0.00765],[1793476115358,-0.352036],[1793476115358,-0.24696],[1793476115358,-0.18323],[1793476115358,-0.100776],[1793476115358,-0.0832],[1793476115358,0.048],[1793476115358,0.095847],[1793476805378,0.07134],[1793476806315,-0.107876],[1793476926029,0.18],[1793476951104,-0.11232],[1793477082037,-0.125928],[1793477142540,0.229878],[1793477424786,-0.11544],[1793477495040,-0.272144],[1793477525419,-0.108],[1793477621205,0.07],[1793477632546,-0.0362],[1793477632546,-0.072],[1793477666395,-0.1014],[1793477694602,0.0088],[1793477694602,0.01541],[1793477929538,-0.2016],[1793477938970,0.4203],[1793478009540,-0.12685],[1793478044835,-0.220896],[1793478090093,0.035],[1793478090093,0.07],[1793478170733,0.0297],[1793478175646,0.1152],[1793478242007,-0.107272],[1793478362545,0.215758],[1793478392616,-0.0352],[1793478392616,-0.07],[1793478402793,0.11352],[1793478437989,0.04],[1793478639478,-0.241605],[1793478674931,0.04768],[1793478695223,0.0074],[1793478695223,0.0148],[1793478705115,-0.027032],[1793478705115,-0.05829],[1793478705115,-0.058156],[1793478705115,-0.058156],[1793478715653,-0.074817],[1793478725266,0.0576],[1793478921876,-0.1064],[1793479111396,-0.07128],[1793479112334,0.05135],[1793479113204,0.054592],[1793479114902,-0.026202],[1793479116724,-0.058344],[1793479118357,0.007746],[1793479120042,-0.039469],[1793479121855,-0.024149],[1793479124294,-0.08025],[1793479130188,0.0468],[1793479130188,0.0323],[1793479137979,0.05258],[1793479149969,-0.0721],[1793479162838,-0.03051],[1793479322061,0.06751],[1793479330883,-0.0356],[1793479330883,0.0885],[1793479330883,0.02592],[1793479330883,-0.03],[1793479330883,-0.015],[1793479330883,0.186813],[1793479330883,-0.119457],[1793479330883,-0.03809],[1793577748428,-0.1903],[1793577756335,-0.06903],[1793606477745,-0.89748],[1793606499893,-0.162966],[1793606507044,-0.2856],[1793606513918,-0.209125],[1793640128101,-0.502208],[1793664084583,-0.14455],[1793664084583,-0.452423],[1793674551649,-0.7644],[1793761755092,-1.532598],[1793827782794,0.00736],[1793827787962,1.553],[1793841519033,1.535],[1793885526718,-0.11577],[1793885526718,0.90818],[1793885526718,-0.3009],[1793885526718,0.9198],[1793920351396,-0.207324],[1793925555249,-0.1926],[1793941625579,-0.18122],[1793944499409,-0.165],[1793946566683,-0.0252],[1793946566683,-0.1428],[1793947061398,-0.00846],[1793947061398,-0.151585],[1794026148527,0.0996],[1794033121543,0.1719],[1794095006505,0.09823],[1794143566111,0.15111],[1794158584654,-0.00928],[1794174919838,-0.12032],[1794174925460,-0.506966],[1794176424161,0.37696],[1794184145133,0.57584],[1794184145133,-0.3429],[1794184145133,-0.392],[1794184145133,-0.411111],[1794184145133,0.04224]];
+/* KnightTrader-Muse — BloFin dashboard.
+   Data: the BloFin bot publishes a credentials-free snapshot
+   (blofin_state.json, same directory, refreshed by the bot every
+   cycle and deployed with this page) with account, positions,
+   orders, fills and stats. BloFin has no public account-state
+   endpoint, so the snapshot is the only account source. Live
+   prices and 1h candles come from BloFin's PUBLIC market API
+   (no auth): /api/v1/market/tickers and /api/v1/market/candles.
+   No keys or secrets are on this page; it is read-only. */
+var BF_API = "https://openapi.blofin.com";
+var SNAP_URL = "blofin_state.json";
+var BAKED_SNAP = {"venue":"BloFin","updated_at_ms":1794287969624,"updated_at":"2026-11-10T05:19:29Z","account":{"equity":6.45,"withdrawable":0.32,"used_margin":6.13,"notional":33.8},"positions":[{"coin":"NIL","inst":"NIL-USDT","side":"SHORT","timeframe":"15m","size":122.0,"entry":0.0568,"mark":0.0567,"lev":6,"margin":1.1549,"notional":6.9174,"upnl":0.0122,"upnl_pct":1.06,"sl":0.057210000000000004,"tp1":0.056060000000000006,"tp2":0.05544,"tp1_hit":false,"open_ms":1794286477016},{"coin":"AAVE","inst":"AAVE-USDT","side":"SHORT","timeframe":"1h","size":0.020000000000000004,"entry":126.59,"mark":126.76,"lev":2,"margin":1.2659,"notional":2.5352,"upnl":-0.0034,"upnl_pct":-0.27,"sl":129.09,"tp1":122.57000000000001,"tp2":118.82000000000001,"tp1_hit":false,"open_ms":1794286800000},{"coin":"MON","inst":"MON-USDT","side":"LONG","timeframe":"15m","size":370.0,"entry":0.01684,"mark":0.01682,"lev":5,"margin":1.2462,"notional":6.2234,"upnl":-0.0074,"upnl_pct":-0.59,"sl":0.016700000000000003,"tp1":0.01709,"tp2":0.017300000000000003,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PIXEL","inst":"PIXEL-USDT","side":"LONG","timeframe":"15m","size":2040.0,"entry":0.004133,"mark":0.004116,"lev":7,"margin":1.2045,"notional":8.3966,"upnl":-0.0347,"upnl_pct":-2.88,"sl":0.00411,"tp1":0.004176,"tp2":0.00421,"tp1_hit":false,"open_ms":1794287745321},{"coin":"PENGU","inst":"PENGU-USDT","side":"LONG","timeframe":"15m","size":1200.0,"entry":0.006365,"mark":0.006346,"lev":6,"margin":1.273,"notional":7.6152,"upnl":-0.0228,"upnl_pct":-1.79,"sl":0.006325,"tp1":0.006438999999999999,"tp2":0.0064979999999999994,"tp1_hit":false,"open_ms":1794287745321}],"orders":[{"coin":"NIL","kind":"tp2","side":"buy","type":"limit","px":0.05544,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"tp1","side":"buy","type":"limit","px":0.05606,"size":61.0,"reduce_only":true},{"coin":"NIL","kind":"sl","side":"buy","type":"tpsl","px":0.05721,"size":122.0,"reduce_only":true},{"coin":"AAVE","kind":"tp1","side":"buy","type":"limit","px":122.57,"size":0.020000000000000004,"reduce_only":true},{"coin":"AAVE","kind":"sl","side":"buy","type":"tpsl","px":129.09,"size":0.020000000000000004,"reduce_only":true},{"coin":"MON","kind":"tp2","side":"sell","type":"limit","px":0.0173,"size":190.0,"reduce_only":true},{"coin":"MON","kind":"tp1","side":"sell","type":"limit","px":0.01709,"size":180.0,"reduce_only":true},{"coin":"MON","kind":"sl","side":"sell","type":"tpsl","px":0.0167,"size":370.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp2","side":"sell","type":"limit","px":0.00421,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"tp1","side":"sell","type":"limit","px":0.004176,"size":1020.0,"reduce_only":true},{"coin":"PIXEL","kind":"sl","side":"sell","type":"tpsl","px":0.00411,"size":2040.0,"reduce_only":true},{"coin":"PENGU","kind":"tp2","side":"sell","type":"limit","px":0.006498,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"tp1","side":"sell","type":"limit","px":0.006439,"size":600.0,"reduce_only":true},{"coin":"PENGU","kind":"sl","side":"sell","type":"tpsl","px":0.006325,"size":1200.0,"reduce_only":true}],"fills":[{"coin":"PENGU","time":1794287785863,"dir":"Open Long","px":0.006365,"sz":1200.0,"pnl":0.0,"fee":0.0045828},{"coin":"PIXEL","time":1794287782474,"dir":"Open Long","px":0.004128,"sz":2040.0,"pnl":0.0,"fee":0.005052672},{"coin":"MON","time":1794287778266,"dir":"Open Long","px":0.01686,"sz":370.0,"pnl":0.0,"fee":0.00374292},{"coin":"AAVE","time":1794286812584,"dir":"Open Short","px":126.51,"sz":0.020000000000000004,"pnl":0.0,"fee":0.00151812},{"coin":"NIL","time":1794286489558,"dir":"Open Short","px":0.05678,"sz":122.0,"pnl":0.0,"fee":0.004156296},{"coin":"XRP","time":1794286100411,"dir":"Close Long","px":1.0915,"sz":5.0,"pnl":-0.0015,"fee":0.0032745},{"coin":"XRP","time":1794286090278,"dir":"Open Long","px":1.0918,"sz":5.0,"pnl":0.0,"fee":0.0032754},{"coin":"XRP","time":1794285996007,"dir":"Close Long","px":1.0918,"sz":5.0,"pnl":-0.0025,"fee":0.0032754},{"coin":"XRP","time":1794285966445,"dir":"Open Long","px":1.0923,"sz":5.0,"pnl":0.0,"fee":0.0032769},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0914,"sz":1.0,"pnl":-0.00228,"fee":0.00065484},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.0918,"sz":2.0,"pnl":-0.00376,"fee":0.00131016},{"coin":"XRP","time":1794285956193,"dir":"Close Long","px":1.092,"sz":1.0,"pnl":-0.00168,"fee":0.0006552},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0937,"sz":4.0,"pnl":0.0,"fee":0.00262488},{"coin":"XRP","time":1794285861411,"dir":"Open Long","px":1.0936,"sz":1.0,"pnl":0.0,"fee":0.00065616}],"stats":{"today":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"week":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"month":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"all_time":{"wins":0,"losses":0,"total_r":0.0,"trades":0},"feed_start":"2026-11-10"},"closed":[],"universe":{"tradable":153,"hl_total":235,"coins":["0G","AAVE","ACE","ADA","AERO","AIXBT","ALGO","ALT","APE","APT","AR","ARB","ASTER","ATOM","AVAX","AVNT","AXS","BANANA","BCH","BERA","BIGTIME","BIO","BLUR","BNB","BOME","BSV","BTC","CAKE","CASHCAT","CATI","CC","CHIP","COMP","CRV","CYBER","DASH","DOGE","DOT","DYDX","EIGEN","ENA","ENS","ETC","ETH","ETHFI","FARTCOIN","FET","FIL","FTM","GALA","GAS","GMX","GRAM","GRASS","HBAR","HEMI","HYPE","HYPER","ICP","ILV","IMX","INIT","INJ","IO","IOTA","JTO","JUP","KAITO","KAS","LAYER","LDO","LINEA","LINK","LIT","LTC","MANTA","MATIC","ME","MEGA","MELANIA","MEME","MERL","MET","MINA","MNT","MON","MOODENG","MORPHO","MOVE","NEAR","NEO","NIL","NOT","ONDO","OP","ORDI","PENDLE","PENGU","PEOPLE","PIXEL","POL","POLYX","PONS","POPCAT","PUMP","PYTH","RENDER","REZ","RNDR","RSR","RUNE","S","SAGA","SAND","SEI","SKY","SNX","SOL","SPX","STABLE","STRK","STX","SUI","SUPER","SUSHI","SYRUP","TAO","TIA","TRB","TRUMP","TRX","TURBO","UMA","UNI","USELESS","VIRTUAL","VVV","WCT","WIF","WLD","WLFI","XAI","XLM","XMR","XPL","XRP","ZEC","ZEN","ZETA","ZK","ZRO","kPEPE","kSHIB"]},"bot":{"risk_pct":0.01,"max_open":6,"max_margin":0.95,"fee_taker":0.0006,"live_start_ms":1794284568601,"feed_start":"2026-11-10"}};
 
 var $ = function(id){ return document.getElementById(id); };
-var paused = false, failCount = 0, timer = null, lastOk = 0, fillsCache = SNAPSHOT.fills, closesOnly = false;
+var paused = false, failCount = 0, timer = null, lastOk = 0;
+var fillsCache = [], closedCache = [], snapCache = null;
+var liveMids = {}; /* instId -> last price, refreshed every 15s */
+var curPositions = {}; /* coin -> HL-like position object, for the PnL share badge */
+var pcLevels = {}; /* coin -> {entry, side, sl, tp1, tp2} for chart lines */
+var shareCoin = null;
+var UNIVERSE = (BAKED_SNAP && BAKED_SNAP.universe) ? BAKED_SNAP.universe.coins : [];
 
 function num(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
 function fmtUSD(v, dp){ var n = num(v); var s = Math.abs(n).toFixed(dp == null ? 2 : dp); return (n < 0 ? "-$" : "$") + s; }
@@ -393,146 +366,60 @@ function cls(v){ return num(v) > 0 ? "pos" : num(v) < 0 ? "neg" : ""; }
 function fmtTimeET(ms){ try { return new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",hour12:true}).format(new Date(ms)); } catch(e){ return new Date(ms).toLocaleString(); } }
 function fmtClockET(ms){ try { return new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(new Date(ms)); } catch(e){ return new Date(ms).toLocaleTimeString(); } }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function fmtR(r){ return (r >= 0 ? "+" : "") + num(r).toFixed(2) + "R"; }
 function isClose(f){ var d = (f.dir || ""); return d.indexOf("Close") === 0 || d.indexOf("Liquidation") === 0; }
+/* Feed coin -> BloFin instrument id. kPEPE/kSHIB are Hyperliquid-side
+   1000x names; BloFin trades PEPE/SHIB directly. */
+function instFor(coin){ if (coin === "kPEPE") return "PEPE-USDT"; if (coin === "kSHIB") return "SHIB-USDT"; return coin + "-USDT"; }
 
-function scoreFor(fills, pred){
-  var w=0,l=0,pnl=0,fees=0,n=0;
-  for (var i=0;i<fills.length;i++){ var f=fills[i]; if(!isClose(f)) continue; if(pred && !pred(f)) continue;
-    var cp = num(f.closedPnl); n++; pnl += cp; fees += num(f.fee); if (cp>0) w++; else if (cp<0) l++; }
-  return {w:w,l:l,pnl:pnl,fees:fees,n:n};
-}
-/* Main score = seeded history + live bot trades only.
-   Seeded history (per Matt): the crypto feed's paper record on Hyperliquid
-   coins only — Today 0W/0L +0.00R (0), This week 0W/0L +0.00R (0),
-   This month 37W/39L +14.90R (76), All-time 37W/39L +14.90R (76, since
-   Nov 5, 2026). From here on ONLY the live bot's own closed trades add to
-   it; the feed's future paper trades never do. The live portion is computed
-   from this account's fills strictly after the bot's live start —
-   Nov 8, 2026, 7:57:32 PM EST = 2026-11-09T00:57:32Z — so the manual test
-   trade just before that start and all earlier account activity are
-   excluded. Periods run on UTC like the bot's overviews: today resets at
-   UTC midnight, the week starts Monday 00:00 UTC, the month at UTC month
-   start; the seeded Today/week/month amounts belong to the UTC day, week
-   and month containing the snapshot (Nov 9, 2026 UTC). */
-var LIVE_START_MS = 1794185852000;
-var BOT_START_EQUITY = 16.27; /* account equity when live trading began */
-var SEED_REF_MS = Date.UTC(2026, 10, 9); /* Nov 9, 2026 UTC */
-var SEED = {
-  today: {w:0, l:0, r:0, n:0},
-  week:  {w:0, l:0, r:0, n:0},
-  month: {w:37, l:39, r:14.90, n:76},
-  all:   {w:37, l:39, r:14.90, n:76}
-};
-
-/* Seeded R curve: the 76 filtered feed trades (Hyperliquid coins only) in
-   chronological order — [close time ms, R]. They sum to +14.90R, matching the
-   seeded month/all-time score. The chart plots cumulative R from this curve,
-   then adds only the live bot's own closed trades (liveTrades) after the
-   live start. This is the bot's record; the account's raw fills are NOT used
-   for the curve, because they include pre-bot manual trading and end at
-   -$6.93 while the record is +14.90R. */
-var SEED_R_CURVE = [[1793874791000,-1.0],[1793875215000,-1.0],[1793880317000,-1.0],[1793889445000,2.25],[1793889445000,2.25],[1793889505000,2.25],[1793889680000,2.25],[1793890101000,2.25],[1793891238000,2.25],[1793891540000,2.25],[1793891658000,2.25],[1793892318000,2.25],[1793892502000,2.25],[1793894054000,2.25],[1793896638000,-1.0],[1793904979000,-1.0],[1793906000000,0.91],[1793908038000,-1.0],[1793923635000,-1.0],[1793924596000,-1.0],[1793926532000,0.75],[1793935575000,0.97],[1793936416000,-1.0],[1793943015000,0.91],[1793946735000,-1.0],[1793952616000,-1.0],[1793952915000,0.68],[1793958873000,1.65],[1793958875000,-0.75],[1793958875000,-1.0],[1793962477000,0.32],[1793962637000,-0.57],[1793976880000,-1.0],[1793976881000,-1.0],[1793987686000,0.44],[1793987687000,-1.0],[1793993000000,-1.0],[1793996899000,-1.0],[1794002115000,-0.82],[1794006254000,-1.0],[1794009436000,1.25],[1794012885000,-0.36],[1794012885000,-0.15],[1794012886000,0.53],[1794020100000,0.87],[1794030890000,-1.0],[1794031577000,-1.0],[1794034465000,-1.0],[1794041678000,-1.0],[1794058334000,-1.0],[1794059776000,1.45],[1794059777000,1.3],[1794066882000,1.07],[1794066883000,-1.0],[1794070481000,0.16],[1794074353000,0.09],[1794081308000,0.31],[1794095687000,-1.0],[1794099554000,0.75],[1794107835000,-1.0],[1794110086000,0.3],[1794120974000,-0.75],[1794124515000,0.43],[1794124516000,-0.09],[1794131684000,-1.0],[1794144283000,-1.0],[1794146107000,-1.0],[1794174976000,2.25],[1794175035000,2.25],[1794175036000,2.25],[1794175155000,-1.0],[1794175156000,0.75],[1794175156000,2.25],[1794178935000,-1.0],[1794178996000,-1.0],[1794185691000,0.75]];
-function pad2(n){ return (n < 10 ? "0" : "") + n; }
-function dayKey(ms){ var d = new Date(ms); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1) + "-" + pad2(d.getUTCDate()); }
-function monthKey(ms){ var d = new Date(ms); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth()+1); }
-function weekKey(ms){ var dow = (new Date(ms).getUTCDay() + 6) % 7; return dayKey(ms - dow * 86400000); } /* Monday 00:00 UTC of the week */
-
-/* Group post-start fills into closed trades (one position episode per coin:
-   from flat to flat, partial closes included). A trade's R is its total
-   realized PnL divided by the bot's risk on it — 1% of equity when the
-   trade opened, bot sizing rule — with equity tracked forward fill by fill
-   from $16.27 at the live start. Win/loss by the sign of total R, the same
-   basis the bot itself scores on. */
-function liveTrades(fills){
-  var sorted = fills.filter(function(f){ return f.time > LIVE_START_MS; }).slice()
-    .sort(function(a,b){ return a.time - b.time; });
-  var equity = BOT_START_EQUITY, open = {}, trades = [];
-  sorted.forEach(function(f){
-    var sz = num(f.sz), cp = num(f.closedPnl), coin = f.coin;
-    var ep = open[coin];
-    if (!ep && !isClose(f)){
-      ep = open[coin] = { pos:0, maxPos:0, pnl:0, riskUsd:0.01 * equity, closes:0 };
-    }
-    if (ep){
-      ep.pos += (f.side === "B" ? sz : -sz);
-      if (Math.abs(ep.pos) > ep.maxPos) ep.maxPos = Math.abs(ep.pos);
-      if (isClose(f)){ ep.pnl += cp; ep.closes++; }
-      if (ep.closes && Math.abs(ep.pos) <= 1e-6 * Math.max(1, ep.maxPos)){
-        var r = ep.riskUsd > 0 ? ep.pnl / ep.riskUsd : 0;
-        trades.push({ closeTime:f.time, coin:coin, pnl:ep.pnl, r:r, win:r > 0, loss:r < 0 });
-        delete open[coin];
-      }
-    }
-    equity += cp - num(f.fee);
-  });
-  return trades;
-}
-function fmtR(r){ return (r > 0 ? "+" : "") + r.toFixed(2) + "R"; }
-function renderScore(fills){
-  var trades = liveTrades(fills);
-  var now = Date.now();
-  var buckets = [
-    { id:"today", seedApplies: dayKey(now) === dayKey(SEED_REF_MS),   inPeriod:function(t){ return dayKey(t) === dayKey(now); } },
-    { id:"week",  seedApplies: weekKey(now) === weekKey(SEED_REF_MS), inPeriod:function(t){ return weekKey(t) === weekKey(now); } },
-    { id:"month", seedApplies: monthKey(now) === monthKey(SEED_REF_MS), inPeriod:function(t){ return monthKey(t) === monthKey(now); } },
-    { id:"all",   seedApplies: true,                                  inPeriod:function(){ return true; } }
+/* ---- Score: the BloFin bot's own record, straight from the snapshot.
+   No seeded history — the BloFin bot started fresh on Nov 10, 2026,
+   so Today / This week / This month / All-time are all the bot's own
+   closed trades (the snapshot's stats block). */
+function renderScore(snap){
+  var st = (snap && snap.stats) || {};
+  var rows = [
+    { id:"today", d: st.today || {} },
+    { id:"week",  d: st.week || {} },
+    { id:"month", d: st.month || {} },
+    { id:"all",   d: st.all_time || {} }
   ];
-  buckets.forEach(function(b){
-    var seed = b.seedApplies ? SEED[b.id] : {w:0, l:0, r:0, n:0};
-    var w = seed.w, l = seed.l, r = seed.r, n = seed.n, liveN = 0;
-    trades.forEach(function(t){
-      if (!b.inPeriod(t.closeTime)) return;
-      liveN++; n++; r += t.r; if (t.win) w++; else if (t.loss) l++;
-    });
-    var rec = $("scoreRec-" + b.id), wr = $("scoreWR-" + b.id), rr = $("scoreR-" + b.id), nn = $("scoreN-" + b.id), lv = $("scoreLive-" + b.id);
+  rows.forEach(function(b){
+    var w = num(b.d.wins), l = num(b.d.losses), r = num(b.d.total_r), n = num(b.d.trades);
+    var rec = $("scoreRec-" + b.id), wr = $("scoreWR-" + b.id), rr = $("scoreR-" + b.id), nn = $("scoreN-" + b.id);
     if (!rec) return;
     rec.textContent = w + "W / " + l + "L";
     wr.textContent = n ? (100 * w / n).toFixed(1) + "%" : "—";
     rr.innerHTML = "<strong>" + fmtR(r) + "</strong>";
     rr.className = "num " + cls(r);
     nn.textContent = n;
-    lv.textContent = "+" + liveN + " live";
   });
-  var bw = 0, bl = 0, br = 0;
-  trades.forEach(function(t){ br += t.r; if (t.win) bw++; else if (t.loss) bl++; });
+  var at = st.all_time || {};
   var brEl = $("botRecord");
-  if (brEl) brEl.textContent = trades.length + (trades.length === 1 ? " live trade" : " live trades") +
-    " so far (" + bw + "W / " + bl + "L, " + fmtR(br) + ") — counting only this account's closing fills after live trading began (Nov 8, 2026, 7:57 PM ET); the manual test trade just before that start and all earlier account activity are excluded. Kept separate from the seeded feed history, and also the only thing that adds to the main score above from here on.";
+  var atN = num(at.trades), atW = num(at.wins), atL = num(at.losses), atR = num(at.total_r);
+  if (brEl) brEl.textContent = atN + (atN === 1 ? " live trade" : " live trades") +
+    " so far (" + atW + "W / " + atL + "L, " + fmtR(atR) + ") — the BloFin bot's own closed trades since it went live (Nov 10, 2026). No seeded history: this is a fresh bot, so the score above is entirely its own record.";
 }
 
-function renderState(state, orders){
-  var ms = state.marginSummary || {};
-  var eq = num(ms.accountValue), mg = num(ms.totalMarginUsed);
-  var positions = (state.assetPositions || []).map(function(ap){ return ap.position; }).filter(function(p){ return num(p.szi) !== 0; });
-  var upnl = positions.reduce(function(a,p){ return a + num(p.unrealizedPnl); }, 0);
-  /* price-chart rotation: open position coins -> entry / stop / TP levels.
-     The stop is the resting reduce-only order at or on the losing side of
-     the entry (below it for a long, above for a short — including a stop
-     moved to breakeven, which sits at the entry); the take-profits are the
-     resting reduce-only orders on the winning side, nearest to entry = TP1,
-     farthest = TP2. This reads the live orders, so it follows the stop
-     when the bot moves it to breakeven after TP1 fills. */
+/* ---- Account / positions / orders, from the snapshot ---- */
+function renderState(snap){
+  var acct = (snap && snap.account) || {};
+  var eq = num(acct.equity), mg = num(acct.used_margin);
+  var positions = (snap && snap.positions) || [];
+  var orders = (snap && snap.orders) || [];
+  var upnl = positions.reduce(function(a,p){ return a + num(p.upnl); }, 0);
   pcLevels = {};
+  curPositions = {};
   positions.forEach(function(p){
-    pcLevels[p.coin] = { entry: num(p.entryPx), side: num(p.szi) > 0 ? 1 : -1, sl: 0, tp1: 0, tp2: 0 };
-  });
-  (orders || []).forEach(function(o){
-    var lv = pcLevels[o.coin];
-    if (!lv || !o.reduceOnly || !o.limitPx) return;
-    var px = num(o.limitPx);
-    if (lv.side > 0){ /* long: stop at/below entry, TPs above */
-      if (px <= lv.entry){ if (!lv.sl || px > lv.sl) lv.sl = px; }
-      else if (!lv.tp1 || px < lv.tp1){ lv.tp2 = lv.tp1; lv.tp1 = px; }
-      else if (!lv.tp2){ lv.tp2 = px; }
-    } else { /* short: stop at/above entry, TPs below */
-      if (px >= lv.entry){ if (!lv.sl || px < lv.sl) lv.sl = px; }
-      else if (!lv.tp1 || px > lv.tp1){ lv.tp2 = lv.tp1; lv.tp1 = px; }
-      else if (!lv.tp2){ lv.tp2 = px; }
-    }
+    pcLevels[p.coin] = { entry: num(p.entry), side: p.side === "LONG" ? 1 : -1,
+      sl: num(p.sl), tp1: num(p.tp1), tp2: num(p.tp2) };
+    curPositions[p.coin] = { coin: p.coin, szi: (p.side === "LONG" ? 1 : -1) * num(p.size),
+      entryPx: num(p.entry), leverage: { value: num(p.lev), type: "cross" },
+      unrealizedPnl: num(p.upnl), positionValue: num(p.notional), marginUsed: num(p.margin) };
   });
   $("kEquity").textContent = fmtUSD(eq);
-  $("kEquityD").textContent = "notional positions " + fmtUSD(ms.totalNtlPos);
-  $("kWithdraw").textContent = fmtUSD(state.withdrawable);
+  $("kEquityD").textContent = "notional positions " + fmtUSD(acct.notional);
+  $("kWithdraw").textContent = fmtUSD(acct.withdrawable);
   $("kMargin").textContent = fmtUSD(mg);
   $("kMarginD").textContent = eq ? (100*mg/eq).toFixed(1)+"% of equity · cap 95%" : "of equity";
   var up = $("kUpnl"); up.textContent = positions.length ? fmtSigned(upnl) : "$0.00"; up.className = "value " + (positions.length ? cls(upnl) : "");
@@ -542,9 +429,6 @@ function renderState(state, orders){
 
   if (!positions.length){
     if (!lastOk){
-      /* Never connected live yet — the baked-in snapshot is from the live
-         start (account was flat then), so do NOT claim "no open positions"
-         from it. Show connecting until the first live refresh lands. */
       $("posWrap").innerHTML = "<div class='empty'><strong>Connecting to live feed…</strong><br>Loading the account's current positions. If this stays up, the live feed is unreachable — the page retries on its own.</div>";
       $("posNote").textContent = "";
     } else {
@@ -552,68 +436,64 @@ function renderState(state, orders){
       $("posNote").textContent = "";
     }
   } else {
-    $("posNote").textContent = positions.length + " live on Hyperliquid";
-    curPositions = {};
-    positions.forEach(function(p){ curPositions[p.coin] = p; });
+    $("posNote").textContent = positions.length + " live on BloFin";
     var rows = positions.map(function(p){
-      var sz = num(p.szi), side = sz > 0 ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
-      var lev = p.leverage ? (p.leverage.value + "× " + esc(p.leverage.type)) : "—";
+      var side = p.side === "LONG" ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
+      var lev = p.lev ? (p.lev + "× cross") : "—";
       return "<tr><td data-label='Coin'><strong>"+esc(p.coin)+"</strong> "+side+"</td>"+
-        "<td class='num' data-label='Size'>"+esc(p.szi)+"</td>"+
-        "<td class='num' data-label='Entry'>"+fmtPx(p.entryPx)+"</td>"+
-        "<td class='num' data-label='Mark / value'>"+fmtUSD(p.positionValue)+"</td>"+
+        "<td class='num' data-label='Size'>"+esc(String(p.size))+"</td>"+
+        "<td class='num' data-label='Entry'>"+fmtPx(p.entry)+"</td>"+
+        "<td class='num' data-label='Mark / value'>"+fmtPx(p.mark)+" · "+fmtUSD(p.notional)+"</td>"+
         "<td class='num' data-label='Leverage'>"+lev+"</td>"+
-        "<td class='num "+cls(p.unrealizedPnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(p.unrealizedPnl)+"</strong></td>"+
-        "<td class='num' data-label='Liq. price'>"+(p.liquidationPx ? fmtPx(p.liquidationPx) : "—")+"</td>"+
+        "<td class='num "+cls(p.upnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(p.upnl)+"</strong></td>"+
         "<td class='num' data-label='Share'><button class='share-btn' type='button' data-coin='"+esc(p.coin)+"' title='Share PnL badge'>Share</button></td></tr>";
     }).join("");
-    $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Position value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Liq. price</th><th class='num'>Share</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
-    /* keep an open badge preview live as prices refresh */
+    $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Mark / value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Share</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
     if (shareCoin && !$("shareOverlay").hidden) drawBadge();
   }
 
   if (!orders.length){
     $("ordWrap").innerHTML = "<div class='empty'><strong>No open orders.</strong><br>Nothing resting on the book right now.</div>";
   } else {
+    var kindLabel = { entry:"Entry", tp1:"TP1", tp2:"TP2", sl:"Stop", other:"Order" };
     var orows = orders.map(function(o){
-      var side = o.side === "B" ? "<span class='tag long'>BUY</span>" : "<span class='tag short'>SELL</span>";
-      var type = o.orderType || (o.isTrigger ? "Trigger" : "Limit");
+      var side = o.side === "buy" ? "<span class='tag long'>BUY</span>" : "<span class='tag short'>SELL</span>";
       return "<tr><td data-label='Coin'><strong>"+esc(o.coin)+"</strong> "+side+"</td>"+
-        "<td data-label='Type'>"+esc(type)+(o.reduceOnly ? " · reduce-only" : "")+"</td>"+
-        "<td class='num' data-label='Size'>"+esc(o.sz)+"</td>"+
-        "<td class='num' data-label='Limit px'>"+fmtPx(o.limitPx)+"</td>"+
-        "<td class='num' data-label='Trigger px'>"+(o.triggerPx ? fmtPx(o.triggerPx) : "—")+"</td>"+
-        "<td class='time-cell' data-label='Placed'>"+fmtTimeET(o.timestamp)+"</td></tr>";
+        "<td data-label='Kind'>"+esc(kindLabel[o.kind] || "Order")+(o.reduce_only ? " · reduce-only" : "")+"</td>"+
+        "<td data-label='Type'>"+esc(o.type)+"</td>"+
+        "<td class='num' data-label='Size'>"+esc(String(o.size))+"</td>"+
+        "<td class='num' data-label='Price'>"+fmtPx(o.px)+"</td></tr>";
     }).join("");
-    $("ordWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th>Type</th><th class='num'>Size</th><th class='num'>Limit px</th><th class='num'>Trigger px</th><th>Placed</th></tr></thead><tbody>"+orows+"</tbody></table></div>";
+    $("ordWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th>Kind</th><th>Type</th><th class='num'>Size</th><th class='num'>Price</th></tr></thead><tbody>"+orows+"</tbody></table></div>";
   }
 }
 
+/* ---- Recent fills, from the snapshot (post live-start only) ---- */
 function renderFills(fills){
-  var list = fills.filter(function(f){ return !closesOnly || isClose(f); }).slice(0, 30);
+  var list = (fills || []).filter(function(f){ return !closesOnly || isClose(f); }).slice(0, 30);
   if (!list.length){ $("fillsWrap").innerHTML = "<div class='empty'>No fills match this filter yet.</div>"; return; }
   var rows = list.map(function(f){
-    var close = isClose(f), cp = num(f.closedPnl);
+    var close = isClose(f), cp = num(f.pnl);
     var badge = close ? (cp > 0 ? " <span class='tag win'>WINNER</span>" : cp < 0 ? " <span class='tag lose'>LOSER</span>" : " <span class='tag flat'>FLAT</span>") : "";
     return "<tr><td class='time-cell' data-label='Time'>"+fmtTimeET(f.time)+"</td>"+
       "<td data-label='Coin'><strong>"+esc(f.coin)+"</strong></td>"+
       "<td data-label='Action'>"+esc(f.dir || "")+badge+"</td>"+
       "<td class='num' data-label='Price'>"+fmtPx(f.px)+"</td>"+
-      "<td class='num' data-label='Size'>"+esc(f.sz)+"</td>"+
+      "<td class='num' data-label='Size'>"+esc(String(f.sz))+"</td>"+
       "<td class='num "+(close ? cls(cp) : "")+"' data-label='Realized PnL'>"+(close ? fmtSigned(cp) : "—")+"</td>"+
       "<td class='num' data-label='Fee'>"+fmtUSD(f.fee, 3)+"</td></tr>";
   }).join("");
   $("fillsWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Time (ET)</th><th>Coin</th><th>Action</th><th class='num'>Price</th><th class='num'>Size</th><th class='num'>Realized PnL</th><th class='num'>Fee</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
 }
 
-function renderChart(fills, snap){
-  /* Bot record curve in R: seeded feed history, then live bot trades only.
-     Do NOT use the account's raw fills here — they include pre-bot manual
-     trading and sum to -$6.93, while the bot's record is +14.90R. */
+/* ---- Cumulative R curve: the bot's own closed trades only ----
+   (snapshot.closed, in close order). No seeded history — the BloFin
+   bot started fresh on Nov 10, 2026, so the curve starts at 0. */
+function renderChart(snap){
+  var closed = (snap && snap.closed) || [];
   var pts = [], cum = 0;
-  SEED_R_CURVE.forEach(function(pr){ cum += pr[1]; pts.push({t:pr[0], v:cum}); });
-  liveTrades(fills || []).forEach(function(tr){ cum += tr.r; pts.push({t:tr.closeTime, v:cum}); });
-  if (pts.length < 2){ $("chartWrap").innerHTML = "<span style='color:var(--muted)'>Not enough closed trades to draw the curve yet.</span>"; $("chartMeta").innerHTML=""; return; }
+  closed.forEach(function(c){ cum += num(c.r); pts.push({t: num(c.close_ms), v: cum, coin: c.coin}); });
+  if (pts.length < 2){ $("chartWrap").innerHTML = "<span style='color:var(--muted)'>Not enough closed trades to draw the curve yet — the bot just went live (Nov 10, 2026).</span>"; $("chartMeta").innerHTML=""; return; }
   var min = Math.min(0, Math.min.apply(null, pts.map(function(p){return p.v;})));
   var max = Math.max(0, Math.max.apply(null, pts.map(function(p){return p.v;})));
   if (max - min < 0.01){ max = min + 0.01; }
@@ -633,446 +513,396 @@ function renderChart(fills, snap){
     "<span>"+pts.length+" closed trades · "+fmtTimeET(pts[0].t)+" → "+fmtTimeET(pts[pts.length-1].t)+"</span>";
 }
 
-/* ---- Price charts: 1h candles, cycling through open positions + BTC ---- */
-/* Rotation list = the account's open position coins (in the order the
-   exchange lists them) followed by BTC. If the account is flat, just BTC.
-   Candles come from Hyperliquid's public candleSnapshot (1h, last ~100).
-   The in-progress candle is kept and ticked live: pcDraw updates its
-   close/high/low with the latest mid (from allMids, refreshed every
-   15s) on every draw, so the chart moves in real time instead of only
-   changing once an hour when a candle closes. Entry, stop and
-   take-profit prices (for an open position) are drawn as labelled lines
-   so you can see where the bot got in and where it gets out. */
-var pcCoins = ["BTC"], pcIdx = 0, pcCache = {}, pcTimer = null, pcLevels = {};
-var liveMids = {}; /* latest allMids, refreshed every 15s by refresh() */
-var curPositions = {}; /* coin -> position object, for the PnL share badge */
-var shareCoin = null; /* coin whose badge preview is open, or null */
-var PC_ROTATE_MS = 10000, PC_N = 100;
-function pcList(){
-  var coins = Object.keys(pcLevels);
-  if (coins.indexOf("BTC") < 0) coins.push("BTC");
-  return coins.length ? coins : ["BTC"];
-}
+/* ---- Price charts: 1h candles from BloFin's public API ----
+   GET /api/v1/market/candles?instId=<COIN>-USDT&bar=1H&limit=100
+   rows: [ts, open, high, low, close, vol, volCcy, volQuoteCcy, confirm],
+   newest first. Entry / stop / TP1 / TP2 lines come from the trade
+   record in the snapshot (pcLevels). */
+var pcCoins = [], pcData = {}, pcIdx = 0, pcTimer = null;
 function pcFetch(coin){
-  var now = Date.now();
-  var cached = pcCache[coin];
-  if (cached && now - cached.at < 60000) return Promise.resolve(cached.candles);
-  return post({type:"candleSnapshot", req:{coin:coin, interval:"1h", startTime: now - PC_N * 3600000, endTime: now}})
-    .then(function(rows){
-      /* Keep the in-progress candle too (the last one) — pcDraw updates
-         its close/high/low with the live mid on every refresh, so the
-         chart ticks in real time instead of only changing once an hour
-         when a candle closes. */
-      var cs = (rows || [])
-        .map(function(c){ return { t:num(c.t), o:num(c.o), h:num(c.h), l:num(c.l), c:num(c.c) }; })
-        .slice(-PC_N);
-      pcCache[coin] = { candles: cs, at: Date.now() };
-      return cs;
-    }).catch(function(){ return cached ? cached.candles : []; });
+  return fetch(BF_API + "/api/v1/market/candles?instId=" + encodeURIComponent(instFor(coin)) + "&bar=1H&limit=100")
+    .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function(j){
+      var rows = (j && j.data) || [];
+      var bars = rows.map(function(c){ return { t: num(c[0]), o: num(c[1]), h: num(c[2]), l: num(c[3]), c: num(c[4]) }; })
+        .filter(function(b){ return b.t > 0; }).sort(function(a,b){ return a.t - b.t; }).slice(-100);
+      if (bars.length) pcData[coin] = bars;
+      return bars;
+    });
 }
 function pcDraw(){
-  var coins = pcList();
-  if (pcIdx >= coins.length) pcIdx = 0;
-  var coin = coins[pcIdx];
-  var dots = coins.map(function(c, i){
-    return "<button type='button' data-i='"+i+"' aria-pressed='"+(i===pcIdx)+"' aria-label='Show "+esc(c)+" chart' title='"+esc(c)+"'></button>";
-  }).join("");
-  $("pcDots").innerHTML = dots;
-  var lv = pcLevels[coin] || {};
-  var entry = lv.entry;
-  $("pcTitle").innerHTML = esc(coin) + " <span class='tf'>1h · " + (entry ? (lv.side > 0 ? "LONG" : "SHORT") + ", entry " + fmtPx(entry) : "Bitcoin") + "</span>";
-  pcFetch(coin).then(function(cs){
-    if (!cs.length){ $("pcWrap").innerHTML = "<span style='color:var(--muted)'>No 1h candles returned for " + esc(coin) + " yet.</span>"; $("pcMeta").innerHTML = ""; return; }
-    /* Real-time: if the last candle is still in progress (its hour
-       hasn't closed), tick it with the live mid so the chart moves
-       every refresh instead of freezing between hours. Copy the
-       array + the last candle so the cache is not mutated. */
-    cs = cs.slice();
-    var lastC = cs[cs.length - 1];
-    var isLive = lastC && lastC.t + 3600000 > Date.now();
-    var livePx = 0;
-    if (isLive && liveMids && liveMids[coin]){
-      livePx = num(liveMids[coin]);
-      if (livePx > 0){
-        lastC = { t:lastC.t, o:lastC.o, h:Math.max(lastC.h, livePx),
-                  l:Math.min(lastC.l, livePx), c:livePx };
-        cs[cs.length - 1] = lastC;
-      } else { livePx = 0; }
-    }
-    var lo = Math.min.apply(null, cs.map(function(c){ return c.l; }));
-    var hi = Math.max.apply(null, cs.map(function(c){ return c.h; }));
-    /* levels drawn: entry, stop, TP1, TP2 — include them in the range */
-    var levels = [];
-    if (entry) levels.push({px: entry, label: "Entry " + fmtPx(entry), col: "var(--accent)", dash: "6 4"});
-    if (lv.sl) levels.push({px: lv.sl, label: "Stop " + fmtPx(lv.sl), col: "var(--down)", dash: "6 4"});
-    if (lv.tp1) levels.push({px: lv.tp1, label: "TP1 " + fmtPx(lv.tp1), col: "var(--up)", dash: "6 4"});
-    if (lv.tp2) levels.push({px: lv.tp2, label: "TP2 " + fmtPx(lv.tp2), col: "var(--up)", dash: "2 3"});
-    levels.forEach(function(L){ lo = Math.min(lo, L.px); hi = Math.max(hi, L.px); });
-    if (hi - lo < 1e-12){ hi = lo + 1e-12; }
-    var W = 880, H = 240, P = 8, n = cs.length, step = (W - 2*P) / n, bw = Math.max(2, step * 0.6);
-    function Y(v){ return H - P - (H - 2*P) * (v - lo) / (hi - lo); }
-    var parts = [];
-    cs.forEach(function(c, i){
-      var x = P + step * i + step / 2;
-      var up = c.c >= c.o, col = up ? "var(--up)" : "var(--down)";
-      parts.push("<line x1='"+x.toFixed(1)+"' y1='"+Y(c.h).toFixed(1)+"' x2='"+x.toFixed(1)+"' y2='"+Y(c.l).toFixed(1)+"' stroke='"+col+"' stroke-width='1'/>");
-      var yO = Y(c.o), yC = Y(c.c);
-      parts.push("<rect x='"+(x - bw/2).toFixed(1)+"' y='"+Math.min(yO, yC).toFixed(1)+"' width='"+bw.toFixed(1)+"' height='"+Math.max(1, Math.abs(yC - yO)).toFixed(1)+"' fill='"+col+"'/>");
-    });
+  var coin = pcCoins[pcIdx]; if (!coin) return;
+  var bars = pcData[coin];
+  var wrap = $("pcWrap"); if (!wrap) return;
+  var mid = liveMids[instFor(coin)];
+  var lv = pcLevels[coin];
+  var priceLabel = "—";
+  if (mid) priceLabel = "Live: " + fmtPx(mid);
+  if (!bars || !bars.length){
+    wrap.innerHTML = "<span style='color:var(--muted)'>Loading "+esc(coin)+" 1h candles…</span>";
+    $("pcTitle").textContent = coin + " · 1h candles";
+    $("pcMeta").innerHTML = "<span>" + priceLabel + "</span>";
+    pcFetch(coin).then(function(){ pcDraw(); });
+    return;
+  }
+  var bars2 = bars.slice();
+  var last = bars2[bars2.length-1];
+  if (mid && last){
+    var n = Object.assign({}, last);
+    n.c = mid; n.h = Math.max(last.h, mid); n.l = Math.min(last.l, mid);
+    bars2[bars2.length-1] = n;
+  }
+  var lo = Math.min.apply(null, bars2.map(function(b){ return b.l; }));
+  var hi = Math.max.apply(null, bars2.map(function(b){ return b.h; }));
+  if (lv){ lo = Math.min(lo, lv.sl, lv.tp1, lv.tp2); hi = Math.max(hi, lv.entry, lv.sl, lv.tp1, lv.tp2); }
+  if (hi - lo < 1e-9){ hi = lo + 1e-9; }
+  var W = 880, H = 260, P = 4, BW = (W - 2*P) / bars2.length;
+  function X(i){ return P + BW*i + BW/2; }
+  function Y(v){ return H - P - (H - 2*P) * (v - lo) / (hi - lo); }
+  var s = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='1 hour candlestick chart for "+esc(coin)+"'>";
+  if (lv){
+    var levels = [
+      { v: lv.entry, c: "var(--text)", label: "Entry " + fmtPx(lv.entry) },
+      { v: lv.sl, c: "var(--down)", label: "Stop " + fmtPx(lv.sl) },
+      { v: lv.tp1, c: "var(--up)", label: "TP1 " + fmtPx(lv.tp1) },
+      { v: lv.tp2, c: "var(--up)", label: "TP2 " + fmtPx(lv.tp2) }
+    ];
     levels.forEach(function(L){
-      var y = Y(L.px);
-      parts.push("<line x1='"+P+"' y1='"+y.toFixed(1)+"' x2='"+(W-P)+"' y2='"+y.toFixed(1)+"' stroke='"+L.col+"' stroke-width='1.5' stroke-dasharray='"+L.dash+"'/>");
-      parts.push("<text x='"+(W-P-4).toFixed(1)+"' y='"+(y-4).toFixed(1)+"' text-anchor='end' font-size='11' font-weight='600' fill='"+L.col+"'>"+esc(L.label)+"</text>");
+      var y = Y(L.v).toFixed(1);
+      s += "<line x1='"+P+"' y1='"+y+"' x2='"+(W-P)+"' y2='"+y+"' stroke='"+L.c+"' stroke-width='1' stroke-dasharray='5 4'/>" +
+        "<text x='"+(W-P-4)+"' y='"+(Number(y)-4)+"' text-anchor='end' font-size='11' fill='"+L.c+"'>"+esc(L.label)+"</text>";
     });
-    var last = cs[cs.length - 1], first = cs[0];
-    var chg = first.c ? 100 * (last.c / first.c - 1) : 0;
-    /* Mark the in-progress candle: a live-price dot at its close so
-       it is clear the rightmost candle is still ticking. */
-    if (isLive && livePx > 0){
-      var lx = P + step * (n - 1) + step / 2, ly = Y(last.c);
-      parts.push("<circle cx='"+lx.toFixed(1)+"' cy='"+ly.toFixed(1)+"' r='4' fill='var(--accent)' stroke='#fff' stroke-width='1.5'/>");
-    }
-    var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='"+esc(coin)+" 1-hour candlestick chart'>"+parts.join("")+"</svg>";
-    $("pcWrap").innerHTML = svg;
-    $("pcMeta").innerHTML = (isLive && livePx > 0
-      ? "<span style='display:inline-flex;align-items:center;gap:5px'><span class='live-dot'></span>Live: <strong>"+fmtPx(livePx)+"</strong></span>"
-      : "<span>Last close: <strong>"+fmtPx(last.c)+"</strong></span>")+
-      "<span>Range shown: "+fmtPx(lo)+" – "+fmtPx(hi)+"</span>"+
-      "<span class='"+cls(chg)+"'>"+fmtPct(chg)+" over "+n+"h</span>"+
-      (entry ? "<span>Entry: "+fmtPx(entry)+"</span>" : "") +
-      (lv.sl ? "<span class='neg'>Stop: "+fmtPx(lv.sl)+"</span>" : "") +
-      (lv.tp1 ? "<span class='pos'>TP1: "+fmtPx(lv.tp1)+"</span>" : "") +
-      (lv.tp2 ? "<span class='pos'>TP2: "+fmtPx(lv.tp2)+"</span>" : "") +
-      "<span>"+fmtTimeET(first.t)+" → "+fmtTimeET(last.t)+"</span>";
+  }
+  bars2.forEach(function(b, i){
+    var x = X(i), up = b.c >= b.o;
+    var col = up ? "var(--up)" : "var(--down)";
+    var w = Math.max(1, BW * 0.6);
+    s += "<line x1='"+x.toFixed(1)+"' y1='"+Y(b.h).toFixed(1)+"' x2='"+x.toFixed(1)+"' y2='"+Y(b.l).toFixed(1)+"' stroke='"+col+"' stroke-width='1'/>" +
+      "<rect x='"+(x-w/2).toFixed(1)+"' y='"+Y(Math.max(b.o, b.c)).toFixed(1)+"' width='"+w.toFixed(1)+"' height='"+Math.max(1, Math.abs(Y(b.o)-Y(b.c))).toFixed(1)+"' fill='"+col+"'/>";
   });
+  s += "</svg>";
+  wrap.innerHTML = s;
+  var span = bars2[0].t, spanEnd = bars2[bars2.length-1].t;
+  var title = coin + " · 1h candles";
+  if (lv){ title = coin + " · 1h · " + (pcLevels[coin].side > 0 ? "LONG" : "SHORT") + " · entry " + fmtPx(lv.entry); }
+  $("pcTitle").textContent = title;
+  $("pcMeta").innerHTML = "<span>" + priceLabel + "</span><span>" + fmtTimeET(span) + " → " + fmtTimeET(spanEnd) + "</span><span>" + bars2.length + " candles · BloFin public candles</span>";
+  $("pcDots").innerHTML = pcCoins.map(function(c, i){
+    return "<button type='button' data-idx='" + i + "'" + (i === pcIdx ? " class='active'" : "") + ">" + esc(c) + "</button>";
+  }).join("");
 }
-function pcAdvance(){ var coins = pcList(); if (!coins.length) return; pcIdx = (pcIdx + 1) % coins.length; pcDraw(); }
 function pcStart(){
   if (pcTimer) clearInterval(pcTimer);
-  pcTimer = setInterval(function(){ if (!paused && !document.hidden) pcAdvance(); }, PC_ROTATE_MS);
+  pcTimer = setInterval(function(){ pcIdx = (pcIdx + 1) % pcCoins.length; pcDraw(); }, 10000);
 }
-$("pcDots").addEventListener("click", function(e){
-  var b = e.target.closest ? e.target.closest("button[data-i]") : null;
-  if (!b) return;
-  pcIdx = parseInt(b.getAttribute("data-i"), 10) || 0;
-  pcDraw();
-});
+function pcSetCoins(){
+  var open = (snapCache && snapCache.positions) ? snapCache.positions.map(function(p){ return p.coin; }) : [];
+  var coins = open.slice();
+  if (coins.indexOf("BTC") < 0) coins.push("BTC");
+  pcCoins = coins;
+  if (pcIdx >= pcCoins.length) pcIdx = 0;
+  pcCoins.forEach(function(c){ pcFetch(c); });
+}
 
-function renderMarket(metaCtx, mids){
-  if (!metaCtx){ return; }
-  var meta = metaCtx[0], ctxs = metaCtx[1];
-  var byCoin = {};
-  meta.universe.forEach(function(u, i){ byCoin[u.name] = ctxs[i]; });
+/* ---- Market: live mids, 24h change, 24h volume from BloFin's
+   public tickers (GET /api/v1/market/tickers, no auth). ---- */
+function renderMarket(tickers){
+  var map = {};
+  (tickers || []).forEach(function(t){ if (t.instId) map[t.instId] = t; });
+  liveMids = {};
+  Object.keys(map).forEach(function(k){ liveMids[k] = num(map[k].last); });
   var rows = UNIVERSE.map(function(c){
-    var ctx = byCoin[c] || (c === "RENDER" ? byCoin["RNDR"] : null);
-    var mid = mids && (mids[c] || (c === "RENDER" ? mids["RNDR"] : null));
-    if (!ctx && !mid) return {coin:c, missing:true};
-    var mark = ctx ? num(ctx.markPx) : num(mid);
-    var prev = ctx ? num(ctx.prevDayPx) : 0;
-    var chg = prev ? 100*(mark/prev - 1) : null;
-    return { coin:c, mid: mid ? num(mid) : mark, chg:chg, funding: ctx ? 100*num(ctx.funding) : null,
-             oi: ctx ? num(ctx.openInterest) : null, vol: ctx ? num(ctx.dayNtlVlm) : 0 };
-  }).sort(function(a,b){ return (b.vol||0) - (a.vol||0); });
-  var html = rows.map(function(r){
-    if (r.missing) return "<tr><td data-label='Coin'><strong>"+esc(r.coin)+"</strong></td><td class='num' colspan='5' style='color:var(--muted)'>no live market data returned</td></tr>";
-    return "<tr><td data-label='Coin'><strong>"+esc(r.coin)+"</strong></td>"+
-      "<td class='num' data-label='Mid'>"+fmtPx(r.mid)+"</td>"+
-      "<td class='num "+(r.chg==null?"":cls(r.chg))+"' data-label='24h change'>"+(r.chg==null?"—":fmtPct(r.chg))+"</td>"+
-      "<td class='num' data-label='Funding / hr'>"+(r.funding==null?"—":fmtPct(r.funding,4))+"</td>"+
-      "<td class='num' data-label='Open interest'>"+(r.oi==null?"—":fmtUSD(r.oi * r.mid, 0))+"</td>"+
-      "<td class='num' data-label='24h volume'>"+fmtUSD(r.vol, 0)+"</td></tr>";
-  }).join("");
-  $("mktWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Mid</th><th class='num'>24h change</th><th class='num'>Funding / hr</th><th class='num'>Open interest</th><th class='num'>24h volume</th></tr></thead><tbody>"+html+"</tbody></table></div>";
+    var t = map[instFor(c)];
+    if (!t) return null;
+    var last = num(t.last), open24 = num(t.open24h), high24 = num(t.high24h), low24 = num(t.low24h);
+    var chg = open24 ? 100*(last-open24)/open24 : 0;
+    return "<tr><td data-label='Coin'><strong>"+esc(c)+"</strong></td>"+
+      "<td class='num' data-label='Mid'>"+fmtPx(last)+"</td>"+
+      "<td class='num "+cls(chg)+"' data-label='24h change'><strong>"+fmtPct(chg)+"</strong></td>"+
+      "<td class='num' data-label='24h volume'>"+fmtUSD(t.volCurrency24h, 0)+"</td></tr>";
+  }).filter(Boolean).join("");
+  $("mktWrap").innerHTML = rows ?
+    "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Mid</th><th class='num'>24h change</th><th class='num'>24h volume</th></tr></thead><tbody>"+rows+"</tbody></table></div>" :
+    "<div class='empty'>Market data failed to load — retrying.</div>";
+  $("mktNote").textContent = "Mid price, 24h change and 24h volume from BloFin's public tickers. BloFin tickers carry no funding or open interest, so those columns are not shown.";
 }
 
-function post(body){
-  var ctl = ("AbortController" in window) ? new AbortController() : null;
-  var to = ctl ? setTimeout(function(){ ctl.abort(); }, 12000) : null;
-  return fetch(API, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
-    .then(function(r){ if (to) clearTimeout(to); if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+/* ---- Fetching / refresh ---- */
+function fetchSnap(){
+  return fetch(SNAP_URL, { cache: "no-store" }).then(function(r){
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  });
 }
-function applyAll(state, orders, fills, snap){ renderState(state, orders); renderScore(fills); renderFills(fills); renderChart(fills, snap); }
-
-function setConn(kind, text){ var b=$("connBadge"); b.className = "live-badge" + (kind==="live" ? "" : " " + kind); $("connText").textContent = text; }
-
-var ctxCounter = 99;
-/* ---- PnL badge sharer: share icon per open position -> preview modal
-   with a canvas badge image, a $ / % toggle, and copy / download /
-   native-share actions. The badge is drawn on a canvas (1080x1080) so
-   it is a real PNG the user can copy or share anywhere. PnL % is the
-   return on margin (unrealized PnL / marginUsed); in % mode no dollar
-   figure appears on the badge at all. ---- */
-function pnlPct(p){
-  var up = num(p.unrealizedPnl);
-  var m = num(p.marginUsed);
-  if (m > 0) return up / m * 100;
-  var v = num(p.positionValue);
-  return v > 0 ? up / v * 100 : 0;
+function bfTickers(){
+  return fetch(BF_API + "/api/v1/market/tickers").then(function(r){
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(function(j){ return (j && j.data) || []; });
 }
+function setConn(mode){
+  var badge = $("connBadge"), text = $("connText");
+  badge.className = "conn " + mode;
+  if (mode === "ok"){ text.textContent = "● Live"; }
+  else if (mode === "stale"){ text.textContent = "● Stale snapshot"; }
+  else { text.textContent = "● Connecting to live feed…"; }
+}
+function applyAll(snap){
+  snapCache = snap;
+  if (snap && snap.universe && snap.universe.coins && snap.universe.coins.length) UNIVERSE = snap.universe.coins;
+  renderScore(snap);
+  renderState(snap);
+  renderFills(snap.fills || []);
+  renderChart(snap);
+  var upd = snap ? num(snap.updated_at_ms) : 0;
+  var age = upd ? Date.now() - upd : 0;
+  var stale = age > 3600e3;
+  if (upd){
+    $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd) + " ET" +
+      (stale ? " — STALE (snapshot is " + Math.round(age/60000) + " min old; account figures lag the last deploy)" : "") +
+      " · prices live · refreshes every 15s";
+  }
+  var bs = $("botState");
+  if (bs && snap && snap.account){
+    var posN = (snap.positions || []).length;
+    bs.textContent = "Bot state: live — last snapshot " + fmtTimeET(upd) + " ET · equity " + fmtUSD(snap.account.equity) + " · " + posN + " open position" + (posN === 1 ? "" : "s") + " · margin " + fmtUSD(snap.account.used_margin) + " · fee 0.06% taker.";
+  }
+  setConn(stale ? "stale" : (lastOk ? "ok" : "connecting"));
+  announceUpdates(snap);
+  pcSetCoins();
+  if (pcCoins.length) pcDraw();
+}
+function refresh(){
+  if (paused) return;
+  return Promise.allSettled([fetchSnap(), bfTickers()]).then(function(res){
+    var snapRes = res[0], tkRes = res[1];
+    if (snapRes.status === "fulfilled" && snapRes.value){
+      lastOk = Date.now(); /* set before applyAll so the badge reads Live on the first good refresh */
+      applyAll(snapRes.value);
+      failCount = 0;
+    } else {
+      failCount += 1;
+      if (snapCache){ /* keep last snapshot on screen; mark staleness */
+        var upd = num(snapCache.updated_at_ms);
+        $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd) + " ET — snapshot fetch failed (" + failCount + "), showing last good snapshot · prices live · refreshes every 15s";
+        setConn("stale");
+      } else {
+        setConn("connecting");
+        $("updatedAt").textContent = "Connecting to live feed… (snapshot fetch failed, retrying)";
+      }
+    }
+    if (tkRes.status === "fulfilled"){ renderMarket(tkRes.value); }
+    var b = $("kPos"); if (b && pcCoins.length) pcDraw();
+  });
+}
+function startLoop(){
+  if (timer) clearInterval(timer);
+  timer = setInterval(function(){ if (!paused) refresh(); }, 15000);
+}
+
+/* ---- Universe chips ---- */
+function renderChips(){
+  var el = $("uniChips");
+  if (!el) return;
+  el.innerHTML = UNIVERSE.map(function(c){ return "<span>" + esc(c) + "</span>"; }).join("");
+}
+
+/* ---- Voice announcing: only NEW closes / opens ---- */
+var voiceOn = false, voices = [], voiceSeen = { closes: new Set(), opens: new Set() }, voiceSeeded = false;
+function speak(text){
+  try {
+    if (!("speechSynthesis" in window)) return;
+    if (speechSynthesis.speaking) speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.pitch = 0.9; u.rate = 0.95;
+    var v = pickVoice();
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch(e){}
+}
+function pickVoice(){
+  if (!voices.length) return null;
+  var pref = ["Samantha","Google US English","Microsoft Zira","Karen","Moira","Tessa","Google UK English Female"];
+  for (var i = 0; i < pref.length; i++){
+    var hit = voices.find(function(v){ return v.name === pref[i]; });
+    if (hit) return hit;
+  }
+  return voices.find(function(v){ return /samantha|zira|karen|moira|tessa|female|google us english/i.test(v.name); }) || voices[0];
+}
+function loadVoices(){
+  try { voices = speechSynthesis.getVoices() || []; } catch(e){}
+}
+function announceUpdates(snap){
+  if (!snap) return;
+  var closes = snap.closed || [], fills = snap.fills || [];
+  if (!voiceSeeded){
+    closes.forEach(function(c){ voiceSeen.closes.add(c.close_ms + "|" + c.coin); });
+    fills.forEach(function(f){ voiceSeen.opens.add(f.time + "|" + f.coin); });
+    voiceSeeded = true;
+    return;
+  }
+  if (!voiceOn) return;
+  closes.forEach(function(c){
+    var k = c.close_ms + "|" + c.coin;
+    if (!voiceSeen.closes.has(k)){
+      voiceSeen.closes.add(k);
+      speak(c.coin + " closed: " + (c.win ? "winner" : "loser") + ", " + fmtR(c.r) + ".");
+    }
+  });
+  fills.forEach(function(f){
+    var k = f.time + "|" + f.coin;
+    if (!voiceSeen.opens.has(k)){
+      voiceSeen.opens.add(k);
+      if ((f.dir || "").indexOf("Open") === 0) speak(f.coin + " opened: " + f.dir + ", " + num(f.sz) + " units at " + fmtPx(f.px) + ".");
+    }
+  });
+}
+
+/* ---- PnL share badge ---- */
 function drawBadge(){
+  var c = $("shareCanvas"); if (!c) return;
+  var ctx = c.getContext("2d");
+  var W = 1080, H = 1080, cx = W/2;
+  var showDollars = $("shareDollars") && $("shareDollars").checked;
   var p = curPositions[shareCoin];
-  var cv = $("shareCanvas"); if (!cv || !p) return;
-  var ctx = cv.getContext("2d");
-  var W = cv.width, H = cv.height;
-  var showDollars = $("shareDollars").checked;
-  var up = num(p.unrealizedPnl);
-  var pct = pnlPct(p);
-  var good = up >= 0;
-  var col = good ? "#3ecf8e" : "#ff6b7a";
-  var pctTxt = (pct >= 0 ? "+" : "") + pct.toFixed(1) + "%";
-  ctx.textAlign = "center";
-  /* KnightTrader-Muse badge: deep green radial glow on near-black,
-     gold knight + wordmark, glowing PnL. */
-  var bg = ctx.createRadialGradient(W/2, 300, 60, W/2, H/2, 720);
-  bg.addColorStop(0, "#12291e"); bg.addColorStop(0.55, "#0b120e"); bg.addColorStop(1, "#070a08");
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = "#d4a017"; ctx.lineWidth = 5; ctx.strokeRect(20, 20, W - 40, H - 40);
-  ctx.strokeStyle = "rgba(212,160,23,.35)"; ctx.lineWidth = 2; ctx.strokeRect(34, 34, W - 68, H - 68);
-  /* brand */
-  ctx.fillStyle = "#d4a017"; ctx.font = "700 74px 'IBM Plex Sans', sans-serif";
-  ctx.fillText("♞", W / 2, 128);
-  ctx.fillStyle = "#e8ece8"; ctx.font = "800 58px 'IBM Plex Sans', sans-serif";
-  ctx.fillText("KNIGHTTRADER", W / 2, 196);
-  ctx.fillStyle = "#3ecf8e"; ctx.font = "800 58px 'IBM Plex Sans', sans-serif";
-  ctx.fillText("— MUSE —", W / 2, 262);
-  ctx.fillStyle = "#d4a017"; ctx.fillRect(W/2 - 130, 292, 260, 4);
-  var sz = num(p.szi), side = sz > 0 ? "LONG" : "SHORT";
-  ctx.fillStyle = "#e8ece8"; ctx.font = "700 104px 'IBM Plex Sans', sans-serif";
-  ctx.fillText(p.coin + "  ·  " + side, W / 2, 440);
-  /* PnL, glowing */
-  ctx.save();
-  ctx.shadowColor = col; ctx.shadowBlur = 46;
-  ctx.fillStyle = col;
-  if (showDollars){
-    ctx.font = "700 168px 'IBM Plex Mono', monospace";
-    ctx.fillText(fmtSigned(up), W / 2, 640);
-  } else {
-    ctx.font = "700 168px 'IBM Plex Mono', monospace";
-    ctx.fillText(pctTxt, W / 2, 640);
+  var g = ctx.createRadialGradient(cx, 300, 60, cx, H/2, 700);
+  g.addColorStop(0, "#0c2b18"); g.addColorStop(0.55, "#071610"); g.addColorStop(1, "#05080a");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#d4a017"; ctx.lineWidth = 6; ctx.strokeRect(26, 26, W-52, H-52);
+  ctx.strokeStyle = "rgba(212,160,23,0.45)"; ctx.lineWidth = 2; ctx.strokeRect(46, 46, W-92, H-92);
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#d4a017"; ctx.font = "bold 96px serif";
+  ctx.shadowColor = "rgba(212,160,23,0.9)"; ctx.shadowBlur = 34;
+  ctx.fillText("♞", cx, 170); ctx.shadowBlur = 0;
+  ctx.fillStyle = "#f4f6f8"; ctx.font = "bold 64px system-ui, sans-serif";
+  ctx.fillText("KNIGHTTRADER", cx, 285);
+  ctx.fillStyle = "#4ade80"; ctx.font = "bold 40px system-ui, sans-serif";
+  ctx.fillText("— MUSE —", cx, 345);
+  var isWin = p && num(p.unrealizedPnl) >= 0;
+  ctx.fillStyle = "#e8eef3"; ctx.font = "bold 96px system-ui, sans-serif";
+  ctx.fillText(shareCoin || "", cx, 470);
+  var dir = p ? (num(p.szi) > 0 ? "LONG" : "SHORT") : "";
+  ctx.fillStyle = dir === "LONG" ? "#4ade80" : "#f87171"; ctx.font = "bold 44px system-ui, sans-serif";
+  ctx.fillText(dir, cx, 545);
+  var badgePct = 0, badgeDollars = "$0.00", pnlTxt = "—", pnlCol = "#e8eef3";
+  if (p){
+    badgePct = num(p.marginUsed) ? 100 * num(p.unrealizedPnl) / num(p.marginUsed) : 0;
+    badgeDollars = fmtSigned(p.unrealizedPnl);
+    pnlTxt = fmtPct(badgePct, 1);
+    pnlCol = isWin ? "#4ade80" : "#f87171";
   }
-  ctx.restore();
-  if (showDollars){
-    ctx.font = "600 64px 'IBM Plex Sans', sans-serif";
-    ctx.fillStyle = "#93a198";
-    ctx.fillText(pctTxt, W / 2, 732);
+  ctx.fillStyle = pnlCol; ctx.font = "bold 130px system-ui, sans-serif";
+  ctx.shadowColor = pnlCol; ctx.shadowBlur = 46;
+  ctx.fillText(pnlTxt, cx, 700); ctx.shadowBlur = 0;
+  if (showDollars && p){
+    ctx.fillStyle = pnlCol; ctx.font = "bold 64px system-ui, sans-serif";
+    ctx.fillText(badgeDollars, cx, 810);
   }
-  ctx.fillStyle = "#e8ece8"; ctx.font = "500 52px 'IBM Plex Sans', sans-serif";
-  var y = showDollars ? 836 : 776;
-  ctx.fillText("Entry " + fmtPx(p.entryPx) + "   ·   " + (p.leverage ? p.leverage.value + "× " + p.leverage.type : "—"), W / 2, y);
-  if (showDollars){
-    ctx.fillStyle = "#93a198"; ctx.font = "500 48px 'IBM Plex Sans', sans-serif";
-    ctx.fillText("Position value " + fmtUSD(p.positionValue), W / 2, 916);
-  }
-  ctx.fillStyle = "#93a198"; ctx.font = "500 40px 'IBM Plex Sans', sans-serif";
-  ctx.fillText("Live  ·  Hyperliquid  ·  " + new Date().toLocaleString("en-US", {month: "short", day: "numeric", hour: "numeric", minute: "2-digit"}), W / 2, H - 70);
+  ctx.fillStyle = "#9aa4ad"; ctx.font = "34px system-ui, sans-serif";
+  ctx.fillText("Unrealized PnL on margin · live on BloFin", cx, 880);
+  ctx.fillStyle = "#8b95a0"; ctx.font = "30px system-ui, sans-serif";
+  ctx.fillText("Live · BloFin · " + new Date().toLocaleString("en-US",{timeZone:"America/New_York"}), cx, 940);
+  ctx.fillStyle = "#6b7680"; ctx.font = "26px system-ui, sans-serif";
+  ctx.fillText("knighttrader-muse · not financial advice", cx, 990);
 }
-function setShareStatus(t, ok){ var el = $("shareStatus"); el.textContent = t; el.className = "share-status" + (ok === true ? " ok" : ok === false ? " err" : ""); }
-function flashBtn(id, label){ var b = $(id); if (!b) return; var old = b.textContent; b.textContent = label; setTimeout(function(){ b.textContent = old; }, 2000); }
+function setStatus(msg, ok){
+  var el = $("shareStatus"); if (!el) return;
+  el.textContent = msg;
+  el.style.color = ok ? "var(--up)" : "var(--down)";
+  el.style.fontWeight = "700";
+}
+function flashBtn(el, label){
+  var orig = el.textContent; el.textContent = label; el.disabled = true;
+  setTimeout(function(){ el.textContent = orig; el.disabled = false; }, 2000);
+}
 function openShare(coin){
-  var p = curPositions[coin]; if (!p) return;
   shareCoin = coin;
-  $("shareSub").textContent = "Preview your " + coin + " PnL badge. Copy the image or share it.";
-  setShareStatus("");
+  $("shareTitle").textContent = coin + " · PnL badge";
+  var p = curPositions[coin];
+  $("shareSub").textContent = p ? ("Unrealized PnL " + fmtSigned(p.unrealizedPnl) + " on " + fmtUSD(p.marginUsed) + " margin · " + (num(p.szi) > 0 ? "LONG" : "SHORT") + " · entry " + fmtPx(p.entryPx) + " · " + (p.leverage && p.leverage.value ? p.leverage.value + "× cross" : "")) : "";
   $("shareOverlay").hidden = false;
   drawBadge();
 }
 function closeShare(){ $("shareOverlay").hidden = true; shareCoin = null; }
-function badgeBlob(cb){
-  var cv = $("shareCanvas");
-  if (cv.toBlob){ cv.toBlob(cb, "image/png"); } else { cb(null); }
-}
 
-function refresh(){
-  if (paused) return;
-  try {
-  ctxCounter++;
-  var jobs = [ post({type:"clearinghouseState", user:ADDR}), post({type:"openOrders", user:ADDR}), post({type:"userFills", user:ADDR}), post({type:"allMids"}) ];
-  var wantCtx = ctxCounter % 4 === 0; /* market context every ~60s, account data every cycle */
-  if (wantCtx) jobs.push(post({type:"metaAndAssetCtxs"}));
-  Promise.all(jobs).then(function(res){
-    failCount = 0; lastOk = Date.now();
-    fillsCache = (res[2] && res[2].length) ? res[2] : fillsCache;
-    liveMids = res[3] || liveMids; /* latest mids — the price charts tick the in-progress candle with these */
-    applyAll(res[0], res[1] || [], fillsCache);
-    announceUpdates(fillsCache);
-    renderMarket(wantCtx ? res[4] : null, res[3]);
-    pcDraw();
-    setConn("live", "LIVE · STREAMING");
-    $("updatedAt").textContent = "Updated " + fmtClockET(lastOk) + " ET · refreshes every 15s";
-  }).catch(function(){
-    failCount++;
-    if (lastOk){ setConn("stale", "STALE · RETRYING"); $("updatedAt").textContent = "Feed unreachable — showing last data from " + fmtClockET(lastOk) + " ET. Retrying…"; }
-    else { setConn("error", "SNAPSHOT · FEED UNREACHABLE"); $("updatedAt").textContent = "Live feed unreachable — showing the snapshot taken when this page was built (" + fmtTimeET(SNAPSHOT.at) + " ET). Retrying…"; }
-  }).then(function(){ schedule(); });
-  } catch(err){
-    /* A synchronous throw (e.g. fetch unavailable on first paint) must not
-       kill the retry loop — count it as a failure and schedule a retry. */
-    failCount++;
-    setConn("error", "SNAPSHOT · FEED UNREACHABLE");
-    schedule();
-  }
-}
-function schedule(){ if (timer) clearTimeout(timer); if (!paused){ /* fast reconnect: 3s, 6s, 12s, 24s, 48s, then 60s cap — the old 15s-first backoff left a fresh load stuck on the stale snapshot long enough that the user had to click Refresh to see positions */
-  var delay = failCount ? Math.min(60000, 3000 * Math.pow(2, failCount-1)) : 15000; timer = setTimeout(refresh, delay); } }
-
-/* universe chips */
-$("uniChips").innerHTML = UNIVERSE.map(function(c){ return "<span class='chip'>"+esc(c)+"</span>"; }).join("");
-
-/* Voice announcements (text-to-speech) for live-bot trade opens and closes.
-   Browsers block speech until a user gesture, so voice stays off until the
-   Voice button is tapped. Once on, it announces each new live-bot trade as
-   it opens or closes. Only future trades are announced — turning voice on
-   marks everything already known as seen. */
-var voiceOn = false, seenVoiceCloses = {}, seenVoiceOpens = {};
-/* Female announcer voice: prefer a warm female voice (Samantha on iOS,
-   Google US English on Chrome, Zira on Windows), fall back to any voice
-   whose name reads female, then the default. Pitch slightly low and rate
-   slightly slow for a smooth announcer delivery. */
-var announcerVoice = null;
-function pickAnnouncerVoice(){
-  if (!("speechSynthesis" in window)) return null;
-  var voices = window.speechSynthesis.getVoices() || [];
-  if (!voices.length) return null;
-  var prefer = ["Samantha", "Google US English", "Microsoft Zira", "Karen", "Moira", "Tessa", "Google UK English Female"];
-  for (var i = 0; i < prefer.length; i++){
-    for (var j = 0; j < voices.length; j++){
-      if (voices[j].name.indexOf(prefer[i]) >= 0) return voices[j];
-    }
-  }
-  for (var k = 0; k < voices.length; k++){
-    if (/female|samantha|zira|karen|moira|tessa|victoria|ava|allison|joana/i.test(voices[k].name)) return voices[k];
-  }
-  return voices[0];
-}
-function speak(text){
-  if (!voiceOn || !("speechSynthesis" in window)) return;
-  try {
-    if (!announcerVoice) announcerVoice = pickAnnouncerVoice();
-    window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    if (announcerVoice) u.voice = announcerVoice;
-    u.pitch = 0.9;
-    u.rate = 0.95;
-    window.speechSynthesis.speak(u);
-  } catch(e){}
-}
-if ("speechSynthesis" in window){
-  window.speechSynthesis.onvoiceschanged = function(){ announcerVoice = pickAnnouncerVoice(); };
-}
-function markVoiceSeen(fills){
-  var live = liveTrades(fills || []);
-  live.forEach(function(tr){ seenVoiceCloses[tr.coin + "@" + tr.closeTime] = true; });
-  (fills || []).forEach(function(f){
-    if (!f || f.time <= LIVE_START_MS) return;
-    var d = f.dir || "";
-    if (d.indexOf("Open") === 0) seenVoiceOpens[f.coin + "@" + f.time + "@" + d] = true;
+/* ---- Controls ---- */
+var closesOnly = false;
+function setupControls(){
+  $("pauseBtn").addEventListener("click", function(){
+    paused = !paused;
+    this.textContent = paused ? "▶ Resume" : "⏸ Pause";
+    setConn(paused ? "stale" : (lastOk ? "ok" : "connecting"));
+    if (!paused) refresh();
   });
-}
-function announceUpdates(fills){
-  if (!voiceOn) return;
-  var live = liveTrades(fills || []);
-  live.forEach(function(tr){
-    var key = tr.coin + "@" + tr.closeTime;
-    if (seenVoiceCloses[key]) return;
-    seenVoiceCloses[key] = true;
-    var outcome = tr.r > 0 ? "Winner" : (tr.r < 0 ? "Loser" : "Breakeven");
-    speak("Trade closed. " + tr.coin + ", " + outcome + ", " + fmtR(tr.r) + ".");
+  $("refreshBtn").addEventListener("click", function(){ refresh(); });
+  $("voiceBtn").addEventListener("click", function(){
+    voiceOn = !voiceOn;
+    this.textContent = "Voice: " + (voiceOn ? "on" : "off");
+    if (voiceOn){ loadVoices(); speak("Voice announcements on."); }
   });
-  (fills || []).forEach(function(f){
-    if (!f || f.time <= LIVE_START_MS) return;
-    var d = f.dir || "";
-    if (d.indexOf("Open") !== 0) return;
-    var key = f.coin + "@" + f.time + "@" + d;
-    if (seenVoiceOpens[key]) return;
-    seenVoiceOpens[key] = true;
-    var side = d.indexOf("Long") >= 0 ? "long" : (d.indexOf("Short") >= 0 ? "short" : "");
-    speak("New trade opened. " + f.coin + " " + side + ".");
+  $("fAll").addEventListener("click", function(){ closesOnly = false; this.className = "seg active"; $("fCloses").className = "seg"; renderFills(snapCache ? snapCache.fills : []); });
+  $("fCloses").addEventListener("click", function(){ closesOnly = true; this.className = "seg active"; $("fAll").className = "seg"; renderFills(snapCache ? snapCache.fills : []); });
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".share-btn");
+    if (b && b.dataset.coin) openShare(b.dataset.coin);
+    var d = e.target.closest("#pcDots button");
+    if (d){ pcIdx = num(d.dataset.idx); pcDraw(); }
+    if (e.target.closest("#snapNote")) refresh();
   });
+  $("shareClose").addEventListener("click", closeShare);
+  $("shareOverlay").addEventListener("click", function(e){ if (e.target === this) closeShare(); });
+  $("shareDollars").addEventListener("change", drawBadge);
+  $("shareCopy").addEventListener("click", function(){
+    var btn = this;
+    try {
+      $("shareCanvas").toBlob(function(blob){
+        if (!blob){ setStatus("Copy failed: no image.", false); return; }
+        var item = new ClipboardItem({ "image/png": blob });
+        navigator.clipboard.write([item]).then(function(){ flashBtn(btn, "Copied!"); setStatus("Badge copied to clipboard.", true); }, function(){ setStatus("Copy failed: clipboard blocked.", false); });
+      }, "image/png");
+    } catch(e){ setStatus("Copy failed: " + e.message, false); }
+  });
+  $("shareDownload").addEventListener("click", function(){
+    var btn = this;
+    try {
+      $("shareCanvas").toBlob(function(blob){
+        if (!blob){ setStatus("Download failed.", false); return; }
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "pnl-" + (shareCoin || "trade").toLowerCase() + ".png";
+        document.body.appendChild(a); a.click(); a.remove();
+        flashBtn(btn, "Downloaded!"); setStatus("Badge downloaded as PNG.", true);
+      }, "image/png");
+    } catch(e){ setStatus("Download failed: " + e.message, false); }
+  });
+  $("shareNative").addEventListener("click", function(){
+    var btn = this;
+    try {
+      $("shareCanvas").toBlob(function(blob){
+        if (!blob){ setStatus("Share failed: no image.", false); return; }
+        var file = new File([blob], "pnl-" + (shareCoin || "trade").toLowerCase() + ".png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })){
+          navigator.share({ files: [file], title: (shareCoin || "") + " PnL badge" }).then(function(){ flashBtn(btn, "Shared!"); setStatus("Badge shared.", true); }, function(){ setStatus("Share cancelled.", false); });
+        } else { setStatus("Native share isn't available here — use Download PNG instead.", false); }
+      }, "image/png");
+    } catch(e){ setStatus("Share failed: " + e.message, false); }
+  });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !$("shareOverlay").hidden) closeShare(); });
+  if ("speechSynthesis" in window){ loadVoices(); try { speechSynthesis.onvoiceschanged = loadVoices; } catch(e){} }
 }
 
-/* snapshot first paint */
-applyAll(SNAPSHOT.state, SNAPSHOT.orders, SNAPSHOT.fills, true);
-setConn("stale", "CONNECTING");
-$("updatedAt").textContent = "Snapshot from page build (" + fmtTimeET(SNAPSHOT.at) + " ET) — connecting to live feed…";
-pcDraw();
+/* ---- First paint (baked snapshot) then live refresh ---- */
+renderChips();
+setupControls();
+if (BAKED_SNAP){
+  applyAll(BAKED_SNAP);
+  $("updatedAt").textContent = "Snapshot from page build (" + fmtTimeET(num(BAKED_SNAP.updated_at_ms)) + " ET) — connecting to live feed…";
+  setConn("connecting");
+}
 pcStart();
-
-/* controls */
-$("refreshBtn").addEventListener("click", function(){ failCount = 0; refresh(); });
-$("pauseBtn").addEventListener("click", function(){
-  paused = !paused;
-  this.setAttribute("aria-pressed", paused ? "true" : "false");
-  this.textContent = paused ? "Resume" : "Pause";
-  if (paused){ if (timer) clearTimeout(timer); setConn("stale", "PAUSED"); }
-  else { setConn("stale", "CONNECTING"); refresh(); }
-});
-$("voiceBtn").addEventListener("click", function(){
-  voiceOn = !voiceOn;
-  this.setAttribute("aria-pressed", voiceOn ? "true" : "false");
-  this.textContent = voiceOn ? "Voice: on" : "Voice: off";
-  if (voiceOn){
-    markVoiceSeen(fillsCache);
-    speak("Voice announcements on.");
-  } else {
-    try { window.speechSynthesis.cancel(); } catch(e){}
-  }
-});
-$("copyAddr").addEventListener("click", function(){
-  var btn = this;
-  function done(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = "Copy address"; }, 1600); }
-  if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(ADDR).then(done).catch(function(){ btn.textContent = ADDR; }); }
-  else { btn.textContent = ADDR; }
-});
-$("fAll").addEventListener("click", function(){ closesOnly = false; this.setAttribute("aria-pressed","true"); $("fCloses").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
-$("fCloses").addEventListener("click", function(){ closesOnly = true; this.setAttribute("aria-pressed","true"); $("fAll").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
-
-/* PnL badge sharer controls */
-$("posWrap").addEventListener("click", function(e){
-  var b = e.target && e.target.closest ? e.target.closest(".share-btn") : null;
-  if (b && b.getAttribute("data-coin")) openShare(b.getAttribute("data-coin"));
-});
-$("shareDollars").addEventListener("change", drawBadge);
-$("shareClose").addEventListener("click", closeShare);
-$("shareOverlay").addEventListener("click", function(e){ if (e.target === this) closeShare(); });
-$("shareCopy").addEventListener("click", function(){
-  badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
-    if (navigator.clipboard && window.ClipboardItem){
-      navigator.clipboard.write([new ClipboardItem({"image/png": blob})]).then(function(){ setShareStatus("Image copied — paste it anywhere.", true); flashBtn("shareCopy", "Copied!"); }).catch(function(){ setShareStatus("Copy blocked by the browser — try Download PNG instead.", false); });
-    } else { setShareStatus("Copy image isn't supported here — try Download PNG.", false); }
-  });
-});
-$("shareDownload").addEventListener("click", function(){
-  badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "pnl-" + (shareCoin || "badge") + ".png";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
-    setShareStatus("Image downloaded.", true); flashBtn("shareDownload", "Downloaded!");
-  });
-});
-$("shareNative").addEventListener("click", function(){
-  badgeBlob(function(blob){
-    if (!blob){ setShareStatus("Could not make the image in this browser.", false); return; }
-    var file = new File([blob], "pnl-" + (shareCoin || "badge") + ".png", {type: "image/png"});
-    if (navigator.canShare && navigator.canShare({files: [file]})){
-      navigator.share({files: [file], title: "PnL badge"}).then(function(){ setShareStatus("Shared.", true); flashBtn("shareNative", "Shared!"); }).catch(function(){ /* user cancelled */ });
-    } else if (navigator.share){
-      navigator.share({title: "PnL badge", text: "PnL badge"}).catch(function(){});
-      setShareStatus("This browser can't share the image directly — use Copy image or Download PNG.", false);
-    } else {
-      setShareStatus("Sharing isn't supported here — use Copy image or Download PNG.", false);
-    }
-  });
-});
-document.addEventListener("visibilitychange", function(){ if (!document.hidden && !paused && Date.now() - lastOk > 15000){ failCount = 0; refresh(); } });
-/* iOS Safari restores pages from the back-forward cache without a fresh load — pageshow catches that return and reconnects. */
-window.addEventListener("pageshow", function(e){ if (e.persisted && !paused){ failCount = 0; refresh(); } });
-
 refresh();
-})();
+startLoop();
+
 </script>
 </body>
 </html>
