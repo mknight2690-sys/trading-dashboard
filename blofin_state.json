@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794387870966,
-  "updated_at": "2026-11-11T09:04:30Z",
+  "updated_at_ms": 1794387935385,
+  "updated_at": "2026-11-11T09:05:35Z",
   "account": {
     "equity": 5.02,
-    "withdrawable": 0.9,
-    "used_margin": 4.13,
-    "notional": 17.01
+    "withdrawable": 1.96,
+    "used_margin": 3.07,
+    "notional": 6.41
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3664,
+      "mark": 0.3669,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4656,
-      "upnl": 0.006,
-      "upnl_pct": 0.82,
+      "notional": 1.4676,
+      "upnl": 0.008,
+      "upnl_pct": 1.1,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -54,36 +54,17 @@
       "timeframe": "15m",
       "size": 4.0,
       "entry": 1.412,
-      "mark": 1.414,
+      "mark": 1.415,
       "lev": 5,
       "margin": 1.1296,
-      "notional": 5.656,
-      "upnl": 0.008,
-      "upnl_pct": 0.71,
+      "notional": 5.66,
+      "upnl": 0.012,
+      "upnl_pct": 1.06,
       "sl": 1.401,
       "tp1": 1.432,
       "tp2": 1.45,
       "tp1_hit": false,
       "open_ms": 1794385087369
-    },
-    {
-      "coin": "WLFI",
-      "inst": "WLFI-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 222.0,
-      "entry": 0.04799,
-      "mark": 0.04781,
-      "lev": 10,
-      "margin": 1.0654,
-      "notional": 10.6138,
-      "upnl": -0.04,
-      "upnl_pct": -3.75,
-      "sl": 0.0478,
-      "tp1": 0.04839,
-      "tp2": 0.04868,
-      "tp1_hit": false,
-      "open_ms": 1794386700000
     }
   ],
   "orders": [
@@ -167,36 +148,18 @@
       "px": 1.401,
       "size": 4.0,
       "reduce_only": true
-    },
-    {
-      "coin": "WLFI",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.04868,
-      "size": 111.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "WLFI",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.04839,
-      "size": 111.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "WLFI",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 0.0478,
-      "size": 222.0,
-      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "WLFI",
+      "time": 1794387898826,
+      "dir": "Close Long",
+      "px": 0.04777,
+      "sz": 222.0,
+      "pnl": -0.05994,
+      "fee": 0.006362964
+    },
     {
       "coin": "WLFI",
       "time": 1794386729520,
@@ -457,44 +420,35 @@
       "sz": 0.4,
       "pnl": 0.0,
       "fee": 0.0047664
-    },
-    {
-      "coin": "ZRO",
-      "time": 1794363080052,
-      "dir": "Close Long",
-      "px": 1.5417,
-      "sz": 2.0,
-      "pnl": -0.0316,
-      "fee": 0.00185004
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 18,
-      "total_r": -10.2,
-      "trades": 21,
+      "losses": 19,
+      "total_r": -11.11,
+      "trades": 22,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 29,
-      "total_r": -18.89,
-      "trades": 33,
+      "losses": 30,
+      "total_r": -19.8,
+      "trades": 34,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 29,
-      "total_r": -18.89,
-      "trades": 33,
+      "losses": 30,
+      "total_r": -19.8,
+      "trades": 34,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 29,
-      "total_r": -18.89,
-      "trades": 33
+      "losses": 30,
+      "total_r": -19.8,
+      "trades": 34
     },
     "feed_start": "2026-11-10"
   },
@@ -783,6 +737,18 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794386700000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "WLFI",
+      "close_ms": 1794387900000,
+      "r": -0.9137,
+      "pnl": -0.0599,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794387900000,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
