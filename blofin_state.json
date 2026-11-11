@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794365671625,
-  "updated_at": "2026-11-11T02:54:31Z",
+  "updated_at_ms": 1794366570824,
+  "updated_at": "2026-11-11T03:09:30Z",
   "account": {
-    "equity": 5.64,
-    "withdrawable": 0.16,
-    "used_margin": 5.48,
-    "notional": 95.3
+    "equity": 5.66,
+    "withdrawable": 1.53,
+    "used_margin": 4.14,
+    "notional": 88.59
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.367,
+      "mark": 0.3672,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.468,
-      "upnl": 0.0084,
-      "upnl_pct": 1.15,
+      "notional": 1.4688,
+      "upnl": 0.0092,
+      "upnl_pct": 1.26,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,36 +35,17 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 19.87,
-      "mark": 19.81,
+      "mark": 19.83,
       "lev": 7,
       "margin": 1.1354,
-      "notional": 7.924,
-      "upnl": 0.024,
-      "upnl_pct": 2.11,
+      "notional": 7.932,
+      "upnl": 0.016,
+      "upnl_pct": 1.41,
       "sl": 19.98,
       "tp1": 19.66,
       "tp2": 19.490000000000002,
       "tp1_hit": false,
       "open_ms": 1794364704406
-    },
-    {
-      "coin": "AVAX",
-      "inst": "AVAX-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 0.8,
-      "entry": 8.527,
-      "mark": 8.48,
-      "lev": 5,
-      "margin": 1.3643,
-      "notional": 6.784,
-      "upnl": -0.0376,
-      "upnl_pct": -2.76,
-      "sl": 8.464,
-      "tp1": 8.64,
-      "tp2": 8.734,
-      "tp1_hit": false,
-      "open_ms": 1794365100000
     },
     {
       "coin": "INJ",
@@ -73,12 +54,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.32,
+      "mark": 8.36,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.328,
-      "upnl": -0.0032,
-      "upnl_pct": -0.29,
+      "notional": 3.344,
+      "upnl": 0.0128,
+      "upnl_pct": 1.15,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
@@ -92,12 +73,12 @@
       "timeframe": "15m",
       "size": 35.0,
       "entry": 0.1652,
-      "mark": 0.1644,
+      "mark": 0.165,
       "lev": 5,
       "margin": 1.1564,
-      "notional": 5.754,
-      "upnl": -0.028,
-      "upnl_pct": -2.42,
+      "notional": 5.775,
+      "upnl": -0.007,
+      "upnl_pct": -0.61,
       "sl": 0.1637,
       "tp1": 0.1678,
       "tp2": 0.17,
@@ -161,33 +142,6 @@
       "reduce_only": true
     },
     {
-      "coin": "AVAX",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 8.734,
-      "size": 0.4,
-      "reduce_only": true
-    },
-    {
-      "coin": "AVAX",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 8.64,
-      "size": 0.4,
-      "reduce_only": true
-    },
-    {
-      "coin": "AVAX",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 8.464,
-      "size": 0.8,
-      "reduce_only": true
-    },
-    {
       "coin": "INJ",
       "kind": "tp2",
       "side": "sell",
@@ -243,6 +197,15 @@
     }
   ],
   "fills": [
+    {
+      "coin": "AVAX",
+      "time": 1794365910820,
+      "dir": "Close Long",
+      "px": 8.459,
+      "sz": 0.8,
+      "pnl": -0.0656,
+      "fee": 0.00406032
+    },
     {
       "coin": "SNX",
       "time": 1794365250457,
@@ -503,41 +466,32 @@
       "sz": 36.0,
       "pnl": -0.0432,
       "fee": 0.00382752
-    },
-    {
-      "coin": "BSV",
-      "time": 1794318343481,
-      "dir": "Open Short",
-      "px": 16.22,
-      "sz": 0.4,
-      "pnl": 0.0,
-      "fee": 0.0038928
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 7,
-      "total_r": -1.45,
-      "trades": 10
+      "losses": 9,
+      "total_r": -2.45,
+      "trades": 12
     },
     "week": {
       "wins": 4,
-      "losses": 18,
-      "total_r": -10.14,
-      "trades": 22
+      "losses": 20,
+      "total_r": -11.14,
+      "trades": 24
     },
     "month": {
       "wins": 4,
-      "losses": 18,
-      "total_r": -10.14,
-      "trades": 22
+      "losses": 20,
+      "total_r": -11.14,
+      "trades": 24
     },
     "all_time": {
       "wins": 4,
-      "losses": 18,
-      "total_r": -10.14,
-      "trades": 22
+      "losses": 20,
+      "total_r": -11.14,
+      "trades": 24
     },
     "feed_start": "2026-11-10"
   },
@@ -715,6 +669,22 @@
       "close_ms": 1794365220000,
       "r": -0.9713,
       "pnl": -0.0637,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "AVAX",
+      "close_ms": 1794365940000,
+      "r": -1.0,
+      "pnl": -0.0656,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "WLFI",
+      "close_ms": 1794366060001,
+      "r": 0.0,
+      "pnl": 0,
       "win": false,
       "reason": "Position closed (fill not observed)"
     }
