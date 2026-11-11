@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794376775113,
-  "updated_at": "2026-11-11T05:59:35Z",
+  "updated_at_ms": 1794377253117,
+  "updated_at": "2026-11-11T06:07:33Z",
   "account": {
-    "equity": 5.36,
-    "withdrawable": 0.62,
-    "used_margin": 4.74,
-    "notional": 10.32
+    "equity": 5.33,
+    "withdrawable": 1.11,
+    "used_margin": 4.23,
+    "notional": 9.94
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3727,
+      "mark": 0.3714,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4908,
-      "upnl": 0.0312,
-      "upnl_pct": 4.28,
+      "notional": 1.4856,
+      "upnl": 0.026,
+      "upnl_pct": 3.56,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.242,
+      "mark": 8.215,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.2968,
-      "upnl": -0.0344,
-      "upnl_pct": -3.1,
+      "notional": 3.286,
+      "upnl": -0.0452,
+      "upnl_pct": -4.07,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
@@ -67,37 +67,18 @@
       "open_ms": 1794366900000
     },
     {
-      "coin": "POL",
-      "inst": "POL-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 40.0,
-      "entry": 0.08909,
-      "mark": 0.08882,
-      "lev": 7,
-      "margin": 0.5075,
-      "notional": 3.5528,
-      "upnl": -0.0108,
-      "upnl_pct": -2.13,
-      "sl": 0.08855,
-      "tp1": 0.09010000000000001,
-      "tp2": 0.09092,
-      "tp1_hit": false,
-      "open_ms": 1794371400000
-    },
-    {
       "coin": "CATI",
       "inst": "CATI-USDT",
       "side": "SHORT",
       "timeframe": "15m",
       "size": 160.0,
       "entry": 0.03775,
-      "mark": 0.03778,
+      "mark": 0.03776,
       "lev": 5,
       "margin": 1.208,
-      "notional": 6.0448,
-      "upnl": -0.0048,
-      "upnl_pct": -0.4,
+      "notional": 6.0416,
+      "upnl": -0.0016,
+      "upnl_pct": -0.13,
       "sl": 0.03807,
       "tp1": 0.03719,
       "tp2": 0.03672,
@@ -188,33 +169,6 @@
       "reduce_only": true
     },
     {
-      "coin": "POL",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.09092,
-      "size": 20.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "POL",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.0901,
-      "size": 20.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "POL",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 0.08855,
-      "size": 40.0,
-      "reduce_only": true
-    },
-    {
       "coin": "CATI",
       "kind": "tp2",
       "side": "buy",
@@ -243,6 +197,15 @@
     }
   ],
   "fills": [
+    {
+      "coin": "MATIC",
+      "time": 1794377188946,
+      "dir": "Close Long",
+      "px": 0.08848,
+      "sz": 40.0,
+      "pnl": -0.0244,
+      "fee": 0.00212352
+    },
     {
       "coin": "MATIC",
       "time": 1794375755002,
@@ -503,44 +466,35 @@
       "sz": 4.0,
       "pnl": 0.0,
       "fee": 0.00087672
-    },
-    {
-      "coin": "ALGO",
-      "time": 1794328519075,
-      "dir": "Close Short",
-      "px": 0.08814,
-      "sz": 20.0,
-      "pnl": 0.0744,
-      "fee": 0.00035256
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 12,
-      "total_r": -5.8,
-      "trades": 15,
+      "losses": 13,
+      "total_r": -6.36,
+      "trades": 16,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -14.49,
-      "trades": 27,
+      "losses": 24,
+      "total_r": -15.05,
+      "trades": 28,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -14.49,
-      "trades": 27,
+      "losses": 24,
+      "total_r": -15.05,
+      "trades": 28,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -14.49,
-      "trades": 27
+      "losses": 24,
+      "total_r": -15.05,
+      "trades": 28
     },
     "feed_start": "2026-11-10"
   },
@@ -760,6 +714,18 @@
       "pnl": -0.0621,
       "win": false,
       "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "POL",
+      "close_ms": 1794377160000,
+      "r": -0.5549,
+      "pnl": -0.0364,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794377160000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
     }
   ],
   "closed_r_base": 0.0,
