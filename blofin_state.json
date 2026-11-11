@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794366870626,
-  "updated_at": "2026-11-11T03:14:30Z",
+  "updated_at_ms": 1794367292122,
+  "updated_at": "2026-11-11T03:21:32Z",
   "account": {
     "equity": 5.69,
-    "withdrawable": 1.55,
-    "used_margin": 4.14,
-    "notional": 88.57
+    "withdrawable": 0.37,
+    "used_margin": 5.32,
+    "notional": 94.4
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3685,
+      "mark": 0.3698,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.474,
-      "upnl": 0.0144,
-      "upnl_pct": 1.97,
+      "notional": 1.4792,
+      "upnl": 0.0196,
+      "upnl_pct": 2.69,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 19.87,
-      "mark": 19.82,
+      "mark": 19.79,
       "lev": 7,
       "margin": 1.1354,
-      "notional": 7.928,
-      "upnl": 0.02,
-      "upnl_pct": 1.76,
+      "notional": 7.916,
+      "upnl": 0.032,
+      "upnl_pct": 2.82,
       "sl": 19.98,
       "tp1": 19.66,
       "tp2": 19.490000000000002,
@@ -54,12 +54,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.362,
+      "mark": 8.36,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.3448,
-      "upnl": 0.0136,
-      "upnl_pct": 1.22,
+      "notional": 3.344,
+      "upnl": 0.0128,
+      "upnl_pct": 1.15,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
@@ -73,17 +73,36 @@
       "timeframe": "15m",
       "size": 35.0,
       "entry": 0.1652,
-      "mark": 0.1658,
+      "mark": 0.1656,
       "lev": 5,
       "margin": 1.1564,
-      "notional": 5.803,
-      "upnl": 0.021,
-      "upnl_pct": 1.82,
+      "notional": 5.796,
+      "upnl": 0.014,
+      "upnl_pct": 1.21,
       "sl": 0.1637,
       "tp1": 0.1678,
       "tp2": 0.17,
       "tp1_hit": false,
       "open_ms": 1794365220000
+    },
+    {
+      "coin": "FET",
+      "inst": "FET-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 40.0,
+      "entry": 0.1474,
+      "mark": 0.1471,
+      "lev": 5,
+      "margin": 1.1792,
+      "notional": 5.884,
+      "upnl": -0.012,
+      "upnl_pct": -1.02,
+      "sl": 0.1461,
+      "tp1": 0.1496,
+      "tp2": 0.1515,
+      "tp1_hit": false,
+      "open_ms": 1794366900000
     }
   ],
   "orders": [
@@ -194,9 +213,45 @@
       "px": 0.1637,
       "size": 35.0,
       "reduce_only": true
+    },
+    {
+      "coin": "FET",
+      "kind": "tp2",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.1515,
+      "size": 20.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "FET",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.1496,
+      "size": 20.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "FET",
+      "kind": "sl",
+      "side": "sell",
+      "type": "tpsl",
+      "px": 0.1461,
+      "size": 40.0,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "FET",
+      "time": 1794366932726,
+      "dir": "Open Long",
+      "px": 0.1472,
+      "sz": 40.0,
+      "pnl": 0.0,
+      "fee": 0.0035328
+    },
     {
       "coin": "AVAX",
       "time": 1794365910820,
@@ -457,15 +512,6 @@
       "sz": 0.4,
       "pnl": -0.052,
       "fee": 0.003924
-    },
-    {
-      "coin": "ADA",
-      "time": 1794321366708,
-      "dir": "Close Short",
-      "px": 0.1772,
-      "sz": 36.0,
-      "pnl": -0.0432,
-      "fee": 0.00382752
     }
   ],
   "stats": {
