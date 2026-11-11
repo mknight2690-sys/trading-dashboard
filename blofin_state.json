@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794384329058,
-  "updated_at": "2026-11-11T08:05:29Z",
+  "updated_at_ms": 1794385120170,
+  "updated_at": "2026-11-11T08:18:40Z",
   "account": {
-    "equity": 5.19,
-    "withdrawable": 2.05,
-    "used_margin": 3.15,
-    "notional": 9.16
+    "equity": 5.13,
+    "withdrawable": 0.85,
+    "used_margin": 4.29,
+    "notional": 14.84
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.374,
+      "mark": 0.3739,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.496,
-      "upnl": 0.0364,
-      "upnl_pct": 4.99,
+      "notional": 1.4956,
+      "upnl": 0.036,
+      "upnl_pct": 4.93,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 160.0,
       "entry": 0.03775,
-      "mark": 0.0375,
+      "mark": 0.03767,
       "lev": 5,
       "margin": 1.208,
-      "notional": 6.0,
-      "upnl": 0.04,
-      "upnl_pct": 3.31,
+      "notional": 6.0272,
+      "upnl": 0.0128,
+      "upnl_pct": 1.06,
       "sl": 0.03807,
       "tp1": 0.03719,
       "tp2": 0.03672,
@@ -54,17 +54,36 @@
       "timeframe": "15m",
       "size": 1622.0,
       "entry": 0.005184,
-      "mark": 0.005185,
+      "mark": 0.005207,
       "lev": 7,
       "margin": 1.2012,
-      "notional": 8.4101,
-      "upnl": -0.0016,
-      "upnl_pct": -0.14,
+      "notional": 8.4458,
+      "upnl": -0.0373,
+      "upnl_pct": -3.11,
       "sl": 0.005213,
       "tp1": 0.005129,
       "tp2": 0.005084,
       "tp1_hit": false,
       "open_ms": 1794379098757
+    },
+    {
+      "coin": "ATOM",
+      "inst": "ATOM-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 4.0,
+      "entry": 1.412,
+      "mark": 1.41,
+      "lev": 5,
+      "margin": 1.1296,
+      "notional": 5.64,
+      "upnl": -0.008,
+      "upnl_pct": -0.71,
+      "sl": 1.401,
+      "tp1": 1.432,
+      "tp2": 1.45,
+      "tp1_hit": false,
+      "open_ms": 1794385087369
     }
   ],
   "orders": [
@@ -148,9 +167,45 @@
       "px": 0.005213,
       "size": 1622.0,
       "reduce_only": true
+    },
+    {
+      "coin": "ATOM",
+      "kind": "tp2",
+      "side": "sell",
+      "type": "limit",
+      "px": 1.45,
+      "size": 2.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "ATOM",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 1.432,
+      "size": 2.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "ATOM",
+      "kind": "sl",
+      "side": "sell",
+      "type": "tpsl",
+      "px": 1.401,
+      "size": 4.0,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "ATOM",
+      "time": 1794385117056,
+      "dir": "Open Long",
+      "px": 1.414,
+      "sz": 4.0,
+      "pnl": 0.0,
+      "fee": 0.0033936
+    },
     {
       "coin": "LTC",
       "time": 1794384080416,
@@ -411,15 +466,6 @@
       "sz": 15.0,
       "pnl": -0.054,
       "fee": 0.0038304
-    },
-    {
-      "coin": "ATOM",
-      "time": 1794361796858,
-      "dir": "Close Long",
-      "px": 1.404,
-      "sz": 5.0,
-      "pnl": -0.065,
-      "fee": 0.004212
     }
   ],
   "stats": {
