@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794383851863,
-  "updated_at": "2026-11-11T07:57:31Z",
+  "updated_at_ms": 1794383938199,
+  "updated_at": "2026-11-11T07:58:58Z",
   "account": {
-    "equity": 5.21,
-    "withdrawable": 0.03,
-    "used_margin": 5.19,
-    "notional": 17.29
+    "equity": 5.18,
+    "withdrawable": 0.87,
+    "used_margin": 4.32,
+    "notional": 17.3
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3742,
+      "mark": 0.3749,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4968,
-      "upnl": 0.0372,
-      "upnl_pct": 5.1,
+      "notional": 1.4996,
+      "upnl": 0.04,
+      "upnl_pct": 5.48,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -54,36 +54,17 @@
       "timeframe": "15m",
       "size": 1622.0,
       "entry": 0.005184,
-      "mark": 0.00518,
+      "mark": 0.005191,
       "lev": 7,
       "margin": 1.2012,
-      "notional": 8.402,
-      "upnl": 0.0065,
-      "upnl_pct": 0.54,
+      "notional": 8.4198,
+      "upnl": -0.0114,
+      "upnl_pct": -0.95,
       "sl": 0.005213,
       "tp1": 0.005129,
       "tp2": 0.005084,
       "tp1_hit": false,
       "open_ms": 1794379098757
-    },
-    {
-      "coin": "PUMP",
-      "inst": "PUMP-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 1000.0,
-      "entry": 0.003492,
-      "mark": 0.003523,
-      "lev": 4,
-      "margin": 0.873,
-      "notional": 3.523,
-      "upnl": -0.031,
-      "upnl_pct": -3.55,
-      "sl": 0.0035299999999999997,
-      "tp1": 0.003428,
-      "tp2": 0.003371,
-      "tp1_hit": false,
-      "open_ms": 1794379500000
     },
     {
       "coin": "LTC",
@@ -92,12 +73,12 @@
       "timeframe": "15m",
       "size": 0.16,
       "entry": 50.51,
-      "mark": 50.75,
+      "mark": 50.77,
       "lev": 7,
       "margin": 1.1545,
-      "notional": 8.12,
-      "upnl": -0.0384,
-      "upnl_pct": -3.33,
+      "notional": 8.1232,
+      "upnl": -0.0416,
+      "upnl_pct": -3.6,
       "sl": 50.800000000000004,
       "tp1": 49.97,
       "tp2": 49.54,
@@ -188,15 +169,6 @@
       "reduce_only": true
     },
     {
-      "coin": "PUMP",
-      "kind": "sl",
-      "side": "buy",
-      "type": "tpsl",
-      "px": 0.00353,
-      "size": 1000.0,
-      "reduce_only": true
-    },
-    {
       "coin": "LTC",
       "kind": "tp2",
       "side": "buy",
@@ -225,6 +197,15 @@
     }
   ],
   "fills": [
+    {
+      "coin": "PUMP",
+      "time": 1794383882000,
+      "dir": "Close Short",
+      "px": 0.003532,
+      "sz": 1000.0,
+      "pnl": -0.042,
+      "fee": 0.0021192
+    },
     {
       "coin": "LTC",
       "time": 1794380564342,
@@ -485,44 +466,35 @@
       "sz": 1.0,
       "pnl": 0.0,
       "fee": 0.0022158
-    },
-    {
-      "coin": "CHIP",
-      "time": 1794361079966,
-      "dir": "Close Short",
-      "px": 0.03283,
-      "sz": 150.0,
-      "pnl": -0.0675,
-      "fee": 0.0029547
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 15,
-      "total_r": -7.91,
-      "trades": 18,
+      "losses": 16,
+      "total_r": -8.55,
+      "trades": 19,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 26,
-      "total_r": -16.6,
-      "trades": 30,
+      "losses": 27,
+      "total_r": -17.24,
+      "trades": 31,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 26,
-      "total_r": -16.6,
-      "trades": 30,
+      "losses": 27,
+      "total_r": -17.24,
+      "trades": 31,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 26,
-      "total_r": -16.6,
-      "trades": 30
+      "losses": 27,
+      "total_r": -17.24,
+      "trades": 31
     },
     "feed_start": "2026-11-10"
   },
@@ -775,6 +747,18 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794380520000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "PUMP",
+      "close_ms": 1794383880000,
+      "r": -0.6402,
+      "pnl": -0.042,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794383880000,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
