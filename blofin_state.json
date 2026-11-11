@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794368970196,
-  "updated_at": "2026-11-11T03:49:30Z",
+  "updated_at_ms": 1794370234942,
+  "updated_at": "2026-11-11T04:10:34Z",
   "account": {
-    "equity": 5.71,
-    "withdrawable": 0.4,
-    "used_margin": 5.32,
-    "notional": 94.22
+    "equity": 5.56,
+    "withdrawable": 0.17,
+    "used_margin": 5.39,
+    "notional": 95.12
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3695,
+      "mark": 0.372,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.478,
-      "upnl": 0.0184,
-      "upnl_pct": 2.52,
+      "notional": 1.488,
+      "upnl": 0.0284,
+      "upnl_pct": 3.89,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 19.87,
-      "mark": 19.77,
+      "mark": 19.91,
       "lev": 7,
       "margin": 1.1354,
-      "notional": 7.908,
-      "upnl": 0.04,
-      "upnl_pct": 3.52,
+      "notional": 7.964,
+      "upnl": -0.016,
+      "upnl_pct": -1.41,
       "sl": 19.98,
       "tp1": 19.66,
       "tp2": 19.490000000000002,
@@ -54,36 +54,17 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.409,
+      "mark": 8.355,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.3636,
-      "upnl": 0.0324,
-      "upnl_pct": 2.92,
+      "notional": 3.342,
+      "upnl": 0.0108,
+      "upnl_pct": 0.97,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
       "tp1_hit": false,
       "open_ms": 1794365100000
-    },
-    {
-      "coin": "SNX",
-      "inst": "SNX-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 35.0,
-      "entry": 0.1652,
-      "mark": 0.1652,
-      "lev": 5,
-      "margin": 1.1564,
-      "notional": 5.782,
-      "upnl": 0.0,
-      "upnl_pct": 0.0,
-      "sl": 0.1637,
-      "tp1": 0.1678,
-      "tp2": 0.17,
-      "tp1_hit": false,
-      "open_ms": 1794365220000
     },
     {
       "coin": "FET",
@@ -103,6 +84,44 @@
       "tp2": 0.1515,
       "tp1_hit": false,
       "open_ms": 1794366900000
+    },
+    {
+      "coin": "S",
+      "inst": "S-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 162.0,
+      "entry": 0.03775,
+      "mark": 0.03774,
+      "lev": 5,
+      "margin": 1.2231,
+      "notional": 6.1139,
+      "upnl": -0.0016,
+      "upnl_pct": -0.13,
+      "sl": 0.037430000000000005,
+      "tp1": 0.03832,
+      "tp2": 0.038810000000000004,
+      "tp1_hit": false,
+      "open_ms": 1794370146614
+    },
+    {
+      "coin": "FTM",
+      "inst": "S-USDT",
+      "side": "LONG",
+      "timeframe": "1h",
+      "size": 162.0,
+      "entry": 0.03776,
+      "mark": 0.03774,
+      "lev": 5,
+      "margin": 1.2212,
+      "notional": 6.1139,
+      "upnl": -0.0032,
+      "upnl_pct": -0.27,
+      "sl": 0.03743,
+      "tp1": 0.03832,
+      "tp2": 0.03881,
+      "tp1_hit": false,
+      "open_ms": 1794370180403
     }
   ],
   "orders": [
@@ -188,33 +207,6 @@
       "reduce_only": true
     },
     {
-      "coin": "SNX",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.17,
-      "size": 18.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "SNX",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.1678,
-      "size": 17.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "SNX",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 0.1637,
-      "size": 35.0,
-      "reduce_only": true
-    },
-    {
       "coin": "FET",
       "kind": "tp2",
       "side": "sell",
@@ -240,9 +232,81 @@
       "px": 0.1461,
       "size": 40.0,
       "reduce_only": true
+    },
+    {
+      "coin": "S",
+      "kind": "tp2",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.03881,
+      "size": 81.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "S",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.03832,
+      "size": 81.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "S",
+      "kind": "sl",
+      "side": "sell",
+      "type": "tpsl",
+      "px": 0.03743,
+      "size": 162.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "FTM",
+      "kind": "tp2",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.03881,
+      "size": 81.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "FTM",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.03832,
+      "size": 81.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "FTM",
+      "kind": "sl",
+      "side": "sell",
+      "type": "tpsl",
+      "px": 0.03743,
+      "size": 162.0,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "FTM",
+      "time": 1794370180403,
+      "dir": "Open Long",
+      "px": 0.03776,
+      "sz": 162.0,
+      "pnl": 0.0,
+      "fee": 0.003670272
+    },
+    {
+      "coin": "SNX",
+      "time": 1794370005787,
+      "dir": "Close Long",
+      "px": 0.1636,
+      "sz": 35.0,
+      "pnl": -0.056,
+      "fee": 0.0034356
+    },
     {
       "coin": "FET",
       "time": 1794366932726,
@@ -494,50 +558,32 @@
       "sz": 40.0,
       "pnl": 0.0,
       "fee": 0.00220464
-    },
-    {
-      "coin": "BCH",
-      "time": 1794321385699,
-      "dir": "Close Short",
-      "px": 235.82,
-      "sz": 0.020000000000000004,
-      "pnl": -0.0486,
-      "fee": 0.00282984
-    },
-    {
-      "coin": "BSV",
-      "time": 1794321373189,
-      "dir": "Close Short",
-      "px": 16.35,
-      "sz": 0.4,
-      "pnl": -0.052,
-      "fee": 0.003924
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 9,
-      "total_r": -2.45,
-      "trades": 12
+      "losses": 10,
+      "total_r": -3.3,
+      "trades": 13
     },
     "week": {
       "wins": 4,
-      "losses": 20,
-      "total_r": -11.14,
-      "trades": 24
+      "losses": 21,
+      "total_r": -11.99,
+      "trades": 25
     },
     "month": {
       "wins": 4,
-      "losses": 20,
-      "total_r": -11.14,
-      "trades": 24
+      "losses": 21,
+      "total_r": -11.99,
+      "trades": 25
     },
     "all_time": {
       "wins": 4,
-      "losses": 20,
-      "total_r": -11.14,
-      "trades": 24
+      "losses": 21,
+      "total_r": -11.99,
+      "trades": 25
     },
     "feed_start": "2026-11-10"
   },
@@ -731,6 +777,14 @@
       "close_ms": 1794366060001,
       "r": 0.0,
       "pnl": 0,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "SNX",
+      "close_ms": 1794370146614,
+      "r": -0.8537,
+      "pnl": -0.056,
       "win": false,
       "reason": "Position closed (fill not observed)"
     }
