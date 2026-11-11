@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794373171035,
-  "updated_at": "2026-11-11T04:59:31Z",
+  "updated_at_ms": 1794373714501,
+  "updated_at": "2026-11-11T05:08:34Z",
   "account": {
-    "equity": 5.38,
-    "withdrawable": 0.22,
-    "used_margin": 5.17,
-    "notional": 10.51
+    "equity": 5.33,
+    "withdrawable": 0.09,
+    "used_margin": 5.25,
+    "notional": 10.64
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3714,
+      "mark": 0.3728,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4856,
-      "upnl": 0.026,
-      "upnl_pct": 3.56,
+      "notional": 1.4912,
+      "upnl": 0.0316,
+      "upnl_pct": 4.33,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.28,
+      "mark": 8.273,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.312,
-      "upnl": -0.0192,
-      "upnl_pct": -1.73,
+      "notional": 3.3092,
+      "upnl": -0.022,
+      "upnl_pct": -1.98,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
@@ -54,36 +54,17 @@
       "timeframe": "15m",
       "size": 40.0,
       "entry": 0.1474,
-      "mark": 0.1471,
+      "mark": 0.1468,
       "lev": 5,
       "margin": 1.1792,
-      "notional": 5.884,
-      "upnl": -0.012,
-      "upnl_pct": -1.02,
+      "notional": 5.872,
+      "upnl": -0.024,
+      "upnl_pct": -2.04,
       "sl": 0.1461,
       "tp1": 0.1496,
       "tp2": 0.1515,
       "tp1_hit": false,
       "open_ms": 1794366900000
-    },
-    {
-      "coin": "MEGA",
-      "inst": "MEGA-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 90.0,
-      "entry": 0.0508,
-      "mark": 0.05041,
-      "lev": 4,
-      "margin": 1.143,
-      "notional": 4.5369,
-      "upnl": -0.0351,
-      "upnl_pct": -3.07,
-      "sl": 0.05022,
-      "tp1": 0.05178000000000001,
-      "tp2": 0.05265,
-      "tp1_hit": false,
-      "open_ms": 1794370800000
     },
     {
       "coin": "POL",
@@ -92,12 +73,12 @@
       "timeframe": "15m",
       "size": 80.0,
       "entry": 0.08909,
-      "mark": 0.089,
+      "mark": 0.08881,
       "lev": 7,
       "margin": 1.0182,
-      "notional": 7.12,
-      "upnl": -0.0072,
-      "upnl_pct": -0.71,
+      "notional": 7.1048,
+      "upnl": -0.0224,
+      "upnl_pct": -2.2,
       "sl": 0.08855,
       "tp1": 0.09010000000000001,
       "tp2": 0.09092,
@@ -111,17 +92,36 @@
       "timeframe": "15m",
       "size": 80.0,
       "entry": 0.08909,
-      "mark": 0.089,
+      "mark": 0.08881,
       "lev": 7,
       "margin": 1.0182,
-      "notional": 7.12,
-      "upnl": -0.0072,
-      "upnl_pct": -0.71,
+      "notional": 7.1048,
+      "upnl": -0.0224,
+      "upnl_pct": -2.2,
       "sl": 0.08855,
       "tp1": 0.09010000000000001,
       "tp2": 0.09092,
       "tp1_hit": false,
       "open_ms": 1794371400000
+    },
+    {
+      "coin": "CATI",
+      "inst": "CATI-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 160.0,
+      "entry": 0.03775,
+      "mark": 0.03773,
+      "lev": 5,
+      "margin": 1.208,
+      "notional": 6.0368,
+      "upnl": 0.0032,
+      "upnl_pct": 0.26,
+      "sl": 0.03807,
+      "tp1": 0.03719,
+      "tp2": 0.03672,
+      "tp1_hit": false,
+      "open_ms": 1794373680000
     }
   ],
   "orders": [
@@ -207,70 +207,97 @@
       "reduce_only": true
     },
     {
-      "coin": "MEGA",
+      "coin": "POL",
+      "kind": "other",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "POL",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "MATIC",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "MATIC",
+      "kind": "other",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "CATI",
       "kind": "tp2",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.05265,
-      "size": 50.0,
+      "px": 0.03672,
+      "size": 80.0,
       "reduce_only": true
     },
     {
-      "coin": "MEGA",
+      "coin": "CATI",
       "kind": "tp1",
-      "side": "sell",
+      "side": "buy",
       "type": "limit",
-      "px": 0.05178,
-      "size": 40.0,
+      "px": 0.03719,
+      "size": 80.0,
       "reduce_only": true
     },
     {
-      "coin": "MEGA",
+      "coin": "CATI",
       "kind": "sl",
-      "side": "sell",
+      "side": "buy",
       "type": "tpsl",
-      "px": 0.05022,
-      "size": 90.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "POL",
-      "kind": "other",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.0901,
-      "size": 40.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "POL",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.0901,
-      "size": 40.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "MATIC",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.0901,
-      "size": 40.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "MATIC",
-      "kind": "other",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.0901,
-      "size": 40.0,
+      "px": 0.03807,
+      "size": 160.0,
       "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "CATI",
+      "time": 1794373712012,
+      "dir": "Open Short",
+      "px": 0.03773,
+      "sz": 40.0,
+      "pnl": 0.0,
+      "fee": 0.00090552
+    },
+    {
+      "coin": "CATI",
+      "time": 1794373712012,
+      "dir": "Open Short",
+      "px": 0.03774,
+      "sz": 120.0,
+      "pnl": 0.0,
+      "fee": 0.00271728
+    },
+    {
+      "coin": "MEGA",
+      "time": 1794373692569,
+      "dir": "Close Long",
+      "px": 0.05014,
+      "sz": 90.0,
+      "pnl": -0.0621,
+      "fee": 0.00270756
+    },
     {
       "coin": "MATIC",
       "time": 1794371435400,
@@ -513,59 +540,32 @@
       "sz": 0.020000000000000004,
       "pnl": 0.0788,
       "fee": 0.00049028
-    },
-    {
-      "coin": "LINK",
-      "time": 1794325239367,
-      "dir": "Close Short",
-      "px": 10.231,
-      "sz": 0.3,
-      "pnl": 0.0768,
-      "fee": 0.00061386
-    },
-    {
-      "coin": "ALGO",
-      "time": 1794324949231,
-      "dir": "Close Short",
-      "px": 0.08986,
-      "sz": 20.0,
-      "pnl": 0.04,
-      "fee": 0.00035944
-    },
-    {
-      "coin": "CAKE",
-      "time": 1794322921303,
-      "dir": "Close Short",
-      "px": 1.8718,
-      "sz": 2.0,
-      "pnl": -0.0376,
-      "fee": 0.00224616
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 12,
-      "total_r": -4.84,
-      "trades": 15
+      "losses": 13,
+      "total_r": -5.79,
+      "trades": 16
     },
     "week": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -13.53,
-      "trades": 27
+      "losses": 24,
+      "total_r": -14.48,
+      "trades": 28
     },
     "month": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -13.53,
-      "trades": 27
+      "losses": 24,
+      "total_r": -14.48,
+      "trades": 28
     },
     "all_time": {
       "wins": 4,
-      "losses": 23,
-      "total_r": -13.53,
-      "trades": 27
+      "losses": 24,
+      "total_r": -14.48,
+      "trades": 28
     },
     "feed_start": "2026-11-10"
   },
@@ -783,6 +783,14 @@
       "close_ms": 1794371400000,
       "r": -0.7317,
       "pnl": -0.048,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "MEGA",
+      "close_ms": 1794373680000,
+      "r": -0.9466,
+      "pnl": -0.0621,
       "win": false,
       "reason": "Position closed (fill not observed)"
     }
