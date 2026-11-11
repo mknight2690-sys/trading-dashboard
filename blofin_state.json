@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794377253117,
-  "updated_at": "2026-11-11T06:07:33Z",
+  "updated_at_ms": 1794379217656,
+  "updated_at": "2026-11-11T06:40:17Z",
   "account": {
-    "equity": 5.33,
-    "withdrawable": 1.11,
-    "used_margin": 4.23,
-    "notional": 9.94
+    "equity": 5.31,
+    "withdrawable": 1.0,
+    "used_margin": 4.32,
+    "notional": 15.04
   },
   "positions": [
     {
@@ -16,36 +16,17 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3714,
+      "mark": 0.3691,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4856,
-      "upnl": 0.026,
-      "upnl_pct": 3.56,
+      "notional": 1.4764,
+      "upnl": 0.0168,
+      "upnl_pct": 2.3,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
       "tp1_hit": false,
       "open_ms": 1794359100937
-    },
-    {
-      "coin": "INJ",
-      "inst": "INJ-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 0.4,
-      "entry": 8.328,
-      "mark": 8.215,
-      "lev": 3,
-      "margin": 1.1104,
-      "notional": 3.286,
-      "upnl": -0.0452,
-      "upnl_pct": -4.07,
-      "sl": 8.199,
-      "tp1": 8.540000000000001,
-      "tp2": 8.735,
-      "tp1_hit": false,
-      "open_ms": 1794365100000
     },
     {
       "coin": "FET",
@@ -54,12 +35,12 @@
       "timeframe": "15m",
       "size": 40.0,
       "entry": 0.1474,
-      "mark": 0.1478,
+      "mark": 0.1472,
       "lev": 5,
       "margin": 1.1792,
-      "notional": 5.912,
-      "upnl": 0.016,
-      "upnl_pct": 1.36,
+      "notional": 5.888,
+      "upnl": -0.008,
+      "upnl_pct": -0.68,
       "sl": 0.1461,
       "tp1": 0.1496,
       "tp2": 0.1515,
@@ -73,17 +54,55 @@
       "timeframe": "15m",
       "size": 160.0,
       "entry": 0.03775,
-      "mark": 0.03776,
+      "mark": 0.03755,
       "lev": 5,
       "margin": 1.208,
-      "notional": 6.0416,
-      "upnl": -0.0016,
-      "upnl_pct": -0.13,
+      "notional": 6.008,
+      "upnl": 0.032,
+      "upnl_pct": 2.65,
       "sl": 0.03807,
       "tp1": 0.03719,
       "tp2": 0.03672,
       "tp1_hit": false,
       "open_ms": 1794373680000
+    },
+    {
+      "coin": "BIGTIME",
+      "inst": "BIGTIME-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 1622.0,
+      "entry": 0.005184,
+      "mark": 0.005183,
+      "lev": 7,
+      "margin": 1.2012,
+      "notional": 8.4068,
+      "upnl": 0.0016,
+      "upnl_pct": 0.14,
+      "sl": 0.005213,
+      "tp1": 0.005129,
+      "tp2": 0.005084,
+      "tp1_hit": false,
+      "open_ms": 1794379098757
+    },
+    {
+      "coin": "BSV",
+      "inst": "BSV-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 0.5,
+      "entry": 16.21,
+      "mark": 16.2,
+      "lev": 8,
+      "margin": 1.0131,
+      "notional": 8.1,
+      "upnl": 0.005,
+      "upnl_pct": 0.49,
+      "sl": 16.3,
+      "tp1": 16.05,
+      "tp2": 15.92,
+      "tp1_hit": false,
+      "open_ms": 1794379098757
     }
   ],
   "orders": [
@@ -112,33 +131,6 @@
       "type": "tpsl",
       "px": 0.3522,
       "size": 4.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "INJ",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 8.735,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "INJ",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 8.54,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "INJ",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 8.199,
-      "size": 0.4,
       "reduce_only": true
     },
     {
@@ -194,9 +186,54 @@
       "px": 0.03807,
       "size": 160.0,
       "reduce_only": true
+    },
+    {
+      "coin": "BIGTIME",
+      "kind": "tp2",
+      "side": "buy",
+      "type": "limit",
+      "px": 0.005084,
+      "size": 811.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "BIGTIME",
+      "kind": "tp1",
+      "side": "buy",
+      "type": "limit",
+      "px": 0.005129,
+      "size": 811.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "BIGTIME",
+      "kind": "sl",
+      "side": "buy",
+      "type": "tpsl",
+      "px": 0.005213,
+      "size": 1622.0,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "BIGTIME",
+      "time": 1794379126746,
+      "dir": "Open Short",
+      "px": 0.005183,
+      "sz": 1622.0,
+      "pnl": 0.0,
+      "fee": 0.0050440956
+    },
+    {
+      "coin": "INJ",
+      "time": 1794377593157,
+      "dir": "Close Long",
+      "px": 8.191,
+      "sz": 0.4,
+      "pnl": -0.058,
+      "fee": 0.00196584
+    },
     {
       "coin": "MATIC",
       "time": 1794377188946,
@@ -448,53 +485,35 @@
       "sz": 15.0,
       "pnl": 0.0,
       "fee": 0.0038628
-    },
-    {
-      "coin": "CHIP",
-      "time": 1794359728186,
-      "dir": "Open Short",
-      "px": 0.03238,
-      "sz": 150.0,
-      "pnl": 0.0,
-      "fee": 0.0029142
-    },
-    {
-      "coin": "SPX",
-      "time": 1794359134177,
-      "dir": "Open Long",
-      "px": 0.3653,
-      "sz": 4.0,
-      "pnl": 0.0,
-      "fee": 0.00087672
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 13,
-      "total_r": -6.36,
-      "trades": 16,
+      "losses": 14,
+      "total_r": -7.24,
+      "trades": 17,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 24,
-      "total_r": -15.05,
-      "trades": 28,
+      "losses": 25,
+      "total_r": -15.93,
+      "trades": 29,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 24,
-      "total_r": -15.05,
-      "trades": 28,
+      "losses": 25,
+      "total_r": -15.93,
+      "trades": 29,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 24,
-      "total_r": -15.05,
-      "trades": 28
+      "losses": 25,
+      "total_r": -15.93,
+      "trades": 29
     },
     "feed_start": "2026-11-10"
   },
@@ -723,6 +742,18 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794377160000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "INJ",
+      "close_ms": 1794379098757,
+      "r": -0.8841,
+      "pnl": -0.058,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794379098757,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
