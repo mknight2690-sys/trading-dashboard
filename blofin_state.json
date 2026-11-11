@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794371372516,
-  "updated_at": "2026-11-11T04:29:32Z",
+  "updated_at_ms": 1794371997577,
+  "updated_at": "2026-11-11T04:39:57Z",
   "account": {
     "equity": 5.51,
-    "withdrawable": 0.19,
-    "used_margin": 5.32,
-    "notional": 89.75
+    "withdrawable": 0.31,
+    "used_margin": 5.2,
+    "notional": 10.55
   },
   "positions": [
     {
@@ -16,36 +16,17 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.374,
+      "mark": 0.3724,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.496,
-      "upnl": 0.0364,
-      "upnl_pct": 4.99,
+      "notional": 1.4896,
+      "upnl": 0.03,
+      "upnl_pct": 4.11,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
       "tp1_hit": false,
       "open_ms": 1794359100937
-    },
-    {
-      "coin": "COMP",
-      "inst": "COMP-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 0.4,
-      "entry": 19.87,
-      "mark": 19.95,
-      "lev": 7,
-      "margin": 1.1354,
-      "notional": 7.98,
-      "upnl": -0.032,
-      "upnl_pct": -2.82,
-      "sl": 19.98,
-      "tp1": 19.66,
-      "tp2": 19.490000000000002,
-      "tp1_hit": false,
-      "open_ms": 1794364704406
     },
     {
       "coin": "INJ",
@@ -54,12 +35,12 @@
       "timeframe": "15m",
       "size": 0.4,
       "entry": 8.328,
-      "mark": 8.307,
+      "mark": 8.297,
       "lev": 3,
       "margin": 1.1104,
-      "notional": 3.3228,
-      "upnl": -0.0084,
-      "upnl_pct": -0.76,
+      "notional": 3.3188,
+      "upnl": -0.0124,
+      "upnl_pct": -1.12,
       "sl": 8.199,
       "tp1": 8.540000000000001,
       "tp2": 8.735,
@@ -73,12 +54,12 @@
       "timeframe": "15m",
       "size": 40.0,
       "entry": 0.1474,
-      "mark": 0.1473,
+      "mark": 0.1476,
       "lev": 5,
       "margin": 1.1792,
-      "notional": 5.892,
-      "upnl": -0.004,
-      "upnl_pct": -0.34,
+      "notional": 5.904,
+      "upnl": 0.008,
+      "upnl_pct": 0.68,
       "sl": 0.1461,
       "tp1": 0.1496,
       "tp2": 0.1515,
@@ -92,17 +73,55 @@
       "timeframe": "15m",
       "size": 90.0,
       "entry": 0.0508,
-      "mark": 0.05088,
+      "mark": 0.05104,
       "lev": 4,
       "margin": 1.143,
-      "notional": 4.5792,
-      "upnl": 0.0072,
-      "upnl_pct": 0.63,
+      "notional": 4.5936,
+      "upnl": 0.0216,
+      "upnl_pct": 1.89,
       "sl": 0.05022,
       "tp1": 0.05178000000000001,
       "tp2": 0.05265,
       "tp1_hit": false,
       "open_ms": 1794370800000
+    },
+    {
+      "coin": "POL",
+      "inst": "POL-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 80.0,
+      "entry": 0.08909,
+      "mark": 0.08921,
+      "lev": 7,
+      "margin": 1.0182,
+      "notional": 7.1368,
+      "upnl": 0.0096,
+      "upnl_pct": 0.94,
+      "sl": 0.08855,
+      "tp1": 0.09010000000000001,
+      "tp2": 0.09092,
+      "tp1_hit": false,
+      "open_ms": 1794371400000
+    },
+    {
+      "coin": "MATIC",
+      "inst": "POL-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 80.0,
+      "entry": 0.08909,
+      "mark": 0.08921,
+      "lev": 7,
+      "margin": 1.0182,
+      "notional": 7.1368,
+      "upnl": 0.0096,
+      "upnl_pct": 0.94,
+      "sl": 0.08855,
+      "tp1": 0.09010000000000001,
+      "tp2": 0.09092,
+      "tp1_hit": false,
+      "open_ms": 1794371400000
     }
   ],
   "orders": [
@@ -131,33 +150,6 @@
       "type": "tpsl",
       "px": 0.3522,
       "size": 4.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "COMP",
-      "kind": "tp2",
-      "side": "buy",
-      "type": "limit",
-      "px": 19.49,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "COMP",
-      "kind": "tp1",
-      "side": "buy",
-      "type": "limit",
-      "px": 19.66,
-      "size": 0.2,
-      "reduce_only": true
-    },
-    {
-      "coin": "COMP",
-      "kind": "sl",
-      "side": "buy",
-      "type": "tpsl",
-      "px": 19.98,
-      "size": 0.4,
       "reduce_only": true
     },
     {
@@ -240,9 +232,63 @@
       "px": 0.05022,
       "size": 90.0,
       "reduce_only": true
+    },
+    {
+      "coin": "POL",
+      "kind": "other",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "POL",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "MATIC",
+      "kind": "tp1",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
+    },
+    {
+      "coin": "MATIC",
+      "kind": "other",
+      "side": "sell",
+      "type": "limit",
+      "px": 0.0901,
+      "size": 40.0,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "MATIC",
+      "time": 1794371435400,
+      "dir": "Open Long",
+      "px": 0.08909,
+      "sz": 80.0,
+      "pnl": 0.0,
+      "fee": 0.00427632
+    },
+    {
+      "coin": "COMP",
+      "time": 1794371409751,
+      "dir": "Close Short",
+      "px": 19.98,
+      "sz": 0.4,
+      "pnl": -0.048,
+      "fee": 0.0047952
+    },
     {
       "coin": "MEGA",
       "time": 1794370839702,
@@ -494,50 +540,32 @@
       "sz": 2.0,
       "pnl": -0.0376,
       "fee": 0.00224616
-    },
-    {
-      "coin": "LINK",
-      "time": 1794321451340,
-      "dir": "Open Short",
-      "px": 10.487,
-      "sz": 0.3,
-      "pnl": 0.0,
-      "fee": 0.00188766
-    },
-    {
-      "coin": "CAKE",
-      "time": 1794321404218,
-      "dir": "Open Short",
-      "px": 1.853,
-      "sz": 2.0,
-      "pnl": 0.0,
-      "fee": 0.0022236
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 11,
-      "total_r": -4.11,
-      "trades": 14
+      "losses": 12,
+      "total_r": -4.84,
+      "trades": 15
     },
     "week": {
       "wins": 4,
-      "losses": 22,
-      "total_r": -12.8,
-      "trades": 26
+      "losses": 23,
+      "total_r": -13.53,
+      "trades": 27
     },
     "month": {
       "wins": 4,
-      "losses": 22,
-      "total_r": -12.8,
-      "trades": 26
+      "losses": 23,
+      "total_r": -13.53,
+      "trades": 27
     },
     "all_time": {
       "wins": 4,
-      "losses": 22,
-      "total_r": -12.8,
-      "trades": 26
+      "losses": 23,
+      "total_r": -13.53,
+      "trades": 27
     },
     "feed_start": "2026-11-10"
   },
@@ -747,6 +775,14 @@
       "close_ms": 1794370800000,
       "r": -0.8149,
       "pnl": -0.0535,
+      "win": false,
+      "reason": "Position closed (fill not observed)"
+    },
+    {
+      "coin": "COMP",
+      "close_ms": 1794371400000,
+      "r": -0.7317,
+      "pnl": -0.048,
       "win": false,
       "reason": "Position closed (fill not observed)"
     }
