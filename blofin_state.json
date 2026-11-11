@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794380370586,
-  "updated_at": "2026-11-11T06:59:30Z",
+  "updated_at_ms": 1794380729057,
+  "updated_at": "2026-11-11T07:05:29Z",
   "account": {
-    "equity": 5.31,
-    "withdrawable": 0.13,
-    "used_margin": 5.18,
-    "notional": 14.99
+    "equity": 5.38,
+    "withdrawable": 0.25,
+    "used_margin": 5.14,
+    "notional": 17.15
   },
   "positions": [
     {
@@ -16,36 +16,17 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3671,
+      "mark": 0.3641,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4684,
-      "upnl": 0.0088,
-      "upnl_pct": 1.21,
+      "notional": 1.4564,
+      "upnl": -0.0032,
+      "upnl_pct": -0.44,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
       "tp1_hit": false,
       "open_ms": 1794359100937
-    },
-    {
-      "coin": "FET",
-      "inst": "FET-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 40.0,
-      "entry": 0.1474,
-      "mark": 0.1468,
-      "lev": 5,
-      "margin": 1.1792,
-      "notional": 5.872,
-      "upnl": -0.024,
-      "upnl_pct": -2.04,
-      "sl": 0.1461,
-      "tp1": 0.1496,
-      "tp2": 0.1515,
-      "tp1_hit": false,
-      "open_ms": 1794366900000
     },
     {
       "coin": "CATI",
@@ -54,12 +35,12 @@
       "timeframe": "15m",
       "size": 160.0,
       "entry": 0.03775,
-      "mark": 0.03748,
+      "mark": 0.03734,
       "lev": 5,
       "margin": 1.208,
-      "notional": 5.9968,
-      "upnl": 0.0432,
-      "upnl_pct": 3.58,
+      "notional": 5.9744,
+      "upnl": 0.0656,
+      "upnl_pct": 5.43,
       "sl": 0.03807,
       "tp1": 0.03719,
       "tp2": 0.03672,
@@ -73,12 +54,12 @@
       "timeframe": "15m",
       "size": 1622.0,
       "entry": 0.005184,
-      "mark": 0.005171,
+      "mark": 0.005141,
       "lev": 7,
       "margin": 1.2012,
-      "notional": 8.3874,
-      "upnl": 0.0211,
-      "upnl_pct": 1.76,
+      "notional": 8.3387,
+      "upnl": 0.0697,
+      "upnl_pct": 5.81,
       "sl": 0.005213,
       "tp1": 0.005129,
       "tp2": 0.005084,
@@ -92,17 +73,36 @@
       "timeframe": "15m",
       "size": 1000.0,
       "entry": 0.003492,
-      "mark": 0.003503,
+      "mark": 0.003482,
       "lev": 4,
       "margin": 0.873,
-      "notional": 3.503,
-      "upnl": -0.011,
-      "upnl_pct": -1.26,
+      "notional": 3.482,
+      "upnl": 0.01,
+      "upnl_pct": 1.15,
       "sl": 0.0035299999999999997,
       "tp1": 0.003428,
       "tp2": 0.003371,
       "tp1_hit": false,
       "open_ms": 1794379500000
+    },
+    {
+      "coin": "LTC",
+      "inst": "LTC-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 0.16,
+      "entry": 50.51,
+      "mark": 50.37,
+      "lev": 7,
+      "margin": 1.1545,
+      "notional": 8.0592,
+      "upnl": 0.0224,
+      "upnl_pct": 1.94,
+      "sl": 50.800000000000004,
+      "tp1": 49.97,
+      "tp2": 49.54,
+      "tp1_hit": false,
+      "open_ms": 1794380520000
     }
   ],
   "orders": [
@@ -131,33 +131,6 @@
       "type": "tpsl",
       "px": 0.3522,
       "size": 4.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "FET",
-      "kind": "tp2",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.1515,
-      "size": 20.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "FET",
-      "kind": "tp1",
-      "side": "sell",
-      "type": "limit",
-      "px": 0.1496,
-      "size": 20.0,
-      "reduce_only": true
-    },
-    {
-      "coin": "FET",
-      "kind": "sl",
-      "side": "sell",
-      "type": "tpsl",
-      "px": 0.1461,
-      "size": 40.0,
       "reduce_only": true
     },
     {
@@ -222,9 +195,54 @@
       "px": 0.00353,
       "size": 1000.0,
       "reduce_only": true
+    },
+    {
+      "coin": "LTC",
+      "kind": "tp2",
+      "side": "buy",
+      "type": "limit",
+      "px": 49.54,
+      "size": 0.08,
+      "reduce_only": true
+    },
+    {
+      "coin": "LTC",
+      "kind": "tp1",
+      "side": "buy",
+      "type": "limit",
+      "px": 49.97,
+      "size": 0.08,
+      "reduce_only": true
+    },
+    {
+      "coin": "LTC",
+      "kind": "sl",
+      "side": "buy",
+      "type": "tpsl",
+      "px": 50.8,
+      "size": 0.16,
+      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "LTC",
+      "time": 1794380564342,
+      "dir": "Open Short",
+      "px": 50.51,
+      "sz": 0.16,
+      "pnl": 0.0,
+      "fee": 0.00484896
+    },
+    {
+      "coin": "FET",
+      "time": 1794380500852,
+      "dir": "Close Long",
+      "px": 0.1461,
+      "sz": 40.0,
+      "pnl": -0.044,
+      "fee": 0.0035064
+    },
     {
       "coin": "PUMP",
       "time": 1794379637634,
@@ -476,53 +494,35 @@
       "sz": 150.0,
       "pnl": -0.0675,
       "fee": 0.0029547
-    },
-    {
-      "coin": "ATOM",
-      "time": 1794360630407,
-      "dir": "Open Long",
-      "px": 1.417,
-      "sz": 5.0,
-      "pnl": 0.0,
-      "fee": 0.004251
-    },
-    {
-      "coin": "ZRO",
-      "time": 1794359739193,
-      "dir": "Open Long",
-      "px": 1.5575,
-      "sz": 2.0,
-      "pnl": 0.0,
-      "fee": 0.001869
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 14,
-      "total_r": -7.24,
-      "trades": 17,
+      "losses": 15,
+      "total_r": -7.91,
+      "trades": 18,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 25,
-      "total_r": -15.93,
-      "trades": 29,
+      "losses": 26,
+      "total_r": -16.6,
+      "trades": 30,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 25,
-      "total_r": -15.93,
-      "trades": 29,
+      "losses": 26,
+      "total_r": -16.6,
+      "trades": 30,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 25,
-      "total_r": -15.93,
-      "trades": 29
+      "losses": 26,
+      "total_r": -16.6,
+      "trades": 30
     },
     "feed_start": "2026-11-10"
   },
@@ -763,6 +763,18 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794379098757,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "FET",
+      "close_ms": 1794380520000,
+      "r": -0.6707,
+      "pnl": -0.044,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794380520000,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
