@@ -1,12 +1,12 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794383938199,
-  "updated_at": "2026-11-11T07:58:58Z",
+  "updated_at_ms": 1794384329058,
+  "updated_at": "2026-11-11T08:05:29Z",
   "account": {
-    "equity": 5.18,
-    "withdrawable": 0.87,
-    "used_margin": 4.32,
-    "notional": 17.3
+    "equity": 5.19,
+    "withdrawable": 2.05,
+    "used_margin": 3.15,
+    "notional": 9.16
   },
   "positions": [
     {
@@ -16,12 +16,12 @@
       "timeframe": "1h",
       "size": 4.0,
       "entry": 0.3649,
-      "mark": 0.3749,
+      "mark": 0.374,
       "lev": 2,
       "margin": 0.7298,
-      "notional": 1.4996,
-      "upnl": 0.04,
-      "upnl_pct": 5.48,
+      "notional": 1.496,
+      "upnl": 0.0364,
+      "upnl_pct": 4.99,
       "sl": 0.3522,
       "tp1": 0.38480000000000003,
       "tp2": 0.40390000000000004,
@@ -35,12 +35,12 @@
       "timeframe": "15m",
       "size": 160.0,
       "entry": 0.03775,
-      "mark": 0.03743,
+      "mark": 0.0375,
       "lev": 5,
       "margin": 1.208,
-      "notional": 5.9888,
-      "upnl": 0.0512,
-      "upnl_pct": 4.24,
+      "notional": 6.0,
+      "upnl": 0.04,
+      "upnl_pct": 3.31,
       "sl": 0.03807,
       "tp1": 0.03719,
       "tp2": 0.03672,
@@ -54,36 +54,17 @@
       "timeframe": "15m",
       "size": 1622.0,
       "entry": 0.005184,
-      "mark": 0.005191,
+      "mark": 0.005185,
       "lev": 7,
       "margin": 1.2012,
-      "notional": 8.4198,
-      "upnl": -0.0114,
-      "upnl_pct": -0.95,
+      "notional": 8.4101,
+      "upnl": -0.0016,
+      "upnl_pct": -0.14,
       "sl": 0.005213,
       "tp1": 0.005129,
       "tp2": 0.005084,
       "tp1_hit": false,
       "open_ms": 1794379098757
-    },
-    {
-      "coin": "LTC",
-      "inst": "LTC-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 0.16,
-      "entry": 50.51,
-      "mark": 50.77,
-      "lev": 7,
-      "margin": 1.1545,
-      "notional": 8.1232,
-      "upnl": -0.0416,
-      "upnl_pct": -3.6,
-      "sl": 50.800000000000004,
-      "tp1": 49.97,
-      "tp2": 49.54,
-      "tp1_hit": false,
-      "open_ms": 1794380520000
     }
   ],
   "orders": [
@@ -167,36 +148,18 @@
       "px": 0.005213,
       "size": 1622.0,
       "reduce_only": true
-    },
-    {
-      "coin": "LTC",
-      "kind": "tp2",
-      "side": "buy",
-      "type": "limit",
-      "px": 49.54,
-      "size": 0.08,
-      "reduce_only": true
-    },
-    {
-      "coin": "LTC",
-      "kind": "tp1",
-      "side": "buy",
-      "type": "limit",
-      "px": 49.97,
-      "size": 0.08,
-      "reduce_only": true
-    },
-    {
-      "coin": "LTC",
-      "kind": "sl",
-      "side": "buy",
-      "type": "tpsl",
-      "px": 50.8,
-      "size": 0.16,
-      "reduce_only": true
     }
   ],
   "fills": [
+    {
+      "coin": "LTC",
+      "time": 1794384080416,
+      "dir": "Close Short",
+      "px": 50.8,
+      "sz": 0.16,
+      "pnl": -0.0464,
+      "fee": 0.0048768
+    },
     {
       "coin": "PUMP",
       "time": 1794383882000,
@@ -457,44 +420,35 @@
       "sz": 5.0,
       "pnl": -0.065,
       "fee": 0.004212
-    },
-    {
-      "coin": "NEAR",
-      "time": 1794361113607,
-      "dir": "Open Long",
-      "px": 3.693,
-      "sz": 1.0,
-      "pnl": 0.0,
-      "fee": 0.0022158
     }
   ],
   "stats": {
     "today": {
       "wins": 3,
-      "losses": 16,
-      "total_r": -8.55,
-      "trades": 19,
+      "losses": 17,
+      "total_r": -9.26,
+      "trades": 20,
       "day": "2026-11-11"
     },
     "week": {
       "wins": 4,
-      "losses": 27,
-      "total_r": -17.24,
-      "trades": 31,
+      "losses": 28,
+      "total_r": -17.95,
+      "trades": 32,
       "week": "2026-W46"
     },
     "month": {
       "wins": 4,
-      "losses": 27,
-      "total_r": -17.24,
-      "trades": 31,
+      "losses": 28,
+      "total_r": -17.95,
+      "trades": 32,
       "month": "2026-11"
     },
     "all_time": {
       "wins": 4,
-      "losses": 27,
-      "total_r": -17.24,
-      "trades": 31
+      "losses": 28,
+      "total_r": -17.95,
+      "trades": 32
     },
     "feed_start": "2026-11-10"
   },
@@ -759,6 +713,18 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794383880000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "LTC",
+      "close_ms": 1794384120000,
+      "r": -0.7073,
+      "pnl": -0.0464,
+      "win": false,
+      "reason": "Position closed (fill not observed)",
+      "recorded_ms": 1794384120000,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
