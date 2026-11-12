@@ -1,16 +1,101 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794403778883,
-  "updated_at": "2026-11-11T13:29:38Z",
+  "updated_at_ms": 1794441935977,
+  "updated_at": "2026-11-12T00:05:35Z",
   "account": {
     "equity": 0.0,
     "withdrawable": 0.0,
-    "used_margin": 0,
-    "notional": 0
+    "used_margin": 0.0,
+    "notional": 0.0
   },
-  "positions": [],
+  "positions": [
+    {
+      "coin": "SPX",
+      "inst": "SPX-USDT",
+      "side": "LONG",
+      "timeframe": "1h",
+      "size": 4.0,
+      "entry": 0.3649,
+      "mark": 0.36,
+      "lev": 2,
+      "margin": 0.7298,
+      "notional": 1.44,
+      "upnl": -0.0196,
+      "upnl_pct": -2.69,
+      "sl": 0.3522,
+      "tp1": 0.38480000000000003,
+      "tp2": 0.40390000000000004,
+      "tp1_hit": false,
+      "open_ms": 1794359100937
+    },
+    {
+      "coin": "CATI",
+      "inst": "CATI-USDT",
+      "side": "SHORT",
+      "timeframe": "15m",
+      "size": 160.0,
+      "entry": 0.03775,
+      "mark": 0.03716,
+      "lev": 5,
+      "margin": 1.208,
+      "notional": 5.9456,
+      "upnl": 0.0944,
+      "upnl_pct": 7.81,
+      "sl": 0.03807,
+      "tp1": 0.03719,
+      "tp2": 0.03672,
+      "tp1_hit": false,
+      "open_ms": 1794373680000
+    },
+    {
+      "coin": "ATOM",
+      "inst": "ATOM-USDT",
+      "side": "LONG",
+      "timeframe": "15m",
+      "size": 4.0,
+      "entry": 1.412,
+      "mark": 1.392,
+      "lev": 5,
+      "margin": 1.1296,
+      "notional": 5.568,
+      "upnl": -0.08,
+      "upnl_pct": -7.08,
+      "sl": 1.401,
+      "tp1": 1.432,
+      "tp2": 1.45,
+      "tp1_hit": false,
+      "open_ms": 1794385087369
+    }
+  ],
   "orders": [],
   "fills": [
+    {
+      "coin": "CATI",
+      "time": 1794388104711,
+      "dir": "Close Short",
+      "px": 0.03751,
+      "sz": 160.0,
+      "pnl": 0.0364,
+      "fee": 0.00360096
+    },
+    {
+      "coin": "SPX",
+      "time": 1794388085827,
+      "dir": "Close Long",
+      "px": 0.366,
+      "sz": 4.0,
+      "pnl": 0.0028,
+      "fee": 0.0008784
+    },
+    {
+      "coin": "ATOM",
+      "time": 1794388083742,
+      "dir": "Close Long",
+      "px": 1.413,
+      "sz": 4.0,
+      "pnl": -0.004,
+      "fee": 0.0033912
+    },
     {
       "coin": "WLFI",
       "time": 1794387898826,
@@ -253,42 +338,15 @@
       "sz": 0.4,
       "pnl": 0.0,
       "fee": 0.00200064
-    },
-    {
-      "coin": "AVAX",
-      "time": 1794365128443,
-      "dir": "Open Long",
-      "px": 8.541,
-      "sz": 0.8,
-      "pnl": 0.0,
-      "fee": 0.00409968
-    },
-    {
-      "coin": "POLYX",
-      "time": 1794364741057,
-      "dir": "Open Long",
-      "px": 0.03073,
-      "sz": 236.0,
-      "pnl": 0.0,
-      "fee": 0.004351368
-    },
-    {
-      "coin": "COMP",
-      "time": 1794364737159,
-      "dir": "Open Short",
-      "px": 19.86,
-      "sz": 0.4,
-      "pnl": 0.0,
-      "fee": 0.0047664
     }
   ],
   "stats": {
     "today": {
-      "wins": 3,
-      "losses": 19,
-      "total_r": -11.11,
-      "trades": 22,
-      "day": "2026-11-11"
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0,
+      "trades": 0,
+      "day": "2026-11-12"
     },
     "week": {
       "wins": 4,
