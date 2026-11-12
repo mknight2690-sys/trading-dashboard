@@ -1,72 +1,14 @@
 {
   "venue": "BloFin",
-  "updated_at_ms": 1794441935977,
-  "updated_at": "2026-11-12T00:05:35Z",
+  "updated_at_ms": 1794457113880,
+  "updated_at": "2026-11-12T04:18:33Z",
   "account": {
     "equity": 0.0,
     "withdrawable": 0.0,
     "used_margin": 0.0,
     "notional": 0.0
   },
-  "positions": [
-    {
-      "coin": "SPX",
-      "inst": "SPX-USDT",
-      "side": "LONG",
-      "timeframe": "1h",
-      "size": 4.0,
-      "entry": 0.3649,
-      "mark": 0.36,
-      "lev": 2,
-      "margin": 0.7298,
-      "notional": 1.44,
-      "upnl": -0.0196,
-      "upnl_pct": -2.69,
-      "sl": 0.3522,
-      "tp1": 0.38480000000000003,
-      "tp2": 0.40390000000000004,
-      "tp1_hit": false,
-      "open_ms": 1794359100937
-    },
-    {
-      "coin": "CATI",
-      "inst": "CATI-USDT",
-      "side": "SHORT",
-      "timeframe": "15m",
-      "size": 160.0,
-      "entry": 0.03775,
-      "mark": 0.03716,
-      "lev": 5,
-      "margin": 1.208,
-      "notional": 5.9456,
-      "upnl": 0.0944,
-      "upnl_pct": 7.81,
-      "sl": 0.03807,
-      "tp1": 0.03719,
-      "tp2": 0.03672,
-      "tp1_hit": false,
-      "open_ms": 1794373680000
-    },
-    {
-      "coin": "ATOM",
-      "inst": "ATOM-USDT",
-      "side": "LONG",
-      "timeframe": "15m",
-      "size": 4.0,
-      "entry": 1.412,
-      "mark": 1.392,
-      "lev": 5,
-      "margin": 1.1296,
-      "notional": 5.568,
-      "upnl": -0.08,
-      "upnl_pct": -7.08,
-      "sl": 1.401,
-      "tp1": 1.432,
-      "tp2": 1.45,
-      "tp1_hit": false,
-      "open_ms": 1794385087369
-    }
-  ],
+  "positions": [],
   "orders": [],
   "fills": [
     {
@@ -344,29 +286,29 @@
     "today": {
       "wins": 0,
       "losses": 0,
-      "total_r": 0.0,
+      "total_r": 0,
       "trades": 0,
       "day": "2026-11-12"
     },
     "week": {
-      "wins": 4,
-      "losses": 30,
-      "total_r": -19.8,
-      "trades": 34,
+      "wins": 6,
+      "losses": 31,
+      "total_r": -19.27,
+      "trades": 37,
       "week": "2026-W46"
     },
     "month": {
-      "wins": 4,
-      "losses": 30,
-      "total_r": -19.8,
-      "trades": 34,
+      "wins": 6,
+      "losses": 31,
+      "total_r": -19.27,
+      "trades": 37,
       "month": "2026-11"
     },
     "all_time": {
-      "wins": 4,
-      "losses": 30,
-      "total_r": -19.8,
-      "trades": 34
+      "wins": 6,
+      "losses": 31,
+      "total_r": -19.27,
+      "trades": 37
     },
     "feed_start": "2026-11-10"
   },
@@ -667,6 +609,42 @@
       "win": false,
       "reason": "Position closed (fill not observed)",
       "recorded_ms": 1794387900000,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "ATOM",
+      "close_ms": 1794388083742,
+      "r": -0.061,
+      "pnl": -0.004,
+      "win": false,
+      "reason": "Manual close (bot stopped)",
+      "recorded_ms": 1794388083742,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "SPX",
+      "close_ms": 1794388085827,
+      "r": 0.0427,
+      "pnl": 0.0028,
+      "win": true,
+      "reason": "Manual close (bot stopped)",
+      "recorded_ms": 1794388085827,
+      "tp1_frac": 0.0,
+      "tp1_full": false,
+      "tp1_full_reason": ""
+    },
+    {
+      "coin": "CATI",
+      "close_ms": 1794388104711,
+      "r": 0.5549,
+      "pnl": 0.0364,
+      "win": true,
+      "reason": "Manual close (bot stopped)",
+      "recorded_ms": 1794388104711,
       "tp1_frac": 0.0,
       "tp1_full": false,
       "tp1_full_reason": ""
