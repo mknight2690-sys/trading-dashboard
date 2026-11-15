@@ -8,14 +8,14 @@
 <title>KnightTrader-Muse — Trading Dashboard</title>
 <meta property="og:type" content="website" />
 <meta property="og:title" content="KnightTrader-Muse — live trading dashboard" />
-<meta property="og:description" content="Live BloFin account the trading bot trades on. All-time record -19.27R (6W / 31L, 37 trades). Streams live and refreshes every 15 seconds." />
+<meta property="og:description" content="Live Hyperliquid account — BloBrowser and H7 trading live. Equity, positions, charts and PnL badges. Streams live and refreshes every 15 seconds." />
 <meta property="og:url" content="https://mknight2690-sys.github.io/trading-dashboard/" />
 <meta property="og:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="KnightTrader-Muse — live trading dashboard" />
-<meta name="twitter:description" content="Live BloFin account the trading bot trades on. All-time record -19.27R (6W / 31L, 37 trades). Streams live and refreshes every 15 seconds." />
+<meta name="twitter:description" content="Live Hyperliquid account — BloBrowser and H7 trading live. Equity, positions, charts and PnL badges. Streams live and refreshes every 15 seconds." />
 <meta name="twitter:image" content="https://mknight2690-sys.github.io/trading-dashboard/preview.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -180,6 +180,41 @@
     .score-wrap td::before{content:attr(data-label);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding-top:2px}
   }
 </style>
+<style>
+  /* New dashboard additions (carousel, ticker explorer, badge generator). */
+  .carousel-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .carousel-bar .pc-title{font-size:15px;font-weight:700}
+  .carousel-ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .carousel-ctl .btn{padding:5px 10px;min-height:32px;font-size:13px}
+  .src-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;padding:2px 7px;border-radius:4px;vertical-align:1px}
+  .src-bb{background:var(--up-bg);color:var(--up)}
+  .src-h7{background:#e8e4f8;color:#5b4bc4}
+  .src-manual{background:var(--warn-bg);color:var(--warn)}
+  .src-earlier{background:var(--chip);color:var(--muted)}
+  @media (prefers-color-scheme: dark){ .src-h7{background:#241f4d;color:#b7aef5} }
+  .form-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .form-row label{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  .form-row select,.form-row input[type="text"]{font:inherit;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;padding:8px 10px;min-height:38px;max-width:100%}
+  .form-row select{min-width:220px}
+  .badge-wrap{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+  .badge-canvas-wrap{background:#0a0d0c;border-radius:10px;padding:10px;display:flex;justify-content:center}
+  .badge-canvas-wrap canvas{width:100%;max-width:340px;height:auto;display:block;border-radius:6px}
+  .badge-side{display:grid;gap:10px}
+  .badge-nums{font-size:14px;display:grid;gap:6px}
+  .badge-nums .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:6px 0}
+  .badge-nums .row:last-child{border-bottom:none}
+  .badge-nums .k{color:var(--muted)}
+  .badge-nums .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .ticker-grid{display:grid;grid-template-columns:1fr;gap:10px}
+  .stat-list{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:13.5px}
+  .stat-list li{display:flex;gap:9px}
+  .stat-list .k{color:var(--muted);flex:none;width:130px}
+  .gate-pill{display:inline-block;font-weight:700;font-size:12.5px;padding:3px 10px;border-radius:999px}
+  .gate-open{background:var(--up-bg);color:var(--up)}
+  .gate-closed{background:var(--down-bg);color:var(--down)}
+  .gate-startup{background:var(--chip);color:var(--muted)}
+  @media (max-width:720px){ .badge-wrap{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -187,14 +222,17 @@
   <div class="statusbar" role="status">
     <div class="status-left">
       <span class="live-badge" id="connBadge"><span class="live-dot" aria-hidden="true"></span><span id="connText">CONNECTING</span></span>
-      <span class="acct">BloFin account <span class="mono">USDT perps</span></span>
-      <span class="acct">Venue: <strong style="color:var(--ink)">BloFin perps</strong></span>
+      <span class="acct">Master account
+        <span class="mono" id="acctAddr">0x7b4c…5400</span>
+        <button class="copy-btn" id="copyAddr" type="button">Copy address</button>
+      </span>
+      <span class="acct">Venue: <strong style="color:var(--ink)">Hyperliquid perps</strong></span>
     </div>
     <div class="controls">
       <span class="updated" id="updatedAt">Loading live data…</span>
       <button class="btn" id="pauseBtn" type="button" aria-pressed="false">Pause</button>
       <button class="btn" id="refreshBtn" type="button">Refresh now</button>
-      <button class="btn" id="voiceBtn" type="button" aria-pressed="false" title="Speak live-bot trade opens and closes out loud">Voice: off</button>
+      <button class="btn" id="voiceBtn" type="button" aria-pressed="false" title="Speak trade opens and closes out loud">Voice: off</button>
     </div>
   </div>
 
@@ -205,88 +243,103 @@
       <div class="tagline">Live trading dashboard</div>
     </div>
   </div>
-  <h1 class="sr-only">KnightTrader-Muse — live account dashboard</h1>
-  <p class="sub">Live view of the BloFin account the trading bot trades live (crypto trade-setups rules, 15m + 1h breakouts). The score is the BloFin bot's own record only — it went live Nov 10, 2026 with a fresh record, so there is no seeded history here. The account data — positions, orders, fills and stats — comes from a snapshot the bot publishes every cycle; BloFin has no public account endpoint, so those are only as fresh as the last deploy (the page says how old the snapshot is), while the equity number is re-priced live from prices every 15 seconds and prices and 1h candles stream live from BloFin's public market API. Read-only: this page cannot place or change trades, and it can't see the bot process itself — the Bot panel carries the bot's last reported state and its own live record.</p>
+  <h1 class="sr-only">KnightTrader-Muse — live Hyperliquid account dashboard</h1>
+  <p class="sub">Live view of the Hyperliquid master account. BloBrowser trades it with its six avenues at 5× isolated, and H7 — the gated shorts system — trades it at 10× isolated. Everything on this page streams from Hyperliquid's public info API and refreshes every 15 seconds, so any trade either bot places shows up here within one refresh. The snapshot baked into the page (equity curve, ledger, trade history) refreshes on every deploy. Read-only: this page cannot place or change trades.</p>
 
   <div class="kpis" id="kpis">
-    <div class="kpi"><div class="label">Account value</div><div class="value" id="kEquity">—</div><div class="detail" id="kEquityD">perps equity, USDT</div></div>
-    <div class="kpi"><div class="label">Withdrawable</div><div class="value" id="kWithdraw">—</div><div class="detail">available to withdraw</div></div>
-    <div class="kpi"><div class="label">Margin used</div><div class="value" id="kMargin">—</div><div class="detail" id="kMarginD">of equity</div></div>
-    <div class="kpi"><div class="label">Unrealized PnL</div><div class="value" id="kUpnl">—</div><div class="detail">open positions</div></div>
-    <div class="kpi"><div class="label">Open positions</div><div class="value" id="kPos">—</div><div class="detail" id="kPosD">max 6 by bot rules</div></div>
-    <div class="kpi"><div class="label">Open orders</div><div class="value" id="kOrders">—</div><div class="detail">resting on the book</div></div>
+    <div class="kpi"><div class="label">Account equity</div><div class="value" id="kEquity">—</div><div class="detail" id="kEquityD">USDC · live</div></div>
+    <div class="kpi"><div class="label">True profit</div><div class="value" id="kProfit">—</div><div class="detail" id="kProfitD">vs $5.08 baseline · Nov 11 06:17 EST</div></div>
+    <div class="kpi"><div class="label">Realized Nov</div><div class="value" id="kRealNov">—</div><div class="detail" id="kRealNovD">calendar November · all closes</div></div>
+    <div class="kpi"><div class="label">Fees Nov</div><div class="value" id="kFees">—</div><div class="detail">paid to the exchange</div></div>
+    <div class="kpi"><div class="label">Net deposits</div><div class="value" id="kDeposits">—</div><div class="detail" id="kDepositsD">since baseline · auto-detected</div></div>
+    <div class="kpi"><div class="label">Open positions</div><div class="value" id="kPos">—</div><div class="detail" id="kPosD">—</div></div>
   </div>
 
-  <section aria-labelledby="scoreH">
-    <div class="sec-head"><h2 id="scoreH">Score — BloFin bot record</h2><span class="sec-note">The BloFin bot's own closed trades only, since it went live (Nov 10, 2026). No seeded history: this bot started fresh, so Today / This week / This month / All-time are all its own record. The bot's live record is also kept in the Bot panel.</span></div>
-    <div class="panel score-wrap" style="padding:6px 6px 2px">
-      <table>
-        <thead><tr><th>Period</th><th class="num">Record</th><th class="num">Win rate</th><th class="num">Total R</th><th class="num">Trades</th></tr></thead>
-        <tbody>
-          <tr><td data-label="Period"><strong>Today</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-today">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-today">—</td><td class="num pos" data-label="Total R" id="scoreR-today"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-today">0</td></tr>
-          <tr><td data-label="Period"><strong>This week</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-week">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-week">—</td><td class="num pos" data-label="Total R" id="scoreR-week"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-week">0</td></tr>
-          <tr><td data-label="Period"><strong>This month</strong></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-month">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-month">—</td><td class="num pos" data-label="Total R" id="scoreR-month"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-month">0</td></tr>
-          <tr><td data-label="Period"><strong>All-time</strong> <span style="color:var(--muted);font-weight:400">since Nov 10, 2026</span></td><td class="num" data-label="Record"><span class="wl" id="scoreRec-all">0W / 0L</span></td><td class="num" data-label="Win rate" id="scoreWR-all">—</td><td class="num pos" data-label="Total R" id="scoreR-all"><strong>+0.00R</strong></td><td class="num" data-label="Trades" id="scoreN-all">0</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="sec-note" style="margin-top:8px">Periods run on UTC, like the bot's overviews: today resets at UTC midnight, the week starts Monday 00:00 UTC. A trade's R is its realized PnL divided by the bot's risk on that trade — 1% of account equity when the trade opened — on the same basis the bot itself uses, with the stop sized so a stop hit is exactly −1R after fees. The test trade that confirmed the order flow (XRP, Nov 10, 2026) is not in the score — only the live bot's own recorded trades count.</p>
-  </section>
+  <div class="cols" style="margin-top:22px">
+    <section aria-labelledby="h7H" style="margin-top:0">
+      <div class="sec-head"><h2 id="h7H">H7 — gated shorts · 10× isolated</h2><span id="h7GatePill"></span></div>
+      <div class="panel">
+        <ul class="stat-list" id="h7Stats">
+          <li><span class="k">Status</span><span id="h7Status">Starting up…</span></li>
+          <li><span class="k">Gate</span><span id="h7Gate">—</span></li>
+          <li><span class="k">Record</span><span id="h7Record">No H7 trades yet.</span></li>
+          <li><span class="k">Config</span><span>Gated shorts-only · coins with max leverage ≥10× · TP +2% / trail 1% / stop −15% · max 6 open · no DCA · notional max($10.50, equity × 11.05%)</span></li>
+          <li><span class="k">Note</span><span>At 10× isolated, liquidation (~9.5% adverse) hits before the −15% stop — a liquidated trade loses its full $1.05 margin.</span></li>
+        </ul>
+      </div>
+    </section>
+    <section aria-labelledby="bbH" style="margin-top:0">
+      <div class="sec-head"><h2 id="bbH">BloBrowser — six avenues · 5× isolated</h2></div>
+      <div class="panel">
+        <ul class="stat-list">
+          <li><span class="k">Status</span><span id="bbStatus">Live on this account since Nov 11, 2026</span></li>
+          <li><span class="k">Record (era)</span><span id="bbRecord">—</span></li>
+          <li><span class="k">Strategy profit</span><span id="bbProfit">—</span></li>
+          <li><span class="k">Config</span><span>Six avenues (Cadence, Harmonics, Momentum, Pulse, Structure, Swing) · ~$10.50 notional · trailing TP ~1.5% · TP +3.0–3.5% · hard stop −14–16% · staged DCA</span></li>
+          <li><span class="k">Note</span><span>Nov 15 09:13 EST — Matt manually closed CRV + XRP himself (−$1.34). Those are his closes, not BloBrowser losers.</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
 
   <section aria-labelledby="posH">
     <div class="sec-head"><h2 id="posH">Open positions</h2><span class="sec-note" id="posNote"></span></div>
     <div id="posWrap"></div>
   </section>
 
-  <section aria-labelledby="pcH">
-    <div class="sec-head"><h2 id="pcH">Price charts — 1h</h2><span class="sec-note">Cycles through the open positions, then Bitcoin. 1-hour candles from BloFin. The current hour's candle ticks live with the mid price every refresh (15s) — the dot marks the live price. Tap a dot to jump to a coin.</span></div>
+  <section aria-labelledby="carH">
+    <div class="sec-head"><h2 id="carH">Charts — cycling</h2><span class="sec-note">Auto-rotates every 10 seconds. Equity curve, Bitcoin, open positions, then the biggest movers. Pause it or tap a dot to jump.</span></div>
     <div class="chart-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-        <span class="pc-title" id="pcTitle">Loading chart… <span class="tf">1h</span></span>
-        <span class="pc-dots" id="pcDots" role="group" aria-label="Chart coin"></span>
+      <div class="carousel-bar">
+        <span class="pc-title" id="carTitle">Loading chart…</span>
+        <span class="carousel-ctl">
+          <button class="btn" id="carPrev" type="button" aria-label="Previous chart">‹ Prev</button>
+          <button class="btn" id="carPause" type="button" aria-pressed="false">Pause</button>
+          <button class="btn" id="carNext" type="button" aria-label="Next chart">Next ›</button>
+          <span class="pc-dots" id="carDots" role="group" aria-label="Chart slide"></span>
+        </span>
       </div>
-      <div id="pcWrap"><span style="color:var(--muted)">Loading 1h candles…</span></div>
-      <div class="chart-meta" id="pcMeta"></div>
+      <div id="carWrap"><span style="color:var(--muted)">Loading charts…</span></div>
+      <div class="chart-meta" id="carMeta"></div>
     </div>
   </section>
 
-  <section aria-labelledby="ordH">
-    <div class="sec-head"><h2 id="ordH">Open orders</h2><span class="sec-note">Includes the bot's take-profit and stop orders when trades are live.</span></div>
-    <div id="ordWrap"></div>
+  <section aria-labelledby="tickH">
+    <div class="sec-head"><h2 id="tickH">Ticker explorer</h2><span class="sec-note">Pick any Hyperliquid perp and a timeframe. Candles come from Hyperliquid's public API; the current candle ticks live with the mid price.</span></div>
+    <div class="chart-box">
+      <div class="form-row" style="margin-bottom:10px">
+        <div>
+          <label for="tickSearch">Find a coin</label>
+          <input type="text" id="tickSearch" placeholder="Type to filter — e.g. SOL" autocomplete="off" />
+        </div>
+        <div>
+          <label for="tickSelect">Coin</label>
+          <select id="tickSelect"></select>
+        </div>
+        <div>
+          <label>Timeframe</label>
+          <span class="seg" role="group" aria-label="Timeframe" id="tickTf">
+            <button type="button" data-tf="15m" aria-pressed="false">15m</button>
+            <button type="button" data-tf="1h" aria-pressed="true">1h</button>
+            <button type="button" data-tf="4h" aria-pressed="false">4h</button>
+            <button type="button" data-tf="1d" aria-pressed="false">1d</button>
+          </span>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn" id="tickGo" type="button">Load chart</button>
+        </div>
+      </div>
+      <div id="tickWrap"><span style="color:var(--muted)">Pick a coin above — BTC loads by default.</span></div>
+      <div class="chart-meta" id="tickMeta"></div>
+    </div>
   </section>
 
-  <div class="cols" style="margin-top:22px">
-    <section aria-labelledby="botH" style="margin-top:0">
-      <div class="sec-head"><h2 id="botH">Bot</h2></div>
-      <div class="panel">
-        <h3>Live configuration</h3>
-        <ul class="rules">
-          <li><span class="k">Mode</span><span><strong>LIVE</strong> — configured for real orders on this account, no paper mode</span></li>
-          <li><span class="k">Bot's record</span><span id="botRecord">0 live trades so far (0W / 0L, +0.00R) — the BloFin bot's own closed trades since it went live (Nov 10, 2026). No seeded history: this is a fresh bot, so the score above is entirely its own record.</span></li>
-          <li><span class="k">15m setup</span><span>1h trend + 15m EMA / RSI / MACD breakout · time exit 4h</span></li>
-          <li><span class="k">1h setup</span><span>4h trend + 1h EMA / RSI / MACD breakout · time exit 12h</span></li>
-          <li><span class="k">Stop / targets</span><span>Stop 1.5× ATR on every trade, sized so a stop hit is exactly −1R after fees · TP1 +1.5R net of fees (close 50%, stop to breakeven) · TP2 +3R net of fees</span></li>
-          <li><span class="k">Risk</span><span>1% of equity per trade · max 6 open · 1 per coin · 90-min cooldown · margin capped at 95%</span></li>
-          <li><span class="k">Min order</span><span>BloFin minimums are per-coin, typically $0.50–$2 notional (BTC ~$7.47, ETH ~$3, XRP $1.10, SOL $0.86) — at $6.56 equity, 1% risk is $0.07, so only tight-stop setups can trade; the rest are skipped</span></li>
-          <li><span class="k">Bot state</span><span id="botState">Live on BloFin since Nov 10, 2026. Account figures come from the bot's published snapshot, updated on deploy; the equity number is re-priced live from prices every 15 seconds.</span></li>
-        </ul>
-      </div>
-    </section>
-    <section aria-labelledby="uniH" style="margin-top:0">
-      <div class="sec-head"><h2 id="uniH">Tradable universe</h2></div>
-      <div class="panel">
-        <h3>153 of the feed's 235 coins have BloFin perps</h3>
-        <div class="chips" id="uniChips"></div>
-        <p style="margin:12px 0 0;font-size:13px;color:var(--muted)">The other 82 feed coins have no BloFin perp (69) or are reduce-only via the BloFin API (13: APEX, AZTEC, BABY, BRETT, CELO, CHILLGUY, GOAT, GRIFFAIN, PNUT, RESOLV, SKR, STBL, ZEREBRO) and can't be opened here. PEPE and SHIB trade as kPEPE / kSHIB on the Hyperliquid side (1 unit = 1,000 underlying).</p>
-      </div>
-    </section>
-  </div>
-
-  <section aria-labelledby="chartH">
-    <div class="sec-head"><h2 id="chartH">Cumulative R — BloFin bot record</h2><span class="sec-note">The BloFin bot's own record in R, oldest to newest: only its own closed trades since it went live (Nov 10, 2026). Same basis as the score above. The curve starts at 0 — there is no seeded history on this bot.</span></div>
+  <section aria-labelledby="dailyH">
+    <div class="sec-head"><h2 id="dailyH">Daily realized PnL</h2><span class="sec-note">Closed trades only, Eastern days. Nov 15 is Matt's two manual closes (−$1.34) — not BloBrowser trades.</span></div>
     <div class="chart-box">
-      <div id="chartWrap"><span style="color:var(--muted)">Loading fills…</span></div>
-      <div class="chart-meta" id="chartMeta"></div>
+      <div id="dailyWrap"><span style="color:var(--muted)">Loading daily PnL…</span></div>
+      <div class="chart-meta" id="dailyMeta"></div>
     </div>
   </section>
 
@@ -299,74 +352,97 @@
       </span>
     </div>
     <div id="fillsWrap"></div>
-    <p class="sec-note" style="margin-top:8px">Times in Eastern. Closes are tagged <span class="tag win">WINNER</span> / <span class="tag lose">LOSER</span> by the sign of realized PnL, same as the Discord trade posts.</p>
+    <p class="sec-note" style="margin-top:8px">Times in Eastern. Closes are tagged <span class="tag win">WINNER</span> / <span class="tag lose">LOSER</span> by the sign of realized PnL. Source tags: <span class="src-tag src-bb">BloBrowser</span> <span class="src-tag src-h7">H7</span> <span class="src-tag src-manual">Manual</span> <span class="src-tag src-earlier">Earlier</span> (pre-baseline account activity).</p>
+  </section>
+
+  <section aria-labelledby="ledH">
+    <div class="sec-head"><h2 id="ledH">Deposit / withdrawal ledger</h2><span class="sec-note">Auto-detected from the Hyperliquid ledger API. Equity changes from deposits/withdrawals are not trading profit — true profit subtracts net deposits.</span></div>
+    <div id="ledWrap"></div>
+  </section>
+
+  <section aria-labelledby="badgeH">
+    <div class="sec-head"><h2 id="badgeH">PnL badge — make &amp; share</h2><span class="sec-note">Pick a strategy and a timeframe, generate the badge, then download, copy or share it. Leverage is always shown on the badge — a leveraged return is never presented as a spot return.</span></div>
+    <div class="chart-box">
+      <div class="form-row" style="margin-bottom:12px">
+        <div>
+          <label for="badgeStrategy">Strategy</label>
+          <select id="badgeStrategy">
+            <option value="bb">BloBrowser — 5× isolated</option>
+            <option value="h7">H7 — 10× isolated</option>
+            <option value="account">Whole account — 5×–10× isolated</option>
+          </select>
+        </div>
+        <div>
+          <label for="badgeTf">Timeframe</label>
+          <select id="badgeTf">
+            <option value="today">Today</option>
+            <option value="week">This week</option>
+            <option value="month">This month</option>
+            <option value="all" selected>All-time (since Nov 11)</option>
+            <option value="fit">Nov 11–14 (FIT window)</option>
+            <option value="position" disabled>Open trade (pick a position below)</option>
+          </select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn" id="badgeGenerate" type="button">Generate badge</button>
+        </div>
+      </div>
+      <div class="badge-wrap">
+        <div class="badge-canvas-wrap"><canvas id="badgeCanvas" width="1080" height="1080"></canvas></div>
+        <div class="badge-side">
+          <div class="badge-nums" id="badgeNums"></div>
+          <div class="share-row">
+            <button class="btn" id="badgeDownload" type="button">Download PNG</button>
+            <button class="btn" id="badgeCopy" type="button">Copy image</button>
+            <button class="btn" id="badgeShare" type="button">Share…</button>
+          </div>
+          <div class="share-status" id="badgeStatus"></div>
+          <p class="sec-note" style="margin:0">The badge shows the strategy's leverage and that the PnL is on margin from leveraged perps. Dollar and percent figures come from the account's own fills and equity curve on this page — nothing is invented.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section aria-labelledby="mktH">
-    <div class="sec-head"><h2 id="mktH">Bot universe — live market</h2><span class="sec-note" id="mktNote">Mid price, 24h change and 24h volume from BloFin's public tickers.</span></div>
+    <div class="sec-head"><h2 id="mktH">Market — all 235 Hyperliquid perps</h2><span class="sec-note" id="mktNote">Mark price, 24h change, 24h volume, funding and open interest, live from Hyperliquid. Sorted by 24h volume.</span></div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div>
+        <label for="mktSearch">Filter coins</label>
+        <input type="text" id="mktSearch" placeholder="Type to filter — e.g. HYPE" autocomplete="off" />
+      </div>
+    </div>
     <div id="mktWrap"></div>
   </section>
 
   <footer>
-    <span>Data source: the BloFin bot's published snapshot (account, positions, orders, fills, stats) plus BloFin's public market API (<span class="mono">openapi.blofin.com</span>) for live prices and candles. No keys or secrets are on this page; it is read-only.</span>
+    <span>Data source: Hyperliquid public info API (<span class="mono">api.hyperliquid.xyz/info</span>) for master account <span class="mono">0x7b4c095d9f5e23fae21f6d6a3052dd4c422b5400</span>. No keys or secrets are on this page; it is read-only.</span>
     <span id="snapNote">If the live feed can't be reached, the page keeps the last values it loaded and labels them — it never invents numbers.</span>
     <span>Not financial advice. Perpetual futures are leveraged and can lose more than the margin posted on a trade.</span>
   </footer>
 </div>
 
-<!-- PnL badge sharer preview -->
-<div class="share-overlay" id="shareOverlay" hidden>
-  <div class="share-modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
-    <h3 id="shareTitle">Share PnL badge</h3>
-    <p class="share-sub" id="shareSub">Preview your position's PnL badge. Copy the image or share it.</p>
-    <div class="share-canvas-wrap"><canvas id="shareCanvas" width="1080" height="1080"></canvas></div>
-    <div class="share-row">
-      <label class="share-check"><input type="checkbox" id="shareDollars" checked> Show dollar amounts</label>
-      <span class="share-sub" style="margin:0">Uncheck to show the PnL % only — no dollar figures on the badge.</span>
-    </div>
-    <div class="share-row">
-      <button class="btn" id="shareCopy" type="button">Copy image</button>
-      <button class="btn" id="shareDownload" type="button">Download PNG</button>
-      <button class="btn" id="shareNative" type="button">Share…</button>
-      <button class="btn" id="shareClose" type="button">Close</button>
-    </div>
-    <div class="share-status" id="shareStatus"></div>
-  </div>
-</div>
 <script>
 "use strict";
-/* KnightTrader-Muse — BloFin dashboard.
-   Data: the BloFin bot publishes a credentials-free snapshot
-   (blofin_state.json, same directory, refreshed by the bot every
-   cycle and deployed with this page) with account, positions,
-   orders, fills and stats. BloFin has no public account-state
-   endpoint, so the snapshot is the only account source. Live
-   prices and 1h candles come from BloFin's PUBLIC market API
-   (no auth): /api/v1/market/tickers and /api/v1/market/candles.
-   No keys or secrets are on this page; it is read-only. */
-var BF_API = "https://openapi.blofin.com";
-var SNAP_URL = "blofin_state.json";
-var BAKED_SNAP = {"venue":"BloFin","updated_at_ms":1794457113880,"updated_at":"2026-11-12T04:18:33Z","account":{"equity":0.0,"withdrawable":0.0,"used_margin":0.0,"notional":0.0},"positions":[],"orders":[],"fills":[{"coin":"CATI","time":1794388104711,"dir":"Close Short","px":0.03751,"sz":160.0,"pnl":0.0364,"fee":0.00360096},{"coin":"SPX","time":1794388085827,"dir":"Close Long","px":0.366,"sz":4.0,"pnl":0.0028,"fee":0.0008784},{"coin":"ATOM","time":1794388083742,"dir":"Close Long","px":1.413,"sz":4.0,"pnl":-0.004,"fee":0.0033912},{"coin":"WLFI","time":1794387898826,"dir":"Close Long","px":0.04777,"sz":222.0,"pnl":-0.05994,"fee":0.006362964},{"coin":"WLFI","time":1794386729520,"dir":"Open Long","px":0.04804,"sz":222.0,"pnl":0.0,"fee":0.006398928},{"coin":"BIGTIME","time":1794386675198,"dir":"Close Short","px":0.005221,"sz":1622.0,"pnl":-0.061636,"fee":0.0050810772},{"coin":"ATOM","time":1794385117056,"dir":"Open Long","px":1.414,"sz":4.0,"pnl":0.0,"fee":0.0033936},{"coin":"LTC","time":1794384080416,"dir":"Close Short","px":50.8,"sz":0.16,"pnl":-0.0464,"fee":0.0048768},{"coin":"PUMP","time":1794383882000,"dir":"Close Short","px":0.003532,"sz":1000.0,"pnl":-0.042,"fee":0.0021192},{"coin":"LTC","time":1794380564342,"dir":"Open Short","px":50.51,"sz":0.16,"pnl":0.0,"fee":0.00484896},{"coin":"FET","time":1794380500852,"dir":"Close Long","px":0.1461,"sz":40.0,"pnl":-0.044,"fee":0.0035064},{"coin":"PUMP","time":1794379637634,"dir":"Open Short","px":0.00349,"sz":1000.0,"pnl":0.0,"fee":0.002094},{"coin":"BIGTIME","time":1794379126746,"dir":"Open Short","px":0.005183,"sz":1622.0,"pnl":0.0,"fee":0.0050440956},{"coin":"INJ","time":1794377593157,"dir":"Close Long","px":8.191,"sz":0.4,"pnl":-0.058,"fee":0.00196584},{"coin":"MATIC","time":1794377188946,"dir":"Close Long","px":0.08848,"sz":40.0,"pnl":-0.0244,"fee":0.00212352},{"coin":"MATIC","time":1794375755002,"dir":"Close Long","px":0.08879,"sz":40.0,"pnl":-0.012,"fee":0.00213096},{"coin":"CATI","time":1794373712012,"dir":"Open Short","px":0.03773,"sz":40.0,"pnl":0.0,"fee":0.00090552},{"coin":"CATI","time":1794373712012,"dir":"Open Short","px":0.03774,"sz":120.0,"pnl":0.0,"fee":0.00271728},{"coin":"MEGA","time":1794373692569,"dir":"Close Long","px":0.05014,"sz":90.0,"pnl":-0.0621,"fee":0.00270756},{"coin":"MATIC","time":1794371435400,"dir":"Open Long","px":0.08909,"sz":80.0,"pnl":0.0,"fee":0.00427632},{"coin":"COMP","time":1794371409751,"dir":"Close Short","px":19.98,"sz":0.4,"pnl":-0.048,"fee":0.0047952},{"coin":"MEGA","time":1794370839702,"dir":"Open Long","px":0.05083,"sz":90.0,"pnl":0.0,"fee":0.00274482},{"coin":"FTM","time":1794370802363,"dir":"Close Long","px":0.03743,"sz":162.0,"pnl":-0.05346,"fee":0.003638196},{"coin":"FTM","time":1794370180403,"dir":"Open Long","px":0.03776,"sz":162.0,"pnl":0.0,"fee":0.003670272},{"coin":"SNX","time":1794370005787,"dir":"Close Long","px":0.1636,"sz":35.0,"pnl":-0.056,"fee":0.0034356},{"coin":"FET","time":1794366932726,"dir":"Open Long","px":0.1472,"sz":40.0,"pnl":0.0,"fee":0.0035328},{"coin":"AVAX","time":1794365910820,"dir":"Close Long","px":8.459,"sz":0.8,"pnl":-0.0656,"fee":0.00406032},{"coin":"SNX","time":1794365250457,"dir":"Open Long","px":0.1652,"sz":35.0,"pnl":0.0,"fee":0.0034692},{"coin":"POLYX","time":1794365220584,"dir":"Close Long","px":0.03046,"sz":236.0,"pnl":-0.06372,"fee":0.004313136},{"coin":"INJ","time":1794365131765,"dir":"Open Long","px":8.336,"sz":0.4,"pnl":0.0,"fee":0.00200064}],"stats":{"today":{"wins":0,"losses":0,"total_r":0,"trades":0,"day":"2026-11-12"},"week":{"wins":6,"losses":31,"total_r":-19.27,"trades":37,"week":"2026-W46"},"month":{"wins":6,"losses":31,"total_r":-19.27,"trades":37,"month":"2026-11"},"all_time":{"wins":6,"losses":31,"total_r":-19.27,"trades":37},"feed_start":"2026-11-10"},"closed":[{"coin":"MON","close_ms":1794291240000,"r":-0.9024,"pnl":-0.0592,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"PIXEL","close_ms":1794291300000,"r":-0.7152,"pnl":-0.0469,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"PENGU","close_ms":1794317084482,"r":-0.75,"pnl":-0.0492,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"AVNT","close_ms":1794317084482,"r":-0.7073,"pnl":-0.0464,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"DASH","close_ms":1794317084482,"r":-0.686,"pnl":-0.045,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"NIL","close_ms":1794317160000,"r":0.1674,"pnl":0.011,"win":true,"reason":"Position closed (fill not observed)"},{"coin":"IO","close_ms":1794317340000,"r":-0.5183,"pnl":-0.034,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"SUPER","close_ms":1794317460000,"r":-1.193,"pnl":-0.0783,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"ADA","close_ms":1794321360000,"r":-0.6585,"pnl":-0.0432,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"BCH","close_ms":1794321360000,"r":-0.7409,"pnl":-0.0486,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"BSV","close_ms":1794321360000,"r":-0.7927,"pnl":-0.052,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"BANANA","close_ms":1794321420000,"r":-1.1936,"pnl":-0.0783,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"CAKE","close_ms":1794359100937,"r":-0.5732,"pnl":-0.0376,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"AAVE","close_ms":1794359160000,"r":1.2012,"pnl":0.0788,"win":true,"reason":"Position closed (fill not observed)"},{"coin":"ALGO","close_ms":1794359160000,"r":1.7439,"pnl":0.1144,"win":true,"reason":"TP2 hit"},{"coin":"LINK","close_ms":1794359160000,"r":1.1707,"pnl":0.0768,"win":true,"reason":"Position closed (fill not observed)"},{"coin":"CHIP","close_ms":1794361080000,"r":-1.029,"pnl":-0.0675,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"TIA","close_ms":1794364704406,"r":-0.8232,"pnl":-0.054,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"ZRO","close_ms":1794364704406,"r":-0.4817,"pnl":-0.0316,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"ATOM","close_ms":1794364704406,"r":-0.9909,"pnl":-0.065,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"NEAR","close_ms":1794364704406,"r":-0.7012,"pnl":-0.046,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"POLYX","close_ms":1794365220000,"r":-0.9713,"pnl":-0.0637,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"AVAX","close_ms":1794365940000,"r":-1.0,"pnl":-0.0656,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"SNX","close_ms":1794370146614,"r":-0.8537,"pnl":-0.056,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"S","close_ms":1794370800000,"r":-0.8149,"pnl":-0.0535,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"COMP","close_ms":1794371400000,"r":-0.7317,"pnl":-0.048,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"MEGA","close_ms":1794373680000,"r":-0.9466,"pnl":-0.0621,"win":false,"reason":"Position closed (fill not observed)"},{"coin":"POL","close_ms":1794377160000,"r":-0.5549,"pnl":-0.0364,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794377160000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"INJ","close_ms":1794379098757,"r":-0.8841,"pnl":-0.058,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794379098757,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"FET","close_ms":1794380520000,"r":-0.6707,"pnl":-0.044,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794380520000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"PUMP","close_ms":1794383880000,"r":-0.6402,"pnl":-0.042,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794383880000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"LTC","close_ms":1794384120000,"r":-0.7073,"pnl":-0.0464,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794384120000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"BIGTIME","close_ms":1794386700000,"r":-0.9396,"pnl":-0.0616,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794386700000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"WLFI","close_ms":1794387900000,"r":-0.9137,"pnl":-0.0599,"win":false,"reason":"Position closed (fill not observed)","recorded_ms":1794387900000,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"ATOM","close_ms":1794388083742,"r":-0.061,"pnl":-0.004,"win":false,"reason":"Manual close (bot stopped)","recorded_ms":1794388083742,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"SPX","close_ms":1794388085827,"r":0.0427,"pnl":0.0028,"win":true,"reason":"Manual close (bot stopped)","recorded_ms":1794388085827,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""},{"coin":"CATI","close_ms":1794388104711,"r":0.5549,"pnl":0.0364,"win":true,"reason":"Manual close (bot stopped)","recorded_ms":1794388104711,"tp1_frac":0.0,"tp1_full":false,"tp1_full_reason":""}],"closed_r_base":0.0,"universe":{"tradable":153,"hl_total":235,"coins":["0G","AAVE","ACE","ADA","AERO","AIXBT","ALGO","ALT","APE","APT","AR","ARB","ASTER","ATOM","AVAX","AVNT","AXS","BANANA","BCH","BERA","BIGTIME","BIO","BLUR","BNB","BOME","BSV","BTC","CAKE","CASHCAT","CATI","CC","CHIP","COMP","CRV","CYBER","DASH","DOGE","DOT","DYDX","EIGEN","ENA","ENS","ETC","ETH","ETHFI","FARTCOIN","FET","FIL","FTM","GALA","GAS","GMX","GRAM","GRASS","HBAR","HEMI","HYPE","HYPER","ICP","ILV","IMX","INIT","INJ","IO","IOTA","JTO","JUP","KAITO","KAS","LAYER","LDO","LINEA","LINK","LIT","LTC","MANTA","MATIC","ME","MEGA","MELANIA","MEME","MERL","MET","MINA","MNT","MON","MOODENG","MORPHO","MOVE","NEAR","NEO","NIL","NOT","ONDO","OP","ORDI","PENDLE","PENGU","PEOPLE","PIXEL","POL","POLYX","PONS","POPCAT","PUMP","PYTH","RENDER","REZ","RNDR","RSR","RUNE","S","SAGA","SAND","SEI","SKY","SNX","SOL","SPX","STABLE","STRK","STX","SUI","SUPER","SUSHI","SYRUP","TAO","TIA","TRB","TRUMP","TRX","TURBO","UMA","UNI","USELESS","VIRTUAL","VVV","WCT","WIF","WLD","WLFI","XAI","XLM","XMR","XPL","XRP","ZEC","ZEN","ZETA","ZK","ZRO","kPEPE","kSHIB"]},"bot":{"risk_pct":0.01,"max_open":6,"max_margin":0.95,"fee_taker":0.0006,"live_start_ms":1794286410000,"feed_start":"2026-11-10"}};
+/* KnightTrader-Muse — Hyperliquid dashboard.
+   Data: Hyperliquid's PUBLIC info API (api.hyperliquid.xyz/info, no
+   auth) for the master account — clearinghouseState, openOrders,
+   userFills, allMids, metaAndAssetCtxs, candleSnapshot. A snapshot
+   (hl_state.json) is baked into the page at deploy time for the
+   equity curve, ledger, daily bars and first paint; live refresh
+   replaces the account numbers within seconds of open. No keys or
+   secrets are on this page; it is read-only. */
+var ADDR = "0x7b4c095d9f5e23fae21f6d6a3052dd4c422b5400";
+var API = "https://api.hyperliquid.xyz/info";
+var BASELINE_MS = 1794357420000; /* 2026-11-11 06:17 EST */
+var BASELINE_EQUITY = 5.08;
+var BAKED_SNAP = {"venue": "Hyperliquid", "account": "0x7b4c095d9f5e23fae21f6d6a3052dd4c422b5400", "updated_at_ms": 1794756851877, "baseline": {"equity": 5.08, "ms": 1794357420000, "label": "2026-11-11 06:17 EST"}, "equity": 9.74, "withdrawable": 9.74, "margin_used": 0.0, "total_notional": 0.0, "true_profit": 2.7371, "true_profit_pct": 53.88, "net_deposits": 1.9229, "positions": [], "orders": [], "fills": [{"coin": "XRP", "time": 1794752029473, "dir": "Close Long", "px": 0.96522, "sz": 11.0, "pnl": -0.11682, "fee": 0.004777, "source": "manual"}, {"coin": "CRV", "time": 1794752029473, "dir": "Close Long", "px": 0.20063, "sz": 88.3, "pnl": -1.219423, "fee": 0.007972, "source": "manual"}, {"coin": "TRUMP", "time": 1794691671553, "dir": "Close Short", "px": 0.93006, "sz": 10.0, "pnl": 1.2034, "fee": 0.004185, "source": "BloBrowser"}, {"coin": "CRV", "time": 1794689648930, "dir": "Open Long", "px": 0.20313, "sz": 41.4, "pnl": 0.0, "fee": 0.003784, "source": "BloBrowser"}, {"coin": "XRP", "time": 1794670091605, "dir": "Open Long", "px": 0.97584, "sz": 11.0, "pnl": 0.0, "fee": 0.00483, "source": "BloBrowser"}, {"coin": "xyz:PURRDAT", "time": 1794669505000, "dir": "Close Short", "px": 8.3061, "sz": 2.0, "pnl": 0.1048, "fee": 0.01495, "source": "BloBrowser"}, {"coin": "xyz:PURRDAT", "time": 1794661241349, "dir": "Open Short", "px": 8.3585, "sz": 2.0, "pnl": 0.0, "fee": 0.015045, "source": "BloBrowser"}, {"coin": "WLFI", "time": 1794661131066, "dir": "Close Long", "px": 0.047752, "sz": 222.0, "pnl": 0.082806, "fee": 0.00477, "source": "BloBrowser"}, {"coin": "CRV", "time": 1794654035689, "dir": "Open Long", "px": 0.22444, "sz": 46.9, "pnl": 0.0, "fee": 0.004736, "source": "BloBrowser"}, {"coin": "WLFI", "time": 1794632423848, "dir": "Open Long", "px": 0.047379, "sz": 222.0, "pnl": 0.0, "fee": 0.004733, "source": "BloBrowser"}, {"coin": "HYPE", "time": 1794629138475, "dir": "Close Short", "px": 68.295, "sz": 0.16, "pnl": 0.26528, "fee": 0.004917, "source": "BloBrowser"}, {"coin": "BNB", "time": 1794624576667, "dir": "Close Short", "px": 626.7, "sz": 0.017, "pnl": 0.12274, "fee": 0.004794, "source": "BloBrowser"}, {"coin": "TRUMP", "time": 1794623479581, "dir": "Open Short", "px": 1.0504, "sz": 10.0, "pnl": 0.0, "fee": 0.004726, "source": "BloBrowser"}, {"coin": "UNI", "time": 1794623440558, "dir": "Close Short", "px": 5.5952, "sz": 1.9, "pnl": 0.15029, "fee": 0.004783, "source": "BloBrowser"}, {"coin": "HYPE", "time": 1794623423827, "dir": "Open Short", "px": 69.953, "sz": 0.16, "pnl": 0.0, "fee": 0.005036, "source": "BloBrowser"}, {"coin": "UNI", "time": 1794549621270, "dir": "Open Short", "px": 5.6743, "sz": 1.9, "pnl": 0.0, "fee": 0.004851, "source": "BloBrowser"}, {"coin": "SUI", "time": 1794547094361, "dir": "Close Short", "px": 0.77702, "sz": 13.3, "pnl": 0.242326, "fee": 0.00465, "source": "BloBrowser"}, {"coin": "XMR", "time": 1794546599843, "dir": "Close Short", "px": 512.93, "sz": 0.02, "pnl": 0.433, "fee": 0.004616, "source": "BloBrowser"}, {"coin": "BNB", "time": 1794544222016, "dir": "Open Short", "px": 633.92, "sz": 0.017, "pnl": 0.0, "fee": 0.004849, "source": "BloBrowser"}, {"coin": "HBAR", "time": 1794542617737, "dir": "Close Short", "px": 0.061374, "sz": 170.0, "pnl": 0.09843, "fee": 0.004695, "source": "BloBrowser"}, {"coin": "HBAR", "time": 1794540498909, "dir": "Open Short", "px": 0.061953, "sz": 170.0, "pnl": 0.0, "fee": 0.004739, "source": "BloBrowser"}, {"coin": "XMR", "time": 1794506422454, "dir": "Open Short", "px": 534.58, "sz": 0.02, "pnl": 0.0, "fee": 0.004811, "source": "BloBrowser"}, {"coin": "INJ", "time": 1794501101998, "dir": "Close Long", "px": 7.4643, "sz": 1.5, "pnl": 0.16125, "fee": 0.005038, "source": "BloBrowser"}, {"coin": "INJ", "time": 1794499224664, "dir": "Open Long", "px": 7.3568, "sz": 1.5, "pnl": 0.0, "fee": 0.004965, "source": "BloBrowser"}, {"coin": "INJ", "time": 1794498509942, "dir": "Close Short", "px": 7.3546, "sz": 1.5, "pnl": 0.10425, "fee": 0.004964, "source": "BloBrowser"}, {"coin": "INJ", "time": 1794495626548, "dir": "Open Short", "px": 7.4241, "sz": 1.5, "pnl": 0.0, "fee": 0.005011, "source": "BloBrowser"}, {"coin": "AVAX", "time": 1794494149189, "dir": "Close Short", "px": 8.3699, "sz": 1.23, "pnl": 0.259284, "fee": 0.004632, "source": "BloBrowser"}, {"coin": "SUI", "time": 1794490223839, "dir": "Open Short", "px": 0.79524, "sz": 13.3, "pnl": 0.0, "fee": 0.004759, "source": "BloBrowser"}, {"coin": "HYPE", "time": 1794489804199, "dir": "Close Short", "px": 70.197, "sz": 0.15, "pnl": 0.0741, "fee": 0.004738, "source": "BloBrowser"}, {"coin": "HYPE", "time": 1794484821987, "dir": "Open Short", "px": 70.691, "sz": 0.15, "pnl": 0.0, "fee": 0.004771, "source": "BloBrowser"}, {"coin": "ONDO", "time": 1794477761501, "dir": "Close Short", "px": 0.35395, "sz": 30.0, "pnl": 0.1389, "fee": 0.004778, "source": "BloBrowser"}, {"coin": "AVAX", "time": 1794452422173, "dir": "Open Short", "px": 8.5807, "sz": 1.23, "pnl": 0.0, "fee": 0.004749, "source": "BloBrowser"}, {"coin": "TAO", "time": 1794441758353, "dir": "Close Short", "px": 216.62, "sz": 0.048, "pnl": 0.31152, "fee": 0.004678, "source": "BloBrowser"}, {"coin": "ONDO", "time": 1794441139903, "dir": "Open Short", "px": 0.35858, "sz": 30.0, "pnl": 0.0, "fee": 0.00484, "source": "BloBrowser"}, {"coin": "AAVE", "time": 1794440017680, "dir": "Close Short", "px": 120.51, "sz": 0.09, "pnl": 0.2556, "fee": 0.00488, "source": "BloBrowser"}, {"coin": "AAVE", "time": 1794427222777, "dir": "Open Short", "px": 123.35, "sz": 0.09, "pnl": 0.0, "fee": 0.004995, "source": "BloBrowser"}, {"coin": "LINK", "time": 1794423115120, "dir": "Close Long", "px": 10.465, "sz": 0.7, "pnl": 0.098, "fee": 0.003296, "source": "BloBrowser"}, {"coin": "LINK", "time": 1794423115120, "dir": "Close Long", "px": 10.465, "sz": 0.4, "pnl": 0.056, "fee": 0.001883, "source": "BloBrowser"}, {"coin": "LINK", "time": 1794409222125, "dir": "Open Long", "px": 10.325, "sz": 1.1, "pnl": 0.0, "fee": 0.00511, "source": "BloBrowser"}, {"coin": "PUMP", "time": 1794406229417, "dir": "Close Long", "px": 0.003629, "sz": 2931.0, "pnl": 0.120171, "fee": 0.004786, "source": "BloBrowser"}, {"coin": "TAO", "time": 1794405621079, "dir": "Open Short", "px": 223.11, "sz": 0.048, "pnl": 0.0, "fee": 0.004819, "source": "BloBrowser"}, {"coin": "PUMP", "time": 1794395099151, "dir": "Open Long", "px": 0.003588, "sz": 2931.0, "pnl": 0.0, "fee": 0.004732, "source": "BloBrowser"}, {"coin": "USELESS", "time": 1794260732684, "dir": "Close Long", "px": 0.13675, "sz": 73.0, "pnl": -0.03942, "fee": 0.004492, "source": "earlier"}, {"coin": "SPX", "time": 1794260732684, "dir": "Close Long", "px": 0.35843, "sz": 27.5, "pnl": -0.17545, "fee": 0.004435, "source": "earlier"}, {"coin": "AR", "time": 1794260732684, "dir": "Close Long", "px": 3.2185, "sz": 3.06, "pnl": -0.162792, "fee": 0.004431, "source": "earlier"}, {"coin": "CHIP", "time": 1794256641554, "dir": "Close Short", "px": 0.033833, "sz": 345.0, "pnl": 0.025875, "fee": 0.005252, "source": "earlier"}, {"coin": "SPX", "time": 1794255210065, "dir": "Open Long", "px": 0.36481, "sz": 27.5, "pnl": 0.0, "fee": 0.004514, "source": "earlier"}, {"coin": "MEGA", "time": 1794255066574, "dir": "Close Long", "px": 0.05006, "sz": 227.0, "pnl": -0.340954, "fee": 0.005113, "source": "earlier"}, {"coin": "CHIP", "time": 1794242250341, "dir": "Open Short", "px": 0.033908, "sz": 345.0, "pnl": 0.0, "fee": 0.005264, "source": "earlier"}, {"coin": "AAVE", "time": 1794242128656, "dir": "Close Long", "px": 132.97, "sz": 0.1, "pnl": -0.077, "fee": 0.005983, "source": "earlier"}, {"coin": "AR", "time": 1794241530412, "dir": "Open Long", "px": 3.2717, "sz": 3.06, "pnl": 0.0, "fee": 0.004505, "source": "earlier"}, {"coin": "kPEPE", "time": 1794241414655, "dir": "Close Long", "px": 0.005287, "sz": 2309.0, "pnl": 0.595722, "fee": 0.005493, "source": "earlier"}, {"coin": "AAVE", "time": 1794227616746, "dir": "Open Long", "px": 133.74, "sz": 0.1, "pnl": 0.0, "fee": 0.006018, "source": "earlier"}, {"coin": "GRIFFAIN", "time": 1794227598023, "dir": "Close Long", "px": 0.010938, "sz": 1090.0, "pnl": 0.19293, "fee": 0.001788, "source": "earlier"}, {"coin": "USELESS", "time": 1794227040270, "dir": "Open Long", "px": 0.13729, "sz": 73.0, "pnl": 0.0, "fee": 0.004509, "source": "earlier"}, {"coin": "SPX", "time": 1794226994403, "dir": "Close Short", "px": 0.34544, "sz": 31.3, "pnl": -0.263546, "fee": 0.004865, "source": "earlier"}, {"coin": "GRIFFAIN", "time": 1794224011429, "dir": "Open Long", "px": 0.010761, "sz": 1090.0, "pnl": 0.0, "fee": 0.005278, "source": "earlier"}, {"coin": "SPX", "time": 1794223990146, "dir": "Close Short", "px": 0.33771, "sz": 34.5, "pnl": -0.023805, "fee": 0.005242, "source": "earlier"}, {"coin": "SPX", "time": 1794223910319, "dir": "Open Short", "px": 0.33809, "sz": 35.9, "pnl": 0.0, "fee": 0.005461, "source": "earlier"}, {"coin": "RSR", "time": 1794223324817, "dir": "Close Long", "px": 0.001756, "sz": 5565.0, "pnl": -0.294945, "fee": 0.004397, "source": "earlier"}, {"coin": "ARB", "time": 1794223177956, "dir": "Close Long", "px": 0.18006, "sz": 104.8, "pnl": 0.853072, "fee": 0.00283, "source": "earlier"}, {"coin": "RSR", "time": 1794220015150, "dir": "Open Long", "px": 0.001809, "sz": 5565.0, "pnl": 0.0, "fee": 0.00453, "source": "earlier"}, {"coin": "INJ", "time": 1794219982233, "dir": "Close Short", "px": 8.012, "sz": 1.6, "pnl": -0.22128, "fee": 0.005768, "source": "earlier"}, {"coin": "INJ", "time": 1794215928111, "dir": "Open Short", "px": 7.8737, "sz": 1.6, "pnl": 0.0, "fee": 0.005669, "source": "earlier"}, {"coin": "FOGO", "time": 1794214891227, "dir": "Close Short", "px": 0.001965, "sz": 6038.0, "pnl": -0.138874, "fee": 0.005339, "source": "earlier"}, {"coin": "SPX", "time": 1794213890932, "dir": "Open Short", "px": 0.33574, "sz": 29.9, "pnl": 0.0, "fee": 0.004517, "source": "earlier"}, {"coin": "DASH", "time": 1794213805317, "dir": "Close Short", "px": 46.777, "sz": 0.22, "pnl": -0.11946, "fee": 0.00463, "source": "earlier"}, {"coin": "FOGO", "time": 1794212639813, "dir": "Open Short", "px": 0.001942, "sz": 6038.0, "pnl": 0.0, "fee": 0.005276, "source": "earlier"}, {"coin": "DASH", "time": 1794212635519, "dir": "Open Short", "px": 46.234, "sz": 0.22, "pnl": 0.0, "fee": 0.004577, "source": "earlier"}, {"coin": "ATOM", "time": 1794212606967, "dir": "Close Short", "px": 1.3121, "sz": 13.55, "pnl": -0.17615, "fee": 0.008, "source": "earlier"}, {"coin": "AR", "time": 1794212537417, "dir": "Close Short", "px": 3.1239, "sz": 5.18, "pnl": -0.19684, "fee": 0.007281, "source": "earlier"}, {"coin": "2Z", "time": 1794211298928, "dir": "Close Short", "px": 0.019265, "sz": 1.0, "pnl": 0.000241, "fee": 8e-06, "source": "earlier"}, {"coin": "ATOM", "time": 1794211202666, "dir": "Open Short", "px": 1.2991, "sz": 13.55, "pnl": 0.0, "fee": 0.007921, "source": "earlier"}, {"coin": "2Z", "time": 1794211098996, "dir": "Close Short", "px": 0.01926, "sz": 599.0, "pnl": 0.147354, "fee": 0.005191, "source": "earlier"}, {"coin": "AR", "time": 1794209457058, "dir": "Open Short", "px": 3.0859, "sz": 5.18, "pnl": 0.0, "fee": 0.007193, "source": "earlier"}, {"coin": "AERO", "time": 1794209357879, "dir": "Close Short", "px": 0.55601, "sz": 20.0, "pnl": 0.1628, "fee": 0.001668, "source": "earlier"}, {"coin": "kPEPE", "time": 1794208141780, "dir": "Open Long", "px": 0.004995, "sz": 1449.0, "pnl": 0.0, "fee": 0.003256, "source": "earlier"}, {"coin": "ARB", "time": 1794207774835, "dir": "Open Long", "px": 0.17131, "sz": 69.4, "pnl": 0.0, "fee": 0.00535, "source": "earlier"}, {"coin": "AERO", "time": 1794206847614, "dir": "Open Short", "px": 0.56415, "sz": 20.0, "pnl": 0.0, "fee": 0.005077, "source": "earlier"}, {"coin": "kNEIRO", "time": 1794206760398, "dir": "Close Short", "px": 0.05709, "sz": 243.9, "pnl": 0.226827, "fee": 0.002088, "source": "earlier"}], "fills_total": 931, "bb": {"closes": 19, "wins": 19, "losses": 0, "realized_gross": 4.2821, "fees": 0.2069, "strategy_only_profit": 4.09, "strategy_only_pct": 80.4, "leverage": 5, "coins": []}, "h7_coins": [], "h7": {"status": "starting_up", "stats": {"trades": 0, "wins": 0, "losses": 0, "realized": 0}, "leverage": 10, "config": {"gate": "breadth \u226570% OR BTC close > SMA50 \u2192 sit out", "entry": "coins with max leverage \u226510x only", "leverage": "10x isolated", "tp": "+2%", "trail": "1%", "stop": "-15%", "max_open": 6, "notional": "max($10.50, equity \u00d7 11.05%)", "dca": "none"}}, "november": {"pnl": 0.5241, "fees": 1.0335, "fills": 171}, "daily_bars": [{"date": "2026-10-27", "pnl": -0.5362200000000003, "wins": 28, "losses": 23, "trades": 51}, {"date": "2026-10-28", "pnl": 0.86816, "wins": 26, "losses": 7, "trades": 33}, {"date": "2026-10-29", "pnl": 0.05517, "wins": 21, "losses": 11, "trades": 32}, {"date": "2026-10-30", "pnl": -3.1250380000000004, "wins": 65, "losses": 112, "trades": 177}, {"date": "2026-10-31", "pnl": -2.150744, "wins": 34, "losses": 51, "trades": 85}, {"date": "2026-11-01", "pnl": -0.25933, "wins": 0, "losses": 2, "trades": 2}, {"date": "2026-11-02", "pnl": -3.4187520000000005, "wins": 0, "losses": 8, "trades": 8}, {"date": "2026-11-03", "pnl": -1.532598, "wins": 0, "losses": 1, "trades": 1}, {"date": "2026-11-04", "pnl": 3.09536, "wins": 3, "losses": 0, "trades": 3}, {"date": "2026-11-05", "pnl": 1.011386, "wins": 2, "losses": 4, "trades": 6}, {"date": "2026-11-06", "pnl": -0.574665, "wins": 1, "losses": 6, "trades": 7}, {"date": "2026-11-07", "pnl": 0.27013, "wins": 2, "losses": 0, "trades": 2}, {"date": "2026-11-08", "pnl": -0.578577, "wins": 5, "losses": 7, "trades": 12}, {"date": "2026-11-09", "pnl": -0.43477099999999996, "wins": 8, "losses": 17, "trades": 25}, {"date": "2026-11-11", "pnl": 0.8412910000000001, "wins": 5, "losses": 0, "trades": 5}, {"date": "2026-11-12", "pnl": 0.836214, "wins": 6, "losses": 0, "trades": 6}, {"date": "2026-11-13", "pnl": 1.2136360000000002, "wins": 5, "losses": 0, "trades": 5}, {"date": "2026-11-14", "pnl": 1.391006, "wins": 3, "losses": 0, "trades": 3}, {"date": "2026-11-15", "pnl": -1.3362429999999998, "wins": 0, "losses": 2, "trades": 2}], "equity_curve": [{"ms": 1794404640621, "equity": 5.127249}, {"ms": 1794416058644, "equity": 5.346187}, {"ms": 1794437528357, "equity": 5.935186}, {"ms": 1794460393145, "equity": 6.018522}, {"ms": 1794488176374, "equity": 6.263551}, {"ms": 1794574572054, "equity": 7.007303}, {"ms": 1794660980330, "equity": 8.224562}, {"ms": 1794714359490, "equity": 8.613777}, {"ms": 1794717013370, "equity": 8.719007}, {"ms": 1794721187023, "equity": 8.453861}, {"ms": 1794722069664, "equity": 8.404562}, {"ms": 1794722952562, "equity": 8.276267}, {"ms": 1794723914184, "equity": 8.398096}, {"ms": 1794724757304, "equity": 8.535183}, {"ms": 1794725372143, "equity": 8.647632}, {"ms": 1794726872339, "equity": 8.510792}, {"ms": 1794727831776, "equity": 8.526939}, {"ms": 1794729815473, "equity": 8.247072}, {"ms": 1794731435648, "equity": 8.259274}, {"ms": 1794733405782, "equity": 8.37457}, {"ms": 1794735035664, "equity": 8.435245}, {"ms": 1794737041132, "equity": 8.364754}, {"ms": 1794738614206, "equity": 8.165444}, {"ms": 1794740405315, "equity": 8.192952}, {"ms": 1794742252034, "equity": 8.158188}, {"ms": 1794744003739, "equity": 8.039571}, {"ms": 1794745805428, "equity": 8.27846}, {"ms": 1794747605425, "equity": 8.243637}, {"ms": 1794749403219, "equity": 8.286179}, {"ms": 1794751205438, "equity": 8.043533}, {"ms": 1794752613871, "equity": 9.74}, {"ms": 1794753005504, "equity": 9.74}, {"ms": 1794754803676, "equity": 9.74}, {"ms": 1794756603777, "equity": 9.74}], "ledger": [{"date": "2026-11-14 08:00", "type": "Transfer to spot", "amount": -3.56, "note": "Auto-detected by overview bot (Hyperliquid ledger API)"}, {"date": "2026-11-14 10:18", "type": "Transfer from spot", "amount": 3.62, "note": "Auto-detected by overview bot (Hyperliquid ledger API)"}, {"date": "2026-11-15 09:14", "type": "Transfer to spot", "amount": -7.88, "note": "Auto-detected by overview bot (Hyperliquid ledger API)"}, {"date": "2026-11-15 09:16", "type": "Deposit", "amount": 9.74, "note": "Auto-detected by overview bot (Hyperliquid ledger API)"}], "universe": [{"coin": "BTC", "maxLev": 40}, {"coin": "ETH", "maxLev": 25}, {"coin": "ATOM", "maxLev": 5}, {"coin": "MATIC", "maxLev": 20}, {"coin": "DYDX", "maxLev": 5}, {"coin": "SOL", "maxLev": 20}, {"coin": "AVAX", "maxLev": 10}, {"coin": "BNB", "maxLev": 10}, {"coin": "APE", "maxLev": 5}, {"coin": "OP", "maxLev": 5}, {"coin": "LTC", "maxLev": 10}, {"coin": "ARB", "maxLev": 10}, {"coin": "DOGE", "maxLev": 10}, {"coin": "INJ", "maxLev": 5}, {"coin": "SUI", "maxLev": 10}, {"coin": "kPEPE", "maxLev": 10}, {"coin": "CRV", "maxLev": 10}, {"coin": "LDO", "maxLev": 5}, {"coin": "LINK", "maxLev": 10}, {"coin": "STX", "maxLev": 5}, {"coin": "RNDR", "maxLev": 20}, {"coin": "CFX", "maxLev": 5}, {"coin": "FTM", "maxLev": 10}, {"coin": "GMX", "maxLev": 3}, {"coin": "SNX", "maxLev": 3}, {"coin": "XRP", "maxLev": 20}, {"coin": "BCH", "maxLev": 10}, {"coin": "APT", "maxLev": 10}, {"coin": "AAVE", "maxLev": 10}, {"coin": "COMP", "maxLev": 5}, {"coin": "MKR", "maxLev": 10}, {"coin": "WLD", "maxLev": 10}, {"coin": "FXS", "maxLev": 5}, {"coin": "HPOS", "maxLev": 3}, {"coin": "RLB", "maxLev": 3}, {"coin": "UNIBOT", "maxLev": 3}, {"coin": "YGG", "maxLev": 3}, {"coin": "TRX", "maxLev": 10}, {"coin": "kSHIB", "maxLev": 10}, {"coin": "UNI", "maxLev": 10}, {"coin": "SEI", "maxLev": 5}, {"coin": "RUNE", "maxLev": 5}, {"coin": "OX", "maxLev": 3}, {"coin": "FRIEND", "maxLev": 3}, {"coin": "SHIA", "maxLev": 3}, {"coin": "CYBER", "maxLev": 3}, {"coin": "ZRO", "maxLev": 5}, {"coin": "BLZ", "maxLev": 5}, {"coin": "DOT", "maxLev": 10}, {"coin": "BANANA", "maxLev": 3}, {"coin": "TRB", "maxLev": 3}, {"coin": "FTT", "maxLev": 3}, {"coin": "LOOM", "maxLev": 10}, {"coin": "OGN", "maxLev": 3}, {"coin": "RDNT", "maxLev": 5}, {"coin": "ARK", "maxLev": 3}, {"coin": "BNT", "maxLev": 3}, {"coin": "CANTO", "maxLev": 5}, {"coin": "REQ", "maxLev": 3}, {"coin": "BIGTIME", "maxLev": 3}, {"coin": "KAS", "maxLev": 3}, {"coin": "ORBS", "maxLev": 3}, {"coin": "BLUR", "maxLev": 3}, {"coin": "TIA", "maxLev": 5}, {"coin": "BSV", "maxLev": 3}, {"coin": "ADA", "maxLev": 10}, {"coin": "TON", "maxLev": 10}, {"coin": "MINA", "maxLev": 3}, {"coin": "POLYX", "maxLev": 3}, {"coin": "GAS", "maxLev": 3}, {"coin": "PENDLE", "maxLev": 5}, {"coin": "STG", "maxLev": 3}, {"coin": "FET", "maxLev": 5}, {"coin": "STRAX", "maxLev": 10}, {"coin": "NEAR", "maxLev": 10}, {"coin": "MEME", "maxLev": 3}, {"coin": "ORDI", "maxLev": 3}, {"coin": "BADGER", "maxLev": 5}, {"coin": "NEO", "maxLev": 5}, {"coin": "ZEN", "maxLev": 5}, {"coin": "FIL", "maxLev": 5}, {"coin": "PYTH", "maxLev": 5}, {"coin": "SUSHI", "maxLev": 3}, {"coin": "ILV", "maxLev": 3}, {"coin": "IMX", "maxLev": 5}, {"coin": "kBONK", "maxLev": 10}, {"coin": "GMT", "maxLev": 3}, {"coin": "SUPER", "maxLev": 3}, {"coin": "USTC", "maxLev": 3}, {"coin": "NFTI", "maxLev": 3}, {"coin": "JUP", "maxLev": 10}, {"coin": "kLUNC", "maxLev": 3}, {"coin": "RSR", "maxLev": 3}, {"coin": "GALA", "maxLev": 3}, {"coin": "JTO", "maxLev": 5}, {"coin": "NTRN", "maxLev": 3}, {"coin": "ACE", "maxLev": 3}, {"coin": "MAV", "maxLev": 3}, {"coin": "WIF", "maxLev": 5}, {"coin": "CAKE", "maxLev": 3}, {"coin": "PEOPLE", "maxLev": 3}, {"coin": "ENS", "maxLev": 5}, {"coin": "ETC", "maxLev": 5}, {"coin": "XAI", "maxLev": 3}, {"coin": "MANTA", "maxLev": 3}, {"coin": "UMA", "maxLev": 3}, {"coin": "ONDO", "maxLev": 10}, {"coin": "ALT", "maxLev": 3}, {"coin": "ZETA", "maxLev": 3}, {"coin": "DYM", "maxLev": 3}, {"coin": "MAVIA", "maxLev": 3}, {"coin": "W", "maxLev": 5}, {"coin": "PANDORA", "maxLev": 3}, {"coin": "STRK", "maxLev": 5}, {"coin": "PIXEL", "maxLev": 3}, {"coin": "AI", "maxLev": 3}, {"coin": "TAO", "maxLev": 5}, {"coin": "AR", "maxLev": 5}, {"coin": "MYRO", "maxLev": 3}, {"coin": "kFLOKI", "maxLev": 5}, {"coin": "BOME", "maxLev": 3}, {"coin": "ETHFI", "maxLev": 5}, {"coin": "ENA", "maxLev": 10}, {"coin": "MNT", "maxLev": 5}, {"coin": "TNSR", "maxLev": 3}, {"coin": "SAGA", "maxLev": 3}, {"coin": "MERL", "maxLev": 3}, {"coin": "HBAR", "maxLev": 5}, {"coin": "POPCAT", "maxLev": 3}, {"coin": "OMNI", "maxLev": 3}, {"coin": "EIGEN", "maxLev": 5}, {"coin": "REZ", "maxLev": 3}, {"coin": "NOT", "maxLev": 3}, {"coin": "TURBO", "maxLev": 3}, {"coin": "BRETT", "maxLev": 3}, {"coin": "IO", "maxLev": 3}, {"coin": "ZK", "maxLev": 5}, {"coin": "BLAST", "maxLev": 3}, {"coin": "LISTA", "maxLev": 3}, {"coin": "MEW", "maxLev": 3}, {"coin": "RENDER", "maxLev": 5}, {"coin": "kDOGS", "maxLev": 3}, {"coin": "POL", "maxLev": 5}, {"coin": "CATI", "maxLev": 3}, {"coin": "CELO", "maxLev": 3}, {"coin": "HMSTR", "maxLev": 3}, {"coin": "SCR", "maxLev": 3}, {"coin": "NEIROETH", "maxLev": 5}, {"coin": "kNEIRO", "maxLev": 3}, {"coin": "GOAT", "maxLev": 3}, {"coin": "MOODENG", "maxLev": 3}, {"coin": "GRASS", "maxLev": 3}, {"coin": "PURR", "maxLev": 3}, {"coin": "PNUT", "maxLev": 3}, {"coin": "XLM", "maxLev": 5}, {"coin": "CHILLGUY", "maxLev": 3}, {"coin": "SAND", "maxLev": 5}, {"coin": "IOTA", "maxLev": 3}, {"coin": "ALGO", "maxLev": 5}, {"coin": "HYPE", "maxLev": 10}, {"coin": "ME", "maxLev": 3}, {"coin": "MOVE", "maxLev": 3}, {"coin": "VIRTUAL", "maxLev": 5}, {"coin": "PENGU", "maxLev": 5}, {"coin": "USUAL", "maxLev": 3}, {"coin": "FARTCOIN", "maxLev": 10}, {"coin": "AI16Z", "maxLev": 5}, {"coin": "AIXBT", "maxLev": 3}, {"coin": "ZEREBRO", "maxLev": 3}, {"coin": "BIO", "maxLev": 3}, {"coin": "GRIFFAIN", "maxLev": 3}, {"coin": "SPX", "maxLev": 5}, {"coin": "S", "maxLev": 5}, {"coin": "MORPHO", "maxLev": 5}, {"coin": "TRUMP", "maxLev": 10}, {"coin": "MELANIA", "maxLev": 3}, {"coin": "ANIME", "maxLev": 3}, {"coin": "VINE", "maxLev": 3}, {"coin": "VVV", "maxLev": 3}, {"coin": "JELLY", "maxLev": 3}, {"coin": "BERA", "maxLev": 5}, {"coin": "TST", "maxLev": 3}, {"coin": "LAYER", "maxLev": 3}, {"coin": "IP", "maxLev": 3}, {"coin": "OM", "maxLev": 3}, {"coin": "KAITO", "maxLev": 5}, {"coin": "NIL", "maxLev": 3}, {"coin": "PAXG", "maxLev": 10}, {"coin": "PROMPT", "maxLev": 3}, {"coin": "BABY", "maxLev": 3}, {"coin": "WCT", "maxLev": 3}, {"coin": "HYPER", "maxLev": 3}, {"coin": "ZORA", "maxLev": 3}, {"coin": "INIT", "maxLev": 3}, {"coin": "DOOD", "maxLev": 3}, {"coin": "LAUNCHCOIN", "maxLev": 3}, {"coin": "NXPC", "maxLev": 3}, {"coin": "SOPH", "maxLev": 3}, {"coin": "RESOLV", "maxLev": 3}, {"coin": "SYRUP", "maxLev": 3}, {"coin": "PUMP", "maxLev": 10}, {"coin": "PROVE", "maxLev": 3}, {"coin": "YZY", "maxLev": 3}, {"coin": "XPL", "maxLev": 10}, {"coin": "WLFI", "maxLev": 5}, {"coin": "LINEA", "maxLev": 3}, {"coin": "SKY", "maxLev": 3}, {"coin": "ASTER", "maxLev": 5}, {"coin": "AVNT", "maxLev": 5}, {"coin": "STBL", "maxLev": 3}, {"coin": "0G", "maxLev": 3}, {"coin": "HEMI", "maxLev": 3}, {"coin": "APEX", "maxLev": 3}, {"coin": "2Z", "maxLev": 3}, {"coin": "ZEC", "maxLev": 10}, {"coin": "MON", "maxLev": 5}, {"coin": "MET", "maxLev": 3}, {"coin": "MEGA", "maxLev": 3}, {"coin": "CC", "maxLev": 3}, {"coin": "ICP", "maxLev": 5}, {"coin": "AERO", "maxLev": 3}, {"coin": "STABLE", "maxLev": 3}, {"coin": "FOGO", "maxLev": 3}, {"coin": "LIT", "maxLev": 5}, {"coin": "XMR", "maxLev": 5}, {"coin": "AXS", "maxLev": 5}, {"coin": "DASH", "maxLev": 5}, {"coin": "SKR", "maxLev": 3}, {"coin": "AZTEC", "maxLev": 3}, {"coin": "CHIP", "maxLev": 3}, {"coin": "GRAM", "maxLev": 5}, {"coin": "CASHCAT", "maxLev": 3}, {"coin": "PONS", "maxLev": 3}, {"coin": "USELESS", "maxLev": 3}, {"coin": "XTEN", "maxLev": 3}], "market": [{"coin": "BTC", "mark": 64673.0, "chg24": -0.79, "vol24": 7675822595.912636, "funding": 1.25e-05, "oi": 37274.95608}, {"coin": "ETH", "mark": 1809.8, "chg24": -1.22, "vol24": 2189595695.4935036, "funding": -9.1547e-06, "oi": 591415.9532}, {"coin": "ATOM", "mark": 1.313, "chg24": 0.13, "vol24": 750117.1229559999, "funding": -2.1429e-06, "oi": 3020300.2}, {"coin": "MATIC", "mark": 0.37621, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "DYDX", "mark": 0.07842, "chg24": -2.56, "vol24": 153558.609253, "funding": 1.25e-05, "oi": 14881850.6}, {"coin": "SOL", "mark": 71.232, "chg24": -3.2, "vol24": 648721225.8353509, "funding": -1.43186e-05, "oi": 4548457.759999998}, {"coin": "AVAX", "mark": 7.1617, "chg24": -6.43, "vol24": 30103248.488935996, "funding": -7.7886e-06, "oi": 2470136.18}, {"coin": "BNB", "mark": 590.308, "chg24": -0.87, "vol24": 21659656.380410008, "funding": 4.8196e-06, "oi": 53635.746}, {"coin": "APE", "mark": 0.07899, "chg24": -7.52, "vol24": 519860.275411, "funding": -3.08098e-05, "oi": 8052811.399999999}, {"coin": "OP", "mark": 0.08084, "chg24": -4.57, "vol24": 959692.8309520002, "funding": -1.27113e-05, "oi": 21173510.599999998}, {"coin": "LTC", "mark": 44.7676, "chg24": -3.26, "vol24": 6509183.50943, "funding": 6.2625e-06, "oi": 350175.6199999999}, {"coin": "ARB", "mark": 0.13483, "chg24": -1.45, "vol24": 9732971.757032996, "funding": 1.07859e-05, "oi": 72315617.6}, {"coin": "DOGE", "mark": 0.058455, "chg24": -3.67, "vol24": 25189849.789575, "funding": -1.66456e-05, "oi": 554479968.0}, {"coin": "INJ", "mark": 6.9402, "chg24": -9.12, "vol24": 10976360.452870006, "funding": 1.25e-05, "oi": 935339.2}, {"coin": "SUI", "mark": 0.7201, "chg24": -2.51, "vol24": 20251692.068625003, "funding": -5.0907e-06, "oi": 21086956.999999996}, {"coin": "kPEPE", "mark": 0.003923, "chg24": -4.29, "vol24": 41017539.92815701, "funding": 1.25e-05, "oi": 5607308906.0}, {"coin": "CRV", "mark": 0.20065, "chg24": -7.28, "vol24": 7257637.4366810005, "funding": -1.1139e-06, "oi": 38862929.8}, {"coin": "LDO", "mark": 0.27105, "chg24": -2.73, "vol24": 833337.4553209996, "funding": 1.25e-05, "oi": 28051215.599999998}, {"coin": "LINK", "mark": 9.2066, "chg24": -0.22, "vol24": 13878521.83819, "funding": -1.06495e-05, "oi": 3506444.2}, {"coin": "STX", "mark": 0.2674, "chg24": -1.63, "vol24": 576370.9002430001, "funding": -6.92465e-05, "oi": 4722206.6}, {"coin": "RNDR", "mark": 6.8952, "chg24": 0.01, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "CFX", "mark": 0.033906, "chg24": -7.01, "vol24": 1241780.234079, "funding": 1.25e-05, "oi": 41180714.0}, {"coin": "FTM", "mark": 0.71688, "chg24": -1.8, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "GMX", "mark": 7.1299, "chg24": -3.41, "vol24": 329392.3634809999, "funding": 1.25e-05, "oi": 95772.7}, {"coin": "SNX", "mark": 0.14552, "chg24": -3.74, "vol24": 148263.20964, "funding": 1.25e-05, "oi": 3021595.6}, {"coin": "XRP", "mark": 0.9574, "chg24": -1.62, "vol24": 172528305.68259, "funding": -1.6462e-05, "oi": 80208194.0}, {"coin": "BCH", "mark": 207.9, "chg24": -1.73, "vol24": 3403498.391020002, "funding": 1.6645e-06, "oi": 23410.588}, {"coin": "APT", "mark": 0.4498, "chg24": -7.71, "vol24": 3529675.0697619976, "funding": -6.15765e-05, "oi": 5783519.82}, {"coin": "AAVE", "mark": 106.33, "chg24": 2.8, "vol24": 21472552.908679996, "funding": 1.25e-05, "oi": 377178.3}, {"coin": "COMP", "mark": 17.753, "chg24": -4.2, "vol24": 198475.21357, "funding": 1.25e-05, "oi": 35702.06}, {"coin": "MKR", "mark": 1831.5, "chg24": -0.67, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "WLD", "mark": 0.26235, "chg24": -2.97, "vol24": 15324699.767432, "funding": -2.72898e-05, "oi": 100223332.40000002}, {"coin": "FXS", "mark": 0.65538, "chg24": -0.09, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "HPOS", "mark": 0.041873, "chg24": 0.07, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "RLB", "mark": 0.071, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "UNIBOT", "mark": 7.636, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "YGG", "mark": 0.018535, "chg24": -3.38, "vol24": 118276.3267620001, "funding": 1.25e-05, "oi": 9081072.0}, {"coin": "TRX", "mark": 0.30591, "chg24": -1.12, "vol24": 3971774.4606099995, "funding": -2.57953e-05, "oi": 37720634.0}, {"coin": "kSHIB", "mark": 0.003913, "chg24": -2.3, "vol24": 2018697.2039219993, "funding": 1.25e-05, "oi": 843617166.0}, {"coin": "UNI", "mark": 5.1316, "chg24": 0.0, "vol24": 33402590.620470002, "funding": 8.2861e-06, "oi": 6842061.799999997}, {"coin": "SEI", "mark": 0.038865, "chg24": -2.19, "vol24": 743524.3859280001, "funding": 1.25e-05, "oi": 47839762.0}, {"coin": "RUNE", "mark": 0.51254, "chg24": -2.6, "vol24": 392239.9998679999, "funding": -0.0003734327, "oi": 2579064.4}, {"coin": "OX", "mark": 0.007459, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "FRIEND", "mark": 4.72, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "SHIA", "mark": 0.000621, "chg24": 2.81, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "CYBER", "mark": 1.0415, "chg24": -0.37, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "ZRO", "mark": 1.3977, "chg24": -10.79, "vol24": 19304885.88563999, "funding": -1.51952e-05, "oi": 25755705.0}, {"coin": "BLZ", "mark": 0.070043, "chg24": -0.28, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "DOT", "mark": 0.73256, "chg24": -3.6, "vol24": 5536919.282748004, "funding": 5.4393e-06, "oi": 7968621.0}, {"coin": "BANANA", "mark": 2.6837, "chg24": 2.26, "vol24": 98766.01196, "funding": 1.25e-05, "oi": 49065.8}, {"coin": "TRB", "mark": 13.069, "chg24": -2.9, "vol24": 105193.5154099999, "funding": -2.50102e-05, "oi": 31903.0}, {"coin": "FTT", "mark": 0.32243, "chg24": -0.02, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "LOOM", "mark": 0.071161, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "OGN", "mark": 0.055683, "chg24": -0.21, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "RDNT", "mark": 0.018328, "chg24": -0.05, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "ARK", "mark": 0.10667, "chg24": 0.02, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BNT", "mark": 0.38287, "chg24": -0.44, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "CANTO", "mark": 0.066, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "REQ", "mark": 0.15473, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BIGTIME", "mark": 0.004343, "chg24": -3.96, "vol24": 73559.123063, "funding": 1.25e-05, "oi": 27893442.0}, {"coin": "KAS", "mark": 0.02697, "chg24": -0.55, "vol24": 512765.0109999999, "funding": 1.25e-05, "oi": 42837480.0}, {"coin": "ORBS", "mark": 0.01939, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BLUR", "mark": 0.006019, "chg24": -1.02, "vol24": 86635.706217, "funding": 1.25e-05, "oi": 111514902.0}, {"coin": "TIA", "mark": 0.35947, "chg24": 0.84, "vol24": 1501707.4214639997, "funding": -4.45869e-05, "oi": 9128673.000000002}, {"coin": "BSV", "mark": 14.514, "chg24": 0.88, "vol24": 103168.8845100001, "funding": 1.9573e-06, "oi": 37972.3}, {"coin": "ADA", "mark": 0.15322, "chg24": -2.14, "vol24": 10862569.726790005, "funding": 2.9307e-06, "oi": 131347948.0}, {"coin": "TON", "mark": 1.8014, "chg24": -0.33, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "MINA", "mark": 0.045581, "chg24": -2.44, "vol24": 273842.2917380002, "funding": 1.25e-05, "oi": 26230508.0}, {"coin": "POLYX", "mark": 0.025939, "chg24": -4.21, "vol24": 37922.56161, "funding": 1.25e-05, "oi": 1960130.0}, {"coin": "GAS", "mark": 0.96195, "chg24": 0.46, "vol24": 59466.025846, "funding": 1.25e-05, "oi": 83334.6}, {"coin": "PENDLE", "mark": 1.4316, "chg24": -2.55, "vol24": 1365626.1113999998, "funding": 1.25e-05, "oi": 4760520.0}, {"coin": "STG", "mark": 0.15387, "chg24": 0.11, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "FET", "mark": 0.13204, "chg24": -1.85, "vol24": 2988783.4048, "funding": 1.25e-05, "oi": 23481766.0}, {"coin": "STRAX", "mark": 1.5829, "chg24": -0.12, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "NEAR", "mark": 3.1336, "chg24": -2.24, "vol24": 97633892.54889004, "funding": 1.25e-05, "oi": 34205904.60000003}, {"coin": "MEME", "mark": 0.00033, "chg24": -3.51, "vol24": 166409.1763329999, "funding": 1.25e-05, "oi": 925694306.0}, {"coin": "ORDI", "mark": 2.7395, "chg24": -4.31, "vol24": 117163.908693, "funding": 1.25e-05, "oi": 93948.76}, {"coin": "BADGER", "mark": 0.88823, "chg24": -0.46, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "NEO", "mark": 1.5571, "chg24": -2.86, "vol24": 117345.872936, "funding": 1.25e-05, "oi": 195808.18}, {"coin": "ZEN", "mark": 4.11, "chg24": -0.92, "vol24": 155803.4038949999, "funding": 1.25e-05, "oi": 67798.18}, {"coin": "FIL", "mark": 0.60674, "chg24": -7.94, "vol24": 2362386.1040830007, "funding": -1.97821e-05, "oi": 5875015.000000001}, {"coin": "PYTH", "mark": 0.055787, "chg24": -3.32, "vol24": 943240.7109880005, "funding": 4.1479e-06, "oi": 25241576.0}, {"coin": "SUSHI", "mark": 0.15458, "chg24": -1.1, "vol24": 86638.510102, "funding": 5.9956e-06, "oi": 1321808.4000000001}, {"coin": "ILV", "mark": 12.118, "chg24": -0.08, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "IMX", "mark": 0.09914, "chg24": 0.54, "vol24": 1201708.4001530008, "funding": -7.48099e-05, "oi": 14770192.4}, {"coin": "kBONK", "mark": 0.002381, "chg24": -3.25, "vol24": 2490899.491923001, "funding": -4.56788e-05, "oi": 1499494998.0}, {"coin": "GMT", "mark": 0.005474, "chg24": -0.24, "vol24": 67767.963831, "funding": 1.25e-05, "oi": 21452204.0}, {"coin": "SUPER", "mark": 0.136152, "chg24": -0.71, "vol24": 324117.7924300001, "funding": 1.25e-05, "oi": 3541512.0}, {"coin": "USTC", "mark": 0.007534, "chg24": -1.59, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "NFTI", "mark": 6.5609, "chg24": -1.61, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "JUP", "mark": 0.26183, "chg24": 2.09, "vol24": 7541143.386030001, "funding": -6.11483e-05, "oi": 26655024.0}, {"coin": "kLUNC", "mark": 0.034693, "chg24": -2.07, "vol24": 111207.5727359999, "funding": 1.25e-05, "oi": 5590620.0}, {"coin": "RSR", "mark": 0.001333, "chg24": -3.27, "vol24": 183176.040618, "funding": 1.25e-05, "oi": 264177552.0}, {"coin": "GALA", "mark": 0.001346, "chg24": -1.82, "vol24": 549260.1326519997, "funding": 1.25e-05, "oi": 223366496.0}, {"coin": "JTO", "mark": 0.266975, "chg24": -4.22, "vol24": 423112.68505, "funding": 1.25e-05, "oi": 4644266.0}, {"coin": "NTRN", "mark": 0.1238, "chg24": 0.07, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "ACE", "mark": 0.0937, "chg24": -5.92, "vol24": 743067.0732150001, "funding": 1.25e-05, "oi": 1334037.34}, {"coin": "MAV", "mark": 0.015456, "chg24": 0.25, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "WIF", "mark": 0.13276, "chg24": -3.83, "vol24": 1116425.28735, "funding": -3.84107e-05, "oi": 15852496.0}, {"coin": "CAKE", "mark": 1.5906, "chg24": -0.54, "vol24": 752006.10519, "funding": 1.25e-05, "oi": 783988.0}, {"coin": "PEOPLE", "mark": 0.004947, "chg24": -1.16, "vol24": 163371.376146, "funding": 1.22826e-05, "oi": 22429074.0}, {"coin": "ENS", "mark": 3.8557, "chg24": -3.0, "vol24": 613224.6495820006, "funding": 1.25e-05, "oi": 219418.46}, {"coin": "ETC", "mark": 5.9685, "chg24": -2.02, "vol24": 352295.7095010001, "funding": -7.329e-07, "oi": 382055.4}, {"coin": "XAI", "mark": 0.00549, "chg24": -3.17, "vol24": 74246.96243, "funding": 1.25e-05, "oi": 27952480.6}, {"coin": "MANTA", "mark": 0.04115, "chg24": -3.13, "vol24": 76114.490158, "funding": 1.25e-05, "oi": 5615006.8}, {"coin": "UMA", "mark": 0.26284, "chg24": -4.89, "vol24": 51186.420857, "funding": 1.25e-05, "oi": 377522.0}, {"coin": "ONDO", "mark": 0.30439, "chg24": -2.72, "vol24": 7415515.744589997, "funding": 5.0859e-06, "oi": 40543698.0}, {"coin": "ALT", "mark": 0.004659, "chg24": -3.94, "vol24": 169465.39609, "funding": 1.25e-05, "oi": 133143574.0}, {"coin": "ZETA", "mark": 0.02846, "chg24": -2.0, "vol24": 115956.369403, "funding": 1.25e-05, "oi": 19115425.400000002}, {"coin": "DYM", "mark": 0.01251, "chg24": -0.16, "vol24": 416487.3887459998, "funding": 1.25e-05, "oi": 15469131.6}, {"coin": "MAVIA", "mark": 0.03725, "chg24": 0.11, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "W", "mark": 0.00865, "chg24": -4.63, "vol24": 1557091.8693570003, "funding": -4.50223e-05, "oi": 121048937.4}, {"coin": "PANDORA", "mark": 3026.3, "chg24": 0.47, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "STRK", "mark": 0.03451, "chg24": 0.32, "vol24": 2916281.057345, "funding": 1.25e-05, "oi": 533624062.20000005}, {"coin": "PIXEL", "mark": 0.024027, "chg24": 0.08, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "AI", "mark": 0.12555, "chg24": -0.08, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "TAO", "mark": 190.62, "chg24": -3.78, "vol24": 13377163.44322, "funding": 1.25e-05, "oi": 96026.334}, {"coin": "AR", "mark": 2.5465, "chg24": -4.27, "vol24": 845705.815221, "funding": 1.25e-05, "oi": 200898.34}, {"coin": "MYRO", "mark": 0.015813, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "kFLOKI", "mark": 0.018502, "chg24": -0.1, "vol24": 90953.42298, "funding": 1.25e-05, "oi": 14519284.0}, {"coin": "BOME", "mark": 0.000493, "chg24": -3.52, "vol24": 55463.803014, "funding": 1.25e-05, "oi": 414340318.0}, {"coin": "ETHFI", "mark": 0.49773, "chg24": -4.52, "vol24": 3145952.8382430016, "funding": 1.25e-05, "oi": 16452012.600000001}, {"coin": "ENA", "mark": 0.11961, "chg24": -2.71, "vol24": 31701679.51020998, "funding": -1.89108e-05, "oi": 305406232.0}, {"coin": "MNT", "mark": 0.3711, "chg24": -5.0, "vol24": 1461318.6634059995, "funding": -6.02706e-05, "oi": 4644074.6}, {"coin": "TNSR", "mark": 0.02236, "chg24": -1.5, "vol24": 18229.506521, "funding": 1.25e-05, "oi": 2896896.0}, {"coin": "SAGA", "mark": 0.01388, "chg24": 1.02, "vol24": 744879.3599040002, "funding": 1.25e-05, "oi": 143444592.4}, {"coin": "MERL", "mark": 0.030354, "chg24": -4.96, "vol24": 328417.0204600001, "funding": 1.25e-05, "oi": 25069992.0}, {"coin": "HBAR", "mark": 0.058319, "chg24": -0.04, "vol24": 2900679.4151339997, "funding": 1.25e-05, "oi": 121332784.0}, {"coin": "POPCAT", "mark": 0.028574, "chg24": -3.9, "vol24": 591814.0419510001, "funding": -5.80237e-05, "oi": 16470984.0}, {"coin": "OMNI", "mark": 4.1915, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "EIGEN", "mark": 0.1316, "chg24": -5.46, "vol24": 986899.2797250001, "funding": 1.25e-05, "oi": 10147637.7}, {"coin": "REZ", "mark": 0.002893, "chg24": -2.56, "vol24": 430727.135792, "funding": 1.25e-05, "oi": 293603240.0}, {"coin": "NOT", "mark": 0.000299, "chg24": -2.61, "vol24": 45663.230039, "funding": 1.25e-05, "oi": 607818812.0}, {"coin": "TURBO", "mark": 0.000593, "chg24": -3.58, "vol24": 230980.6783659999, "funding": -0.0001015987, "oi": 237929812.0}, {"coin": "BRETT", "mark": 0.003276, "chg24": -1.47, "vol24": 182484.343545, "funding": 1.25e-05, "oi": 50410212.0}, {"coin": "IO", "mark": 0.09692, "chg24": -4.58, "vol24": 272966.45553, "funding": -2.71575e-05, "oi": 4134981.4}, {"coin": "ZK", "mark": 0.007956, "chg24": -3.56, "vol24": 590852.5110070005, "funding": 1.09609e-05, "oi": 134622928.0}, {"coin": "BLAST", "mark": 0.000456, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "LISTA", "mark": 0.12466, "chg24": -0.22, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "MEW", "mark": 0.00064, "chg24": 9.4, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "RENDER", "mark": 1.3713, "chg24": -6.94, "vol24": 1065708.7225999995, "funding": -3.2388e-05, "oi": 1233234.4}, {"coin": "kDOGS", "mark": 0.13659, "chg24": -0.08, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "POL", "mark": 0.080375, "chg24": -0.9, "vol24": 883516.2383729998, "funding": -1.99105e-05, "oi": 52828992.0}, {"coin": "CATI", "mark": 0.082821, "chg24": -0.24, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "CELO", "mark": 0.059766, "chg24": -2.7, "vol24": 73103.283854, "funding": 1.25e-05, "oi": 8597070.0}, {"coin": "HMSTR", "mark": 0.000135, "chg24": -2.88, "vol24": 163546.7316029999, "funding": 1.25e-05, "oi": 12231782672.0}, {"coin": "SCR", "mark": 0.04737, "chg24": -0.59, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "NEIROETH", "mark": 0.01808, "chg24": -0.48, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "kNEIRO", "mark": 0.04744, "chg24": -5.48, "vol24": 61576.648032, "funding": 1.25e-05, "oi": 1112451.6}, {"coin": "GOAT", "mark": 0.010875, "chg24": -3.53, "vol24": 47069.167359, "funding": 1.25e-05, "oi": 92147030.0}, {"coin": "MOODENG", "mark": 0.027155, "chg24": -2.76, "vol24": 118575.952826, "funding": 1.25e-05, "oi": 10425322.0}, {"coin": "GRASS", "mark": 0.38593, "chg24": -4.31, "vol24": 3092160.037535002, "funding": 1.25e-05, "oi": 36310464.0}, {"coin": "PURR", "mark": 0.086882, "chg24": -1.41, "vol24": 2114425.382689, "funding": 1.25e-05, "oi": 110710868.0}, {"coin": "PNUT", "mark": 0.02901, "chg24": -1.79, "vol24": 293199.6616939998, "funding": 1.098e-06, "oi": 19391974.400000002}, {"coin": "XLM", "mark": 0.13869, "chg24": -0.39, "vol24": 5057251.894830006, "funding": 4.6003e-06, "oi": 49494764.0}, {"coin": "CHILLGUY", "mark": 0.012699, "chg24": 0.39, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "SAND", "mark": 0.035997, "chg24": -1.62, "vol24": 217910.3441170001, "funding": 1.25e-05, "oi": 13870226.0}, {"coin": "IOTA", "mark": 0.03121, "chg24": -3.0, "vol24": 463072.3589980003, "funding": 1.25e-05, "oi": 21121972.0}, {"coin": "ALGO", "mark": 0.079373, "chg24": -1.21, "vol24": 641201.9739709998, "funding": -6.7192e-05, "oi": 25113160.0}, {"coin": "HYPE", "mark": 67.228, "chg24": -0.47, "vol24": 1174384279.710457, "funding": 9.9363e-06, "oi": 19561987.23999997}, {"coin": "ME", "mark": 0.03764, "chg24": -2.96, "vol24": 34496.731262, "funding": 1.25e-05, "oi": 2947707.4}, {"coin": "MOVE", "mark": 0.0048, "chg24": -3.09, "vol24": 66751.115922, "funding": 1.25e-05, "oi": 39325854.0}, {"coin": "VIRTUAL", "mark": 0.44329, "chg24": -4.45, "vol24": 996264.9605940001, "funding": -3.592e-06, "oi": 8667472.2}, {"coin": "PENGU", "mark": 0.004873, "chg24": -8.47, "vol24": 2884296.6145080007, "funding": -3.03629e-05, "oi": 454152950.0}, {"coin": "USUAL", "mark": 0.01003, "chg24": -6.26, "vol24": 863024.5270630004, "funding": 1.25e-05, "oi": 24199174.6}, {"coin": "FARTCOIN", "mark": 0.09322, "chg24": -5.15, "vol24": 12860379.358695, "funding": -6.09783e-05, "oi": 144835410.79999995}, {"coin": "AI16Z", "mark": 0.06157, "chg24": -0.79, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "AIXBT", "mark": 0.013037, "chg24": -1.01, "vol24": 89651.1066910001, "funding": 1.25e-05, "oi": 8617344.0}, {"coin": "ZEREBRO", "mark": 0.032083, "chg24": -4.69, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BIO", "mark": 0.016315, "chg24": -4.47, "vol24": 326307.531836, "funding": 1.25e-05, "oi": 37556496.0}, {"coin": "GRIFFAIN", "mark": 0.00931, "chg24": 0.24, "vol24": 171089.5736019999, "funding": 1.25e-05, "oi": 90407316.0}, {"coin": "SPX", "mark": 0.3005, "chg24": -1.89, "vol24": 1730856.346245999, "funding": 1.25e-05, "oi": 9048748.8}, {"coin": "S", "mark": 0.033402, "chg24": -2.97, "vol24": 452541.8810609999, "funding": 1.25e-05, "oi": 33669870.0}, {"coin": "MORPHO", "mark": 1.73844, "chg24": -6.03, "vol24": 2531166.2983400007, "funding": 1.25e-05, "oi": 3047402.8}, {"coin": "TRUMP", "mark": 0.95155, "chg24": -4.7, "vol24": 7931526.554244995, "funding": 3.3079e-06, "oi": 7047669.4}, {"coin": "MELANIA", "mark": 0.04615, "chg24": -5.59, "vol24": 321387.6127829999, "funding": -0.0002303252, "oi": 16761532.8}, {"coin": "ANIME", "mark": 0.002061, "chg24": -2.14, "vol24": 233358.970468, "funding": 1.25e-05, "oi": 95794012.0}, {"coin": "VINE", "mark": 0.007518, "chg24": -0.69, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "VVV", "mark": 19.6456, "chg24": 9.73, "vol24": 23609874.263640005, "funding": 1.25e-05, "oi": 2574741.2999999993}, {"coin": "JELLY", "mark": 0.037555, "chg24": 0.0, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BERA", "mark": 0.09215, "chg24": -7.37, "vol24": 1278384.1224830002, "funding": -9.83846e-05, "oi": 17514548.8}, {"coin": "TST", "mark": 0.017491, "chg24": 0.81, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "LAYER", "mark": 0.043492, "chg24": -4.67, "vol24": 59497.811235, "funding": 1.25e-05, "oi": 4656766.0}, {"coin": "IP", "mark": 0.31703, "chg24": 1.41, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "OM", "mark": 0.06527, "chg24": -0.37, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "KAITO", "mark": 0.17156, "chg24": -9.23, "vol24": 825016.51196, "funding": -6.18557e-05, "oi": 3684628.0}, {"coin": "NIL", "mark": 0.04996, "chg24": -1.89, "vol24": 259406.8801909999, "funding": -1.84462e-05, "oi": 27887986.0}, {"coin": "PAXG", "mark": 3820.6, "chg24": -0.8, "vol24": 4143192.815899998, "funding": 1.25e-05, "oi": 6187.928}, {"coin": "PROMPT", "mark": 0.03661, "chg24": -0.76, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "BABY", "mark": 0.00833, "chg24": -3.25, "vol24": 242527.4896600001, "funding": 1.25e-05, "oi": 22987170.0}, {"coin": "WCT", "mark": 0.026161, "chg24": -2.88, "vol24": 61075.885288, "funding": 1.25e-05, "oi": 3915286.0}, {"coin": "HYPER", "mark": 0.040478, "chg24": -4.7, "vol24": 89102.213076, "funding": -1.42926e-05, "oi": 1570016.0}, {"coin": "ZORA", "mark": 0.004372, "chg24": -2.37, "vol24": 91924.962673, "funding": -2.23765e-05, "oi": 95078492.0}, {"coin": "INIT", "mark": 0.11791, "chg24": 24.8, "vol24": 6123429.608934998, "funding": 0.0009272039, "oi": 9764078.0}, {"coin": "DOOD", "mark": 0.001412, "chg24": 0.28, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "LAUNCHCOIN", "mark": 0.060367, "chg24": 0.52, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "NXPC", "mark": 0.1374, "chg24": -1.55, "vol24": 107178.65119, "funding": -9.8754e-06, "oi": 964966.0}, {"coin": "SOPH", "mark": 0.001358, "chg24": -28.0, "vol24": 4534177.227584, "funding": -0.0013480133, "oi": 423980506.0}, {"coin": "RESOLV", "mark": 0.012701, "chg24": 4.22, "vol24": 1169797.8118580005, "funding": 0.000123839, "oi": 137339790.0}, {"coin": "SYRUP", "mark": 0.102233, "chg24": -0.29, "vol24": 483440.5509920001, "funding": 1.25e-05, "oi": 24861552.0}, {"coin": "PUMP", "mark": 0.002888, "chg24": -8.17, "vol24": 54273870.61874299, "funding": 1.25e-05, "oi": 14350923040.0}, {"coin": "PROVE", "mark": 0.13803, "chg24": -4.33, "vol24": 83570.50649, "funding": -1.71759e-05, "oi": 900280.0}, {"coin": "YZY", "mark": 0.31107, "chg24": 2.31, "vol24": 0.0, "funding": 0.0, "oi": 0.0}, {"coin": "XPL", "mark": 0.043877, "chg24": -8.39, "vol24": 16564149.678160004, "funding": -3.73546e-05, "oi": 560758948.0}, {"coin": "WLFI", "mark": 0.046832, "chg24": -0.64, "vol24": 2529203.0218059984, "funding": 1.25e-05, "oi": 280320686.0}, {"coin": "LINEA", "mark": 0.001881, "chg24": -0.69, "vol24": 748285.1707099996, "funding": -2.4607e-05, "oi": 498084580.0}, {"coin": "SKY", "mark": 0.05415, "chg24": -1.8, "vol24": 964115.2811770001, "funding": -1.42075e-05, "oi": 36981180.0}, {"coin": "ASTER", "mark": 0.5331, "chg24": -14.71, "vol24": 15759252.405249996, "funding": 5.9626e-06, "oi": 24359584.0}, {"coin": "AVNT", "mark": 0.07004, "chg24": -5.29, "vol24": 422799.2827149999, "funding": 1.25e-05, "oi": 9886844.0}, {"coin": "STBL", "mark": 0.019678, "chg24": -2.72, "vol24": 141308.2452429999, "funding": 1.25e-05, "oi": 63363898.0}, {"coin": "0G", "mark": 0.13025, "chg24": -14.87, "vol24": 323034.6141899999, "funding": 1.25e-05, "oi": 6123296.0}, {"coin": "HEMI", "mark": 0.003446, "chg24": -8.76, "vol24": 212651.938626, "funding": 1.25e-05, "oi": 140810564.0}, {"coin": "APEX", "mark": 0.14111, "chg24": -0.79, "vol24": 937606.3498500003, "funding": 1.25e-05, "oi": 3605676.0}, {"coin": "2Z", "mark": 0.016166, "chg24": -3.84, "vol24": 824440.8732510004, "funding": 1.25e-05, "oi": 24882284.0}, {"coin": "ZEC", "mark": 892.31, "chg24": 2.14, "vol24": 543308993.5397999, "funding": 1.25e-05, "oi": 386164.48}, {"coin": "MON", "mark": 0.0155, "chg24": -2.44, "vol24": 4089408.626551, "funding": 1.25e-05, "oi": 1817539954.0}, {"coin": "MET", "mark": 0.2692, "chg24": -1.93, "vol24": 596668.0999500002, "funding": 1.25e-05, "oi": 7684126.0}, {"coin": "MEGA", "mark": 0.049667, "chg24": 10.27, "vol24": 3747877.1911359997, "funding": 1.25e-05, "oi": 159595480.0}, {"coin": "CC", "mark": 0.082341, "chg24": 0.98, "vol24": 1259652.2892460006, "funding": -9.95983e-05, "oi": 53587450.0}, {"coin": "ICP", "mark": 2.192, "chg24": -5.37, "vol24": 1678857.53534, "funding": -2.5513e-05, "oi": 874832.2}, {"coin": "AERO", "mark": 0.433077, "chg24": -2.6, "vol24": 3936133.45642, "funding": 1.25e-05, "oi": 31967402.0}, {"coin": "STABLE", "mark": 0.025136, "chg24": 0.3, "vol24": 136652.1232340001, "funding": 1.25e-05, "oi": 26613658.0}, {"coin": "FOGO", "mark": 0.001778, "chg24": -1.17, "vol24": 93866.851291, "funding": 1.25e-05, "oi": 89878044.0}, {"coin": "LIT", "mark": 2.9038, "chg24": -3.76, "vol24": 56877599.277199976, "funding": -2.53592e-05, "oi": 31365762.0}, {"coin": "XMR", "mark": 501.722, "chg24": -2.58, "vol24": 64660391.05642987, "funding": 1.25e-05, "oi": 181022.3860000001}, {"coin": "AXS", "mark": 0.6837, "chg24": -2.82, "vol24": 231255.9230870001, "funding": 1.25e-05, "oi": 308682.4}, {"coin": "DASH", "mark": 37.548, "chg24": -1.26, "vol24": 675570.3471300002, "funding": 1.25e-05, "oi": 42074.88}, {"coin": "SKR", "mark": 0.008836, "chg24": -3.22, "vol24": 2149882.186790001, "funding": 1.25e-05, "oi": 22644806.0}, {"coin": "AZTEC", "mark": 0.010402, "chg24": -1.86, "vol24": 138483.688481, "funding": 1.25e-05, "oi": 83664432.0}, {"coin": "CHIP", "mark": 0.02714, "chg24": -5.42, "vol24": 3474387.7351080007, "funding": 1.25e-05, "oi": 140296770.0}, {"coin": "GRAM", "mark": 1.0474, "chg24": -0.77, "vol24": 9059474.361299999, "funding": -8.50959e-05, "oi": 12200502.0}, {"coin": "CASHCAT", "mark": 0.039725, "chg24": -9.57, "vol24": 4415760.117428001, "funding": 1.25e-05, "oi": 171860898.0}, {"coin": "PONS", "mark": 0.11908, "chg24": -2.81, "vol24": 3901323.1563000004, "funding": 1.25e-05, "oi": 41459018.0}, {"coin": "USELESS", "mark": 0.099766, "chg24": -9.57, "vol24": 9185217.784964003, "funding": 1.25e-05, "oi": 55329796.0}, {"coin": "XTEN", "mark": 0.209052, "chg24": 2.88, "vol24": 186313.71191, "funding": 1.25e-05, "oi": 7738818.0}]};
 
 var $ = function(id){ return document.getElementById(id); };
 var paused = false, failCount = 0, timer = null, lastOk = 0;
-var fillsCache = [], closedCache = [], snapCache = null;
-var liveMids = {}; /* instId -> last price, refreshed every 15s */
-var curPositions = {}; /* coin -> HL-like position object, for the PnL share badge */
-var pcLevels = {}; /* coin -> {entry, side, sl, tp1, tp2} for chart lines */
-var shareCoin = null;
-var liveEquity = null, liveEquityIsLive = false, liveEquityPrev = null;
-/* Live mid for a coin, from the tickers refresh (every 15s). */
-function liveMidFor(coin){ var m = liveMids[instFor(coin)]; return (m && isFinite(m) && m > 0) ? m : null; }
-/* Live unrealized PnL for a snapshot position, re-priced from the live
-   mid. Falls back to the snapshot upnl when no live price is available. */
-function liveUpnlFor(p){
-  var mid = liveMidFor(p.coin);
-  if (mid == null) return num(p.upnl);
-  var dir = p.side === "LONG" ? 1 : -1;
-  return dir * (mid - num(p.entry)) * num(p.size);
-}
-var UNIVERSE = (BAKED_SNAP && BAKED_SNAP.universe) ? BAKED_SNAP.universe.coins : [];
+var snapCache = null, liveMids = {}, marketCtx = [];
+var fillsCache = [], closesOnly = false, mktFilter = "";
+var curPositions = {}; /* coin -> position object, for the badge generator */
 
 function num(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
 function fmtUSD(v, dp){ var n = num(v); var s = Math.abs(n).toFixed(dp == null ? 2 : dp); return (n < 0 ? "-$" : "$") + s; }
@@ -375,138 +451,106 @@ function fmtPx(v){ var n = num(v); if (!n) return "—"; var dp = n >= 1000 ? 2 
 function fmtPct(v, dp){ var n = num(v); return (n > 0 ? "+" : "") + n.toFixed(dp == null ? 2 : dp) + "%"; }
 function cls(v){ return num(v) > 0 ? "pos" : num(v) < 0 ? "neg" : ""; }
 function fmtTimeET(ms){ try { return new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric",hour:"numeric",minute:"2-digit",hour12:true}).format(new Date(ms)); } catch(e){ return new Date(ms).toLocaleString(); } }
+function fmtDateET(ms){ try { return new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",month:"short",day:"numeric"}).format(new Date(ms)); } catch(e){ return new Date(ms).toLocaleDateString(); } }
 function fmtClockET(ms){ try { return new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(new Date(ms)); } catch(e){ return new Date(ms).toLocaleTimeString(); } }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
-function fmtR(r){ return (r >= 0 ? "+" : "") + num(r).toFixed(2) + "R"; }
 function isClose(f){ var d = (f.dir || ""); return d.indexOf("Close") === 0 || d.indexOf("Liquidation") === 0; }
-/* Feed coin -> BloFin instrument id. kPEPE/kSHIB are Hyperliquid-side
-   1000x names; BloFin trades PEPE/SHIB directly. */
-function instFor(coin){ if (coin === "kPEPE") return "PEPE-USDT"; if (coin === "kSHIB") return "SHIB-USDT"; return coin + "-USDT"; }
-
-/* ---- Score: the BloFin bot's own record, straight from the snapshot.
-   No seeded history — the BloFin bot started fresh on Nov 10, 2026,
-   so Today / This week / This month / All-time are all the bot's own
-   closed trades (the snapshot's stats block). */
-function renderScore(snap){
-  var st = (snap && snap.stats) || {};
-  var rows = [
-    { id:"today", d: st.today || {} },
-    { id:"week",  d: st.week || {} },
-    { id:"month", d: st.month || {} },
-    { id:"all",   d: st.all_time || {} }
-  ];
-  rows.forEach(function(b){
-    var w = num(b.d.wins), l = num(b.d.losses), r = num(b.d.total_r), n = num(b.d.trades);
-    var rec = $("scoreRec-" + b.id), wr = $("scoreWR-" + b.id), rr = $("scoreR-" + b.id), nn = $("scoreN-" + b.id);
-    if (!rec) return;
-    rec.textContent = w + "W / " + l + "L";
-    wr.textContent = n ? (100 * w / n).toFixed(1) + "%" : "—";
-    rr.innerHTML = "<strong>" + fmtR(r) + "</strong>";
-    rr.className = "num " + cls(r);
-    nn.textContent = n;
-  });
-  var at = st.all_time || {};
-  var brEl = $("botRecord");
-  var atN = num(at.trades), atW = num(at.wins), atL = num(at.losses), atR = num(at.total_r);
-  if (brEl) brEl.textContent = atN + (atN === 1 ? " live trade" : " live trades") +
-    " so far (" + atW + "W / " + atL + "L, " + fmtR(atR) + ") — the BloFin bot's own closed trades since it went live (Nov 10, 2026). No seeded history: this is a fresh bot, so the score above is entirely its own record.";
+function srcTag(src){
+  if (src === "BloBrowser") return "<span class='src-tag src-bb'>BloBrowser</span>";
+  if (src === "H7") return "<span class='src-tag src-h7'>H7</span>";
+  if (src === "manual") return "<span class='src-tag src-manual'>Manual</span>";
+  return "<span class='src-tag src-earlier'>Earlier</span>";
 }
+function post(body){
+  return fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+}
+function liveMidFor(coin){ var m = liveMids[coin]; return (m && isFinite(m) && m > 0) ? m : null; }
 
-/* ---- Account / positions / orders, from the snapshot ---- */
-function renderState(snap){
-  var acct = (snap && snap.account) || {};
-  var eq = num(acct.equity), mg = num(acct.used_margin);
-  var positions = (snap && snap.positions) || [];
-  var orders = (snap && snap.orders) || [];
-  /* Live equity: the snapshot equity is frozen at deploy time, so
-     re-price every position from the live mid (tickers, every 15s).
-     liveEquity = snapshot equity - snapshot upnl + live upnl. This is
-     what makes the equity number slide with the market between
-     snapshot deploys; a fresh snapshot re-bases it. */
-  var snapUpnl = positions.reduce(function(a,p){ return a + num(p.upnl); }, 0);
-  var upnl = 0, usedLive = false;
-  positions.forEach(function(p){
-    if (liveMidFor(p.coin) != null) usedLive = true;
-    upnl += liveUpnlFor(p);
-  });
-  liveEquity = eq - snapUpnl + upnl;
-  liveEquityIsLive = usedLive;
-  pcLevels = {};
-  curPositions = {};
-  positions.forEach(function(p){
-    pcLevels[p.coin] = { entry: num(p.entry), side: p.side === "LONG" ? 1 : -1,
-      sl: num(p.sl), tp1: num(p.tp1), tp2: num(p.tp2) };
-    curPositions[p.coin] = { coin: p.coin, szi: (p.side === "LONG" ? 1 : -1) * num(p.size),
-      entryPx: num(p.entry), leverage: { value: num(p.lev), type: "cross" },
-      unrealizedPnl: liveUpnlFor(p), positionValue: num(p.notional), marginUsed: num(p.margin) };
-  });
-  var eqTxt = fmtUSD(liveEquity);
-  $("kEquity").textContent = eqTxt;
-  $("kEquityD").textContent = (usedLive ? "live · " : "") + "notional positions " + fmtUSD(acct.notional);
-  /* Brief direction flash so a moving equity is visible as it slides. */
-  if (liveEquityPrev != null && liveEquity !== liveEquityPrev){
-    var eqEl = $("kEquity");
-    eqEl.style.color = liveEquity > liveEquityPrev ? "var(--up)" : "var(--down)";
+/* ---- KPIs + account state ---- */
+function renderKpis(snap, live){
+  var eq = live ? num(live.equity) : num(snap.equity);
+  var tp = live ? num(live.trueProfit) : num(snap.true_profit);
+  var tpPct = live ? num(live.trueProfitPct) : num(snap.true_profit_pct);
+  var nov = snap.november || {};
+  var positions = live ? live.positions : (snap.positions || []);
+  var mg = live ? num(live.marginUsed) : num(snap.margin_used);
+  var eqEl = $("kEquity");
+  if (live && live.prevEquity != null && eq !== live.prevEquity){
+    eqEl.style.color = eq > live.prevEquity ? "var(--up)" : "var(--down)";
     setTimeout(function(){ eqEl.style.color = ""; }, 700);
   }
-  liveEquityPrev = liveEquity;
-  $("kWithdraw").textContent = fmtUSD(acct.withdrawable);
-  $("kMargin").textContent = fmtUSD(mg);
-  $("kMarginD").textContent = liveEquity ? (100*mg/liveEquity).toFixed(1)+"% of equity · cap 95%" : "of equity";
-  var up = $("kUpnl"); up.textContent = positions.length ? fmtSigned(upnl) : "$0.00"; up.className = "value " + (positions.length ? cls(upnl) : "");
+  eqEl.textContent = fmtUSD(eq);
+  $("kEquityD").textContent = "USDC · live · withdrawable " + fmtUSD(live ? live.withdrawable : snap.withdrawable);
+  var pr = $("kProfit"); pr.textContent = fmtSigned(tp) + "  (" + fmtPct(tpPct) + ")"; pr.className = "value " + cls(tp);
+  $("kProfitD").textContent = "vs $5.08 baseline · Nov 11 06:17 EST · net deposits " + fmtUSD(snap.net_deposits);
+  var rn = $("kRealNov"); rn.textContent = fmtSigned(nov.pnl); rn.className = "value " + cls(nov.pnl);
+  $("kRealNovD").textContent = "calendar November · " + (nov.fills || 0) + " fills · " + (nov.trades != null ? nov.trades + " closes" : "closes");
+  $("kFees").textContent = fmtUSD(nov.fees);
+  $("kDeposits").textContent = fmtUSD(snap.net_deposits);
+  $("kDepositsD").textContent = "since baseline · auto-detected · " + (snap.ledger || []).length + " ledger rows";
   $("kPos").textContent = positions.length;
-  $("kPosD").textContent = positions.length ? "see table below" : "account is flat";
-  $("kOrders").textContent = orders.length;
-  var bs = $("botState");
-  if (bs && snap && snap.account){
-    var posN = positions.length;
-    bs.textContent = "Bot state: live — last snapshot " + fmtTimeET(num(snap.updated_at_ms)) + " ET · equity " + fmtUSD(liveEquity) + (liveEquityIsLive ? " (live)" : "") + " · " + posN + " open position" + (posN === 1 ? "" : "s") + " · margin " + fmtUSD(mg) + " · fee 0.06% taker.";
-  }
-
-  if (!positions.length){
-    if (!lastOk){
-      $("posWrap").innerHTML = "<div class='empty'><strong>Connecting to live feed…</strong><br>Loading the account's current positions. If this stays up, the live feed is unreachable — the page retries on its own.</div>";
-      $("posNote").textContent = "";
-    } else {
-      $("posWrap").innerHTML = "<div class='empty'><strong>No open positions.</strong><br>The account is flat. Any position opened on this account — by the bot or otherwise — appears here within one refresh.</div>";
-      $("posNote").textContent = "";
-    }
-  } else {
-    $("posNote").textContent = positions.length + " live on BloFin";
-    var rows = positions.map(function(p){
-      var side = p.side === "LONG" ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
-      var lev = p.lev ? (p.lev + "× cross") : "—";
-      var lvUpnl = liveUpnlFor(p);
-      var lvMark = liveMidFor(p.coin);
-      return "<tr><td data-label='Coin'><strong>"+esc(p.coin)+"</strong> "+side+"</td>"+
-        "<td class='num' data-label='Size'>"+esc(String(p.size))+"</td>"+
-        "<td class='num' data-label='Entry'>"+fmtPx(p.entry)+"</td>"+
-        "<td class='num' data-label='Mark / value'>"+fmtPx(lvMark != null ? lvMark : p.mark)+" · "+fmtUSD(p.notional)+"</td>"+
-        "<td class='num' data-label='Leverage'>"+lev+"</td>"+
-        "<td class='num "+cls(lvUpnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(lvUpnl)+"</strong></td>"+
-        "<td class='num' data-label='Share'><button class='share-btn' type='button' data-coin='"+esc(p.coin)+"' title='Share PnL badge'>Share</button></td></tr>";
-    }).join("");
-    $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Mark / value</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Share</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
-    if (shareCoin && !$("shareOverlay").hidden) drawBadge();
-  }
-
-  if (!orders.length){
-    $("ordWrap").innerHTML = "<div class='empty'><strong>No open orders.</strong><br>Nothing resting on the book right now.</div>";
-  } else {
-    var kindLabel = { entry:"Entry", tp1:"TP1", tp2:"TP2", sl:"Stop", other:"Order" };
-    var orows = orders.map(function(o){
-      var side = o.side === "buy" ? "<span class='tag long'>BUY</span>" : "<span class='tag short'>SELL</span>";
-      return "<tr><td data-label='Coin'><strong>"+esc(o.coin)+"</strong> "+side+"</td>"+
-        "<td data-label='Kind'>"+esc(kindLabel[o.kind] || "Order")+(o.reduce_only ? " · reduce-only" : "")+"</td>"+
-        "<td data-label='Type'>"+esc(o.type)+"</td>"+
-        "<td class='num' data-label='Size'>"+esc(String(o.size))+"</td>"+
-        "<td class='num' data-label='Price'>"+fmtPx(o.px)+"</td></tr>";
-    }).join("");
-    $("ordWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th>Kind</th><th>Type</th><th class='num'>Size</th><th class='num'>Price</th></tr></thead><tbody>"+orows+"</tbody></table></div>";
-  }
+  var upnl = positions.reduce(function(a,p){ return a + num(p.upnl); }, 0);
+  $("kPosD").textContent = positions.length ? ("uPnL " + fmtSigned(upnl) + " · margin " + fmtUSD(mg)) : "account is flat";
 }
 
-/* ---- Recent fills, from the snapshot (post live-start only) ---- */
+/* ---- H7 + BloBrowser status panels ---- */
+function renderBots(snap, live){
+  var h7 = snap.h7 || {};
+  var st = h7.status || "starting_up";
+  var pill = $("h7GatePill");
+  var statusTxt = st === "live" ? "Live — trading this account" : st === "starting_up" ? "Starting up — deploying now" : "Status: " + st;
+  $("h7Status").textContent = statusTxt;
+  var hs = (h7.stats) || {};
+  var n = num(hs.trades);
+  $("h7Record").textContent = n ? (n + (n === 1 ? " trade" : " trades") + " · " + num(hs.wins) + "W / " + num(hs.losses) + "L · realized " + fmtSigned(hs.realized)) : "No H7 trades yet — the bot is deploying now; its first trades will appear here.";
+  var gate = (h7.config && h7.config.gate) || "breadth ≥70% OR BTC close > SMA50 → sit out";
+  var gateState = h7.gate_state;
+  if (gateState){
+    $("h7Gate").textContent = gateState + " — " + gate;
+    pill.innerHTML = gateState === "OPEN" ? "<span class='gate-pill gate-open'>GATE OPEN — trading</span>" : "<span class='gate-pill gate-closed'>GATE CLOSED — sitting out</span>";
+  } else {
+    $("h7Gate").textContent = gate + " (gate state loads once the bot reports in)";
+    pill.innerHTML = "<span class='gate-pill gate-startup'>STARTING UP</span>";
+  }
+  var bb = snap.bb || {};
+  var bn = num(bb.closes);
+  $("bbRecord").textContent = bn ? (bn + " closed trades · " + num(bb.wins) + "W / " + num(bb.losses) + "L · " + (bn ? (100 * num(bb.wins) / bn).toFixed(0) + "% win rate" : "")) : "—";
+  $("bbProfit").textContent = "Strategy-only " + fmtSigned(bb.strategy_only_profit) + " (" + fmtPct(bb.strategy_only_pct) + " on the $5.08 baseline) · gross realized " + fmtSigned(bb.realized_gross) + " · fees " + fmtUSD(bb.fees);
+}
+
+/* ---- Positions ---- */
+function renderPositions(snap, live){
+  var positions = live ? live.positions : (snap.positions || []);
+  curPositions = {};
+  positions.forEach(function(p){ curPositions[p.coin] = p; });
+  if (!positions.length){
+    $("posWrap").innerHTML = "<div class='empty'><strong>No open positions.</strong><br>The account is flat. Any position opened on this account — by BloBrowser or H7 — appears here within one refresh.</div>";
+    $("posNote").textContent = "";
+    return;
+  }
+  $("posNote").textContent = positions.length + " live on Hyperliquid";
+  var rows = positions.map(function(p){
+    var side = p.side === "LONG" ? "<span class='tag long'>LONG</span>" : "<span class='tag short'>SHORT</span>";
+    var mid = liveMidFor(p.coin);
+    var lvUpnl = p.upnl;
+    if (mid != null){
+      var dir = p.side === "LONG" ? 1 : -1;
+      lvUpnl = dir * (mid - num(p.entry)) * num(p.size);
+    }
+    return "<tr><td data-label='Coin'><strong>"+esc(p.coin)+"</strong> "+side+" "+srcTag(p.source)+"</td>"+
+      "<td class='num' data-label='Size'>"+esc(String(p.size))+"</td>"+
+      "<td class='num' data-label='Entry'>"+fmtPx(p.entry)+"</td>"+
+      "<td class='num' data-label='Mark'>"+fmtPx(mid != null ? mid : p.mark)+"</td>"+
+      "<td class='num' data-label='Notional'>"+fmtUSD(p.notional)+"</td>"+
+      "<td class='num' data-label='Leverage'>"+esc(String(p.leverage))+"× isolated</td>"+
+      "<td class='num "+cls(lvUpnl)+"' data-label='Unrealized PnL'><strong>"+fmtSigned(lvUpnl)+"</strong></td>"+
+      "<td class='num' data-label='Share'><button class='share-btn' type='button' data-coin='"+esc(p.coin)+"' title='Make a PnL badge for this trade'>Badge</button></td></tr>";
+  }).join("");
+  $("posWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Size</th><th class='num'>Entry</th><th class='num'>Mark</th><th class='num'>Notional</th><th class='num'>Leverage</th><th class='num'>Unrealized PnL</th><th class='num'>Badge</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
+}
+
+/* ---- Recent fills ---- */
 function renderFills(fills){
   var list = (fills || []).filter(function(f){ return !closesOnly || isClose(f); }).slice(0, 30);
   if (!list.length){ $("fillsWrap").innerHTML = "<div class='empty'>No fills match this filter yet.</div>"; return; }
@@ -514,7 +558,7 @@ function renderFills(fills){
     var close = isClose(f), cp = num(f.pnl);
     var badge = close ? (cp > 0 ? " <span class='tag win'>WINNER</span>" : cp < 0 ? " <span class='tag lose'>LOSER</span>" : " <span class='tag flat'>FLAT</span>") : "";
     return "<tr><td class='time-cell' data-label='Time'>"+fmtTimeET(f.time)+"</td>"+
-      "<td data-label='Coin'><strong>"+esc(f.coin)+"</strong></td>"+
+      "<td data-label='Coin'><strong>"+esc(f.coin)+"</strong> "+srcTag(f.source)+"</td>"+
       "<td data-label='Action'>"+esc(f.dir || "")+badge+"</td>"+
       "<td class='num' data-label='Price'>"+fmtPx(f.px)+"</td>"+
       "<td class='num' data-label='Size'>"+esc(String(f.sz))+"</td>"+
@@ -524,76 +568,85 @@ function renderFills(fills){
   $("fillsWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Time (ET)</th><th>Coin</th><th>Action</th><th class='num'>Price</th><th class='num'>Size</th><th class='num'>Realized PnL</th><th class='num'>Fee</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
 }
 
-/* ---- Cumulative R curve: the bot's own closed trades only ----
-   (snapshot.closed, in close order). No seeded history — the BloFin
-   bot started fresh on Nov 10, 2026, so the curve starts at 0. The
-   snapshot sends only the last 200 closes, so the curve starts at
-   snapshot.closed_r_base (the R sum of the older closes) — without
-   it the curve's endpoint would fall behind All-time once the
-   record passes 200 trades. Endpoint == All-time total by
-   construction: both sum the same closed-trade ledger. */
-function renderChart(snap){
-  var closed = (snap && snap.closed) || [];
-  var pts = [], cum = num(snap && snap.closed_r_base);
-  closed.forEach(function(c){ cum += num(c.r); pts.push({t: num(c.close_ms), v: cum, coin: c.coin}); });
-  if (pts.length < 2){ $("chartWrap").innerHTML = "<span style='color:var(--muted)'>Not enough closed trades to draw the curve yet — the bot just went live (Nov 10, 2026).</span>"; $("chartMeta").innerHTML=""; return; }
-  var min = Math.min(0, Math.min.apply(null, pts.map(function(p){return p.v;})));
-  var max = Math.max(0, Math.max.apply(null, pts.map(function(p){return p.v;})));
-  if (max - min < 0.01){ max = min + 0.01; }
-  var W=880, H=220, P=8;
-  function X(i){ return P + (W-2*P) * i/(pts.length-1); }
-  function Y(v){ return H-P - (H-2*P) * (v-min)/(max-min); }
-  var d = pts.map(function(p,i){ return (i?"L":"M") + X(i).toFixed(1) + " " + Y(p.v).toFixed(1); }).join(" ");
-  var last = pts[pts.length-1].v;
-  var lineCol = last >= 0 ? "var(--up)" : "var(--down)";
-  var svg = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Cumulative R line chart'>"+
-    "<line x1='"+P+"' y1='"+Y(0).toFixed(1)+"' x2='"+(W-P)+"' y2='"+Y(0).toFixed(1)+"' stroke='var(--line-strong)' stroke-width='1' stroke-dasharray='4 4'/>"+
-    "<path d='"+d+"' fill='none' stroke='"+lineCol+"' stroke-width='2'/>"+
-    "<circle cx='"+X(pts.length-1).toFixed(1)+"' cy='"+Y(last).toFixed(1)+"' r='3.5' fill='"+lineCol+"'/></svg>";
-  $("chartWrap").innerHTML = svg;
-  $("chartMeta").innerHTML = "<span>All-time: <strong class='"+cls(last)+"'>"+fmtR(last)+"</strong></span>"+
-    "<span>Best point: "+fmtR(max)+"</span><span>Worst point: "+fmtR(min)+"</span>"+
-    "<span>"+pts.length+" closed trades · "+fmtTimeET(pts[0].t)+" → "+fmtTimeET(pts[pts.length-1].t)+"</span>";
+/* ---- Ledger ---- */
+function renderLedger(snap){
+  var rows = snap.ledger || [];
+  if (!rows.length){ $("ledWrap").innerHTML = "<div class='empty'>No deposits or withdrawals since the baseline.</div>"; return; }
+  var body = rows.map(function(r){
+    return "<tr><td data-label='Date (ET)'>"+esc(r.date)+"</td><td data-label='Type'>"+esc(r.type)+"</td>"+
+      "<td class='num "+cls(r.amount)+"' data-label='Amount'><strong>"+fmtSigned(r.amount)+"</strong></td>"+
+      "<td data-label='Note'>"+esc(r.note)+"</td></tr>";
+  }).join("");
+  $("ledWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Date (ET)</th><th>Type</th><th class='num'>Amount</th><th>Note</th></tr></thead><tbody>"+body+"</tbody></table></div>" +
+    "<p class='sec-note' style='margin-top:8px'>Net deposits since baseline: <strong>"+fmtSigned(snap.net_deposits)+"</strong> · baseline equity $5.08 (Nov 11 06:17 EST) · true profit = (equity now − $5.08) − net deposits.</p>";
 }
 
-/* ---- Price charts: 1h candles from BloFin's public API ----
-   GET /api/v1/market/candles?instId=<COIN>-USDT&bar=1H&limit=100
-   rows: [ts, open, high, low, close, vol, volCcy, volQuoteCcy, confirm],
-   newest first. Entry / stop / TP1 / TP2 lines come from the trade
-   record in the snapshot (pcLevels). */
-var pcCoins = [], pcData = {}, pcIdx = 0, pcTimer = null, pcRetry = {};
-function pcFetch(coin){
-  return fetch(BF_API + "/api/v1/market/candles?instId=" + encodeURIComponent(instFor(coin)) + "&bar=1H&limit=100")
-    .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then(function(j){
-      var rows = (j && j.data) || [];
-      var bars = rows.map(function(c){ return { t: num(c[0]), o: num(c[1]), h: num(c[2]), l: num(c[3]), c: num(c[4]) }; })
-        .filter(function(b){ return b.t > 0; }).sort(function(a,b){ return a.t - b.t; }).slice(-100);
-      if (bars.length) pcData[coin] = bars;
-      return bars;
-    });
+/* ---- Daily realized PnL bars (SVG) ---- */
+function renderDaily(snap){
+  var bars = snap.daily_bars || [];
+  if (!bars.length){ $("dailyWrap").innerHTML = "<span style='color:var(--muted)'>No closed trades yet.</span>"; $("dailyMeta").innerHTML = ""; return; }
+  var W = 880, H = 200, P = 8;
+  var max = Math.max.apply(null, bars.map(function(b){ return Math.abs(num(b.pnl)); }).concat([0.01]));
+  var bw = (W - 2*P) / bars.length;
+  var zeroY = H/2;
+  var s = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Daily realized PnL bars'>";
+  s += "<line x1='"+P+"' y1='"+zeroY+"' x2='"+(W-P)+"' y2='"+zeroY+"' stroke='var(--line-strong)' stroke-width='1'/>";
+  bars.forEach(function(b, i){
+    var v = num(b.pnl), h = (H/2 - P) * Math.abs(v) / max;
+    var x = P + bw*i + bw*0.2, w = bw*0.6;
+    var y = v >= 0 ? zeroY - h : zeroY;
+    var col = v >= 0 ? "var(--up)" : "var(--down)";
+    s += "<rect x='"+x.toFixed(1)+"' y='"+y.toFixed(1)+"' width='"+w.toFixed(1)+"' height='"+Math.max(1,h).toFixed(1)+"' fill='"+col+"'/>";
+    s += "<text x='"+(x+w/2).toFixed(1)+"' y='"+(H-2)+"' text-anchor='middle' font-size='10' fill='var(--muted)'>"+esc(b.date.slice(5))+"</text>";
+  });
+  s += "</svg>";
+  $("dailyWrap").innerHTML = s;
+  var tot = bars.reduce(function(a,b){ return a + num(b.pnl); }, 0);
+  var best = bars.reduce(function(a,b){ return num(b.pnl) > num(a.pnl) ? b : a; }, bars[0]);
+  var worst = bars.reduce(function(a,b){ return num(b.pnl) < num(a.pnl) ? b : a; }, bars[0]);
+  $("dailyMeta").innerHTML = "<span>Total realized (closes): <strong class='"+cls(tot)+"'>"+fmtSigned(tot)+"</strong></span><span>Best day: "+esc(best.date)+" <strong class='pos'>"+fmtSigned(best.pnl)+"</strong> ("+best.wins+"W/"+best.losses+"L)</span><span>Worst day: "+esc(worst.date)+" <strong class='neg'>"+fmtSigned(worst.pnl)+"</strong></span><span>"+bars.length+" days with closes</span>";
 }
-function pcDraw(){
-  var coin = pcCoins[pcIdx]; if (!coin) return;
-  var bars = pcData[coin];
-  var wrap = $("pcWrap"); if (!wrap) return;
-  var mid = liveMids[instFor(coin)];
-  var lv = pcLevels[coin];
-  var priceLabel = "—";
-  if (mid) priceLabel = "Live: " + fmtPx(mid);
-  if (!bars || !bars.length){
-    wrap.innerHTML = "<span style='color:var(--muted)'>Loading "+esc(coin)+" 1h candles…</span>";
-    $("pcTitle").textContent = coin + " · 1h candles";
-    $("pcMeta").innerHTML = "<span>" + priceLabel + "</span>";
-    var n = (pcRetry[coin] || 0) + 1;
-    pcRetry[coin] = n;
-    /* Bound the retry: if the candles endpoint keeps returning no
-       bars, stop after 3 tries instead of fetching forever. */
-    if (n <= 3) pcFetch(coin).then(function(){ pcDraw(); });
-    else wrap.innerHTML = "<span style='color:var(--muted)'>No 1h candles available for "+esc(coin)+" right now.</span>";
-    return;
-  }
-  pcRetry[coin] = 0;
+
+/* ---- Equity curve (SVG line) ---- */
+function equitySvg(points, liveEq){
+  var pts = points.slice();
+  if (liveEq != null && pts.length) pts.push({ ms: Date.now(), equity: liveEq });
+  if (pts.length < 2) return "<span style='color:var(--muted)'>Not enough equity history to draw the curve yet.</span>";
+  var min = Math.min.apply(null, pts.map(function(p){ return p.equity; }).concat([BASELINE_EQUITY]));
+  var max = Math.max.apply(null, pts.map(function(p){ return p.equity; }));
+  if (max - min < 0.01) max = min + 0.01;
+  var W = 880, H = 260, P = 8;
+  function X(i){ return P + (W-2*P) * i/(pts.length-1); }
+  function Y(v){ return H-P - (H-2*P) * (v-min)/(max-min); }
+  var d = pts.map(function(p,i){ return (i?"L":"M") + X(i).toFixed(1) + " " + Y(p.equity).toFixed(1); }).join(" ");
+  var last = pts[pts.length-1].equity;
+  var col = last >= BASELINE_EQUITY ? "var(--up)" : "var(--down)";
+  return "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Account equity curve'>" +
+    "<line x1='"+P+"' y1='"+Y(BASELINE_EQUITY).toFixed(1)+"' x2='"+(W-P)+"' y2='"+Y(BASELINE_EQUITY).toFixed(1)+"' stroke='var(--line-strong)' stroke-width='1' stroke-dasharray='4 4'/>" +
+    "<path d='"+d+"' fill='none' stroke='"+col+"' stroke-width='2'/>" +
+    "<circle cx='"+X(pts.length-1).toFixed(1)+"' cy='"+Y(last).toFixed(1)+"' r='3.5' fill='"+col+"'/></svg>";
+}
+
+/* ---- Candles ---- */
+var candleCache = {};
+function fetchCandles(coin, interval){
+  var key = coin + "|" + interval;
+  var cached = candleCache[key];
+  var now = Date.now();
+  if (cached && now - cached.at < 60000) return Promise.resolve(cached.bars);
+  var ms = { "15m": 900000, "1h": 3600000, "4h": 14400000, "1d": 86400000 }[interval] || 3600000;
+  var start = now - 100 * ms;
+  return post({ type: "candleSnapshot", req: { coin: coin, interval: interval, startTime: start, endTime: now } })
+    .then(function(rows){
+      var bars = (rows || []).map(function(c){ return { t: num(c.t), o: num(c.o), h: num(c.h), l: num(c.l), c: num(c.c) }; })
+        .filter(function(b){ return b.t > 0; }).sort(function(a,b){ return a.t - b.t; }).slice(-100);
+      if (bars.length) candleCache[key] = { bars: bars, at: Date.now() };
+      return bars;
+    }).catch(function(){ return cached ? cached.bars : []; });
+}
+function drawCandles(el, bars, opts){
+  opts = opts || {};
+  var mid = opts.mid, levels = opts.levels;
   var bars2 = bars.slice();
   var last = bars2[bars2.length-1];
   if (mid && last){
@@ -603,19 +656,13 @@ function pcDraw(){
   }
   var lo = Math.min.apply(null, bars2.map(function(b){ return b.l; }));
   var hi = Math.max.apply(null, bars2.map(function(b){ return b.h; }));
-  if (lv){ lo = Math.min(lo, lv.sl, lv.tp1, lv.tp2); hi = Math.max(hi, lv.entry, lv.sl, lv.tp1, lv.tp2); }
-  if (hi - lo < 1e-9){ hi = lo + 1e-9; }
+  if (levels){ levels.forEach(function(L){ lo = Math.min(lo, L.v); hi = Math.max(hi, L.v); }); }
+  if (hi - lo < 1e-9) hi = lo + 1e-9;
   var W = 880, H = 260, P = 4, BW = (W - 2*P) / bars2.length;
   function X(i){ return P + BW*i + BW/2; }
   function Y(v){ return H - P - (H - 2*P) * (v - lo) / (hi - lo); }
-  var s = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='1 hour candlestick chart for "+esc(coin)+"'>";
-  if (lv){
-    var levels = [
-      { v: lv.entry, c: "var(--text)", label: "Entry " + fmtPx(lv.entry) },
-      { v: lv.sl, c: "var(--down)", label: "Stop " + fmtPx(lv.sl) },
-      { v: lv.tp1, c: "var(--up)", label: "TP1 " + fmtPx(lv.tp1) },
-      { v: lv.tp2, c: "var(--up)", label: "TP2 " + fmtPx(lv.tp2) }
-    ];
+  var s = "<svg viewBox='0 0 "+W+" "+H+"' role='img' aria-label='Candlestick chart'>";
+  if (levels){
     levels.forEach(function(L){
       var y = Y(L.v).toFixed(1);
       s += "<line x1='"+P+"' y1='"+y+"' x2='"+(W-P)+"' y2='"+y+"' stroke='"+L.c+"' stroke-width='1' stroke-dasharray='5 4'/>" +
@@ -629,149 +676,327 @@ function pcDraw(){
     s += "<line x1='"+x.toFixed(1)+"' y1='"+Y(b.h).toFixed(1)+"' x2='"+x.toFixed(1)+"' y2='"+Y(b.l).toFixed(1)+"' stroke='"+col+"' stroke-width='1'/>" +
       "<rect x='"+(x-w/2).toFixed(1)+"' y='"+Y(Math.max(b.o, b.c)).toFixed(1)+"' width='"+w.toFixed(1)+"' height='"+Math.max(1, Math.abs(Y(b.o)-Y(b.c))).toFixed(1)+"' fill='"+col+"'/>";
   });
-  s += "</svg>";
-  wrap.innerHTML = s;
-  var span = bars2[0].t, spanEnd = bars2[bars2.length-1].t;
-  var title = coin + " · 1h candles";
-  if (lv){ title = coin + " · 1h · " + (pcLevels[coin].side > 0 ? "LONG" : "SHORT") + " · entry " + fmtPx(lv.entry); }
-  $("pcTitle").textContent = title;
-  $("pcMeta").innerHTML = "<span>" + priceLabel + "</span><span>" + fmtTimeET(span) + " → " + fmtTimeET(spanEnd) + "</span><span>" + bars2.length + " candles · BloFin public candles</span>";
-  $("pcDots").innerHTML = pcCoins.map(function(c, i){
-    return "<button type='button' data-idx='" + i + "'" + (i === pcIdx ? " class='active'" : "") + ">" + esc(c) + "</button>";
-  }).join("");
-}
-function pcStart(){
-  if (pcTimer) clearInterval(pcTimer);
-  pcTimer = setInterval(function(){ pcIdx = (pcIdx + 1) % pcCoins.length; pcDraw(); }, 10000);
-}
-function pcSetCoins(){
-  var open = (snapCache && snapCache.positions) ? snapCache.positions.map(function(p){ return p.coin; }) : [];
-  var coins = open.slice();
-  if (coins.indexOf("BTC") < 0) coins.push("BTC");
-  pcCoins = coins;
-  if (pcIdx >= pcCoins.length) pcIdx = 0;
-  pcCoins.forEach(function(c){ pcFetch(c); });
-}
-
-/* ---- Market: live mids, 24h change, 24h volume from BloFin's
-   public tickers (GET /api/v1/market/tickers, no auth). ---- */
-function renderMarket(tickers){
-  var map = {};
-  (tickers || []).forEach(function(t){ if (t.instId) map[t.instId] = t; });
-  liveMids = {};
-  Object.keys(map).forEach(function(k){ liveMids[k] = num(map[k].last); });
-  var rows = UNIVERSE.map(function(c){
-    var t = map[instFor(c)];
-    if (!t) return null;
-    var last = num(t.last), open24 = num(t.open24h), high24 = num(t.high24h), low24 = num(t.low24h);
-    var chg = open24 ? 100*(last-open24)/open24 : 0;
-    return "<tr><td data-label='Coin'><strong>"+esc(c)+"</strong></td>"+
-      "<td class='num' data-label='Mid'>"+fmtPx(last)+"</td>"+
-      "<td class='num "+cls(chg)+"' data-label='24h change'><strong>"+fmtPct(chg)+"</strong></td>"+
-      "<td class='num' data-label='24h volume'>"+fmtUSD(t.volCurrency24h, 0)+"</td></tr>";
-  }).filter(Boolean).join("");
-  $("mktWrap").innerHTML = rows ?
-    "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Mid</th><th class='num'>24h change</th><th class='num'>24h volume</th></tr></thead><tbody>"+rows+"</tbody></table></div>" :
-    "<div class='empty'>Market data failed to load — retrying.</div>";
-  $("mktNote").textContent = "Mid price, 24h change and 24h volume from BloFin's public tickers. BloFin tickers carry no funding or open interest, so those columns are not shown.";
-  /* Fresh mids re-price the account: refresh equity/positions so the
-     equity number slides with the market on every 15s refresh. */
-  if (snapCache) renderState(snapCache);
-}
-
-/* ---- Fetching / refresh ---- */
-function fetchSnap(){
-  return fetch(SNAP_URL, { cache: "no-store" }).then(function(r){
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  });
-}
-function bfTickers(){
-  return fetch(BF_API + "/api/v1/market/tickers").then(function(r){
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  }).then(function(j){ return (j && j.data) || []; });
-}
-function setConn(mode){
-  var badge = $("connBadge"), text = $("connText");
-  badge.className = "conn " + mode;
-  if (mode === "ok"){ text.textContent = "● Live"; }
-  else if (mode === "stale"){ text.textContent = "● Stale snapshot"; }
-  else { text.textContent = "● Connecting to live feed…"; }
-}
-function applyAll(snap){
-  snapCache = snap;
-  if (snap && snap.universe && snap.universe.coins && snap.universe.coins.length) UNIVERSE = snap.universe.coins;
-  renderScore(snap);
-  renderState(snap);
-  renderFills(snap.fills || []);
-  renderChart(snap);
-  var upd = snap ? num(snap.updated_at_ms) : 0;
-  var age = upd ? Date.now() - upd : 0;
-  var stale = age > 3600e3;
-  if (upd){
-    $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd) + " ET" +
-      (stale ? " — STALE (snapshot is " + Math.round(age/60000) + " min old; positions, orders and closes lag the last deploy)" : "") +
-      " · equity re-priced live from prices · refreshes every 15s";
+  if (mid && last){
+    var lx = X(bars2.length-1);
+    s += "<circle cx='"+lx.toFixed(1)+"' cy='"+Y(mid).toFixed(1)+"' r='3.5' fill='var(--accent)'/>";
   }
-  setConn(stale ? "stale" : (lastOk ? "ok" : "connecting"));
-  announceUpdates(snap);
-  pcSetCoins();
-  if (pcCoins.length) pcDraw();
-}
-function refresh(){
-  if (paused) return;
-  return Promise.allSettled([fetchSnap(), bfTickers()]).then(function(res){
-    var snapRes = res[0], tkRes = res[1];
-    if (snapRes.status === "fulfilled" && snapRes.value){
-      lastOk = Date.now(); /* set before applyAll so the badge reads Live on the first good refresh */
-      /* Never regress to an older snapshot: the deployed
-         blofin_state.json can be OLDER than the snapshot baked into
-         this page (a preview-only deploy does not re-upload it).
-         Only adopt a fetched snapshot that is at least as new as the
-         one on screen; otherwise keep the on-screen snapshot and
-         just refresh its staleness label. */
-      var newMs = num(snapRes.value.updated_at_ms);
-      var curMs = snapCache ? num(snapCache.updated_at_ms) : 0;
-      if (!snapCache || newMs >= curMs){
-        applyAll(snapRes.value);
-      } else {
-        var upd2 = num(snapCache.updated_at_ms);
-        var age2 = upd2 ? Date.now() - upd2 : 0;
-        var stale2 = age2 > 3600e3;
-        if (upd2){
-          $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd2) + " ET" +
-            (stale2 ? " — STALE (snapshot is " + Math.round(age2/60000) + " min old; positions, orders and closes lag the last deploy)" : "") +
-            " · equity re-priced live from prices · refreshes every 15s";
-        }
-        setConn(stale2 ? "stale" : (lastOk ? "ok" : "connecting"));
-      }
-      failCount = 0;
-    } else {
-      failCount += 1;
-      if (snapCache){ /* keep last snapshot on screen; mark staleness */
-        var upd = num(snapCache.updated_at_ms);
-        $("updatedAt").textContent = "Account data as of " + fmtTimeET(upd) + " ET — snapshot fetch failed (" + failCount + "), showing last good snapshot · prices live · refreshes every 15s";
-        setConn("stale");
-      } else {
-        setConn("connecting");
-        $("updatedAt").textContent = "Connecting to live feed… (snapshot fetch failed, retrying)";
-      }
-    }
-    if (tkRes.status === "fulfilled"){ renderMarket(tkRes.value); }
-    var b = $("kPos"); if (b && pcCoins.length) pcDraw();
-  });
-}
-function startLoop(){
-  if (timer) clearInterval(timer);
-  timer = setInterval(function(){ if (!paused) refresh(); }, 15000);
+  s += "</svg>";
+  el.innerHTML = s;
 }
 
-/* ---- Universe chips ---- */
-function renderChips(){
-  var el = $("uniChips");
-  if (!el) return;
-  el.innerHTML = UNIVERSE.map(function(c){ return "<span>" + esc(c) + "</span>"; }).join("");
+/* ---- Cycling carousel ---- */
+var carSlides = [], carIdx = 0, carPaused = false, carTimer = null;
+function carBuildSlides(snap, live){
+  var slides = [{ kind: "equity", title: "Account equity — since Nov 11" }];
+  slides.push({ kind: "coin", coin: "BTC", title: "BTC · 1h candles" });
+  var open = (live ? live.positions : (snap.positions || [])).map(function(p){ return p.coin; });
+  open.forEach(function(c){ if (c !== "BTC") slides.push({ kind: "coin", coin: c, title: c + " · 1h candles" }); });
+  var movers = (marketCtx.length ? marketCtx : (snap.market || []))
+    .filter(function(m){ return m.coin !== "BTC" && open.indexOf(m.coin) < 0; })
+    .sort(function(a,b){ return Math.abs(num(b.chg24)) - Math.abs(num(a.chg24)); }).slice(0, 3);
+  movers.forEach(function(m){ slides.push({ kind: "coin", coin: m.coin, title: m.coin + " · 1h candles · 24h " + fmtPct(m.chg24) }); });
+  carSlides = slides;
+  if (carIdx >= carSlides.length) carIdx = 0;
+}
+function carDraw(){
+  var s = carSlides[carIdx]; if (!s) return;
+  var wrap = $("carWrap");
+  $("carTitle").textContent = s.title;
+  $("carDots").innerHTML = carSlides.map(function(sl, i){
+    return "<button type='button' data-idx='" + i + "'" + (i === carIdx ? " aria-pressed='true'" : " aria-pressed='false'") + " aria-label='Slide " + (i+1) + ": " + esc(sl.title) + "'></button>";
+  }).join("");
+  if (s.kind === "equity"){
+    var snap = snapCache;
+    var liveEq = window.__liveEquity;
+    wrap.innerHTML = equitySvg((snap && snap.equity_curve) || [], liveEq);
+    var pts = (snap && snap.equity_curve) || [];
+    $("carMeta").innerHTML = "<span>Baseline $5.08 (Nov 11 06:17 EST) · now <strong>" + fmtUSD(liveEq != null ? liveEq : (snap ? snap.equity : 0)) + "</strong></span><span>" + pts.length + " tracker points</span><span>Dashed line = baseline</span>";
+    return;
+  }
+  wrap.innerHTML = "<span style='color:var(--muted)'>Loading " + esc(s.coin) + " 1h candles…</span>";
+  fetchCandles(s.coin, "1h").then(function(bars){
+    if (!bars.length){ wrap.innerHTML = "<span style='color:var(--muted)'>No 1h candles available for " + esc(s.coin) + " right now.</span>"; return; }
+    var p = curPositions[s.coin];
+    var levels = null;
+    if (p){
+      levels = [
+        { v: num(p.entry), c: "var(--ink)", label: "Entry " + fmtPx(p.entry) },
+        { v: num(p.entry) * (p.side === "LONG" ? 0.85 : 1.15), c: "var(--down)", label: "Stop ~" + fmtPx(num(p.entry) * (p.side === "LONG" ? 0.85 : 1.15)) }
+      ];
+    }
+    drawCandles(wrap, bars, { mid: liveMidFor(s.coin), levels: levels });
+    var span = bars[0].t, spanEnd = bars[bars.length-1].t;
+    $("carMeta").innerHTML = "<span>Live: " + fmtPx(liveMidFor(s.coin)) + "</span><span>" + fmtTimeET(span) + " → " + fmtTimeET(spanEnd) + "</span><span>" + bars.length + " candles · Hyperliquid public candles</span>";
+  });
+}
+function carStart(){
+  if (carTimer) clearInterval(carTimer);
+  carTimer = setInterval(function(){ if (!carPaused && carSlides.length){ carIdx = (carIdx + 1) % carSlides.length; carDraw(); } }, 10000);
+}
+
+/* ---- Ticker explorer ---- */
+var tickCoin = "BTC", tickTf = "1h";
+function tickPopulate(){
+  var sel = $("tickSelect");
+  var q = ($("tickSearch").value || "").trim().toUpperCase();
+  var coins = ((snapCache && snapCache.universe) || []).map(function(u){ return u.coin; });
+  if (!coins.length) coins = ["BTC","ETH","SOL","XRP","HYPE"];
+  var filtered = coins.filter(function(c){ return !q || c.indexOf(q) >= 0; });
+  if (filtered.indexOf(tickCoin) < 0 && filtered.length) tickCoin = filtered[0];
+  sel.innerHTML = filtered.map(function(c){ return "<option value='" + esc(c) + "'" + (c === tickCoin ? " selected" : "") + ">" + esc(c) + "</option>"; }).join("");
+}
+function tickDraw(){
+  var wrap = $("tickWrap");
+  wrap.innerHTML = "<span style='color:var(--muted)'>Loading " + esc(tickCoin) + " " + esc(tickTf) + " candles…</span>";
+  fetchCandles(tickCoin, tickTf).then(function(bars){
+    if (!bars.length){ wrap.innerHTML = "<span style='color:var(--muted)'>No " + esc(tickTf) + " candles available for " + esc(tickCoin) + " right now.</span>"; $("tickMeta").innerHTML = ""; return; }
+    var p = curPositions[tickCoin];
+    var levels = null;
+    if (p){
+      levels = [
+        { v: num(p.entry), c: "var(--ink)", label: "Entry " + fmtPx(p.entry) },
+        { v: num(p.entry) * (p.side === "LONG" ? 0.85 : 1.15), c: "var(--down)", label: "Stop ~" + fmtPx(num(p.entry) * (p.side === "LONG" ? 0.85 : 1.15)) }
+      ];
+    }
+    drawCandles(wrap, bars, { mid: liveMidFor(tickCoin), levels: levels });
+    var first = bars[0], last = bars[bars.length-1];
+    var chg = first.o ? 100 * (last.c - first.o) / first.o : 0;
+    $("tickMeta").innerHTML = "<span><strong>" + esc(tickCoin) + "</strong> · " + esc(tickTf) + " · live " + fmtPx(liveMidFor(tickCoin)) + "</span><span>Window change: <strong class='" + cls(chg) + "'>" + fmtPct(chg) + "</strong></span><span>" + fmtTimeET(first.t) + " → " + fmtTimeET(last.t) + "</span><span>" + bars.length + " candles</span>";
+  });
+}
+
+/* ---- Market table ---- */
+function renderMarket(){
+  var rows = (marketCtx.length ? marketCtx : ((snapCache && snapCache.market) || []));
+  var q = mktFilter.trim().toUpperCase();
+  var list = rows.filter(function(m){ return !q || m.coin.indexOf(q) >= 0; })
+    .sort(function(a,b){ return num(b.vol24) - num(a.vol24); }).slice(0, 60);
+  if (!list.length){ $("mktWrap").innerHTML = "<div class='empty'>Market data failed to load — retrying.</div>"; return; }
+  var body = list.map(function(m){
+    var chg = num(m.chg24);
+    return "<tr><td data-label='Coin'><strong>"+esc(m.coin)+"</strong></td>"+
+      "<td class='num' data-label='Mark'>"+fmtPx(m.mark)+"</td>"+
+      "<td class='num "+cls(chg)+"' data-label='24h change'><strong>"+fmtPct(chg)+"</strong></td>"+
+      "<td class='num' data-label='24h volume'>"+fmtUSD(m.vol24, 0)+"</td>"+
+      "<td class='num' data-label='Funding'>"+(num(m.funding)*100).toFixed(4)+"%</td>"+
+      "<td class='num' data-label='Open interest'>"+fmtUSD(m.oi, 0)+"</td></tr>";
+  }).join("");
+  $("mktWrap").innerHTML = "<div class='table-scroll'><table><thead><tr><th>Coin</th><th class='num'>Mark</th><th class='num'>24h change</th><th class='num'>24h volume</th><th class='num'>Funding</th><th class='num'>Open interest</th></tr></thead><tbody>"+body+"</tbody></table></div>";
+  $("mktNote").textContent = "Mark price, 24h change, 24h volume, funding and open interest, live from Hyperliquid. Showing top " + list.length + " by 24h volume" + (q ? " matching '" + q + "'" : "") + ".";
+}
+
+/* ---- PnL badge generator ----
+   Honest by construction: PnL comes from the account's own fills and
+   equity curve; leverage is always printed on the badge; the badge
+   states the PnL is on margin from leveraged perps, never a spot
+   return. Windows are Eastern. */
+function etStartOfToday(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+function etStartOfWeek(){ var d = new Date(); var day = (d.getDay() + 6) % 7; var s = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day); return s.getTime(); }
+function etStartOfMonth(){ var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1).getTime(); }
+function windowRange(tf){
+  var now = Date.now();
+  if (tf === "today") return { start: etStartOfToday(), end: now, label: "Today" };
+  if (tf === "week") return { start: etStartOfWeek(), end: now, label: "This week" };
+  if (tf === "month") return { start: etStartOfMonth(), end: now, label: "This month" };
+  if (tf === "fit") return { start: BASELINE_MS, end: Date.UTC(2026, 10, 15), label: "Nov 11–14" };
+  return { start: BASELINE_MS, end: now, label: "All-time · since Nov 11" };
+}
+function equityAt(ms){
+  var curve = (snapCache && snapCache.equity_curve) || [];
+  var v = BASELINE_EQUITY;
+  for (var i = 0; i < curve.length; i++){ if (num(curve[i].ms) <= ms) v = num(curve[i].equity); else break; }
+  return v;
+}
+function depositsIn(start, end){
+  var tot = 0;
+  ((snapCache && snapCache.ledger) || []).forEach(function(r){
+    var t = Date.parse(r.date.replace(" ", "T") + ":00-05:00");
+    if (t >= start && t <= end) tot += num(r.amount);
+  });
+  return tot;
+}
+function badgeCompute(strategy, tf, posCoin){
+  var fills = fillsCache.length ? fillsCache : ((snapCache && snapCache.fills) || []);
+  var now = Date.now();
+  var label = "", pnl = 0, trades = 0, wins = 0, losses = 0, fees = 0, base = BASELINE_EQUITY, lev = "", note = "";
+  if (tf === "position" && posCoin && curPositions[posCoin]){
+    var p = curPositions[posCoin];
+    var mid = liveMidFor(posCoin);
+    var up = num(p.upnl);
+    if (mid != null){ var dir = p.side === "LONG" ? 1 : -1; up = dir * (mid - num(p.entry)) * num(p.size); }
+    pnl = up;
+    base = num(p.margin) || 1;
+    trades = 1; wins = up > 0 ? 1 : 0; losses = up < 0 ? 1 : 0;
+    label = posCoin + " " + p.side + " · open trade";
+    lev = num(p.leverage) + "× isolated";
+    note = "Unrealized PnL on margin · " + (p.source || "") + " · entry " + fmtPx(p.entry);
+    return { strategy: strategy, tf: tf, label: label, pnl: pnl, pct: base ? 100 * pnl / base : 0, trades: trades, wins: wins, losses: losses, fees: 0, base: base, lev: lev, note: note };
+  }
+  var w = windowRange(tf);
+  label = w.label;
+  var src = strategy === "bb" ? "BloBrowser" : strategy === "h7" ? "H7" : null;
+  if (strategy === "account"){
+    var eqStart = equityAt(w.start);
+    /* For a closed window (e.g. the FIT window) use the equity at the
+       window end, not today's live equity. */
+    var eqNow = (w.end < now - 60000) ? equityAt(w.end)
+      : (window.__liveEquity != null ? window.__liveEquity : (snapCache ? num(snapCache.equity) : eqStart));
+    var dep = depositsIn(w.start, w.end);
+    pnl = (eqNow - eqStart) - dep;
+    base = eqStart;
+    lev = "5×–10× isolated";
+    note = "Whole account · equity change minus net deposits";
+    var closes = fills.filter(function(f){ return isClose(f) && f.time >= w.start && f.time <= w.end; });
+    trades = closes.length; wins = closes.filter(function(f){ return num(f.pnl) > 0; }).length; losses = closes.filter(function(f){ return num(f.pnl) < 0; }).length;
+    fees = closes.reduce(function(a,f){ return a + num(f.fee); }, 0);
+  } else {
+    var list = fills.filter(function(f){ return isClose(f) && f.source === src && f.time >= w.start && f.time <= w.end; });
+    trades = list.length; wins = list.filter(function(f){ return num(f.pnl) > 0; }).length; losses = list.filter(function(f){ return num(f.pnl) < 0; }).length;
+    /* Net of ALL fees the strategy paid in the window (opens + closes),
+       not just close fees — otherwise the badge would overstate profit. */
+    fees = fills.filter(function(f){ return f.source === src && f.time >= w.start && f.time <= w.end; })
+      .reduce(function(a,f){ return a + num(f.fee); }, 0);
+    pnl = list.reduce(function(a,f){ return a + num(f.pnl); }, 0) - fees;
+    base = equityAt(w.start);
+    lev = strategy === "bb" ? "5× isolated" : "10× isolated";
+    note = (strategy === "bb" ? "BloBrowser · six avenues" : "H7 · gated shorts") + " · realized net of fees";
+  }
+  return { strategy: strategy, tf: tf, label: label, pnl: pnl, pct: base ? 100 * pnl / base : 0, trades: trades, wins: wins, losses: losses, fees: fees, base: base, lev: lev, note: note };
+}
+function badgeDraw(b){
+  var c = $("badgeCanvas"); if (!c) return false;
+  var ctx = c.getContext("2d");
+  if (!ctx){ badgeStatus("Badge canvas is not available in this browser — the numbers below are still correct.", false); return false; }
+  var W = 1080, H = 1080, cx = W/2;
+  var g = ctx.createRadialGradient(cx, 300, 60, cx, H/2, 700);
+  g.addColorStop(0, "#0c2b18"); g.addColorStop(0.55, "#071610"); g.addColorStop(1, "#05080a");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#d4a017"; ctx.lineWidth = 6; ctx.strokeRect(26, 26, W-52, H-52);
+  ctx.strokeStyle = "rgba(212,160,23,0.45)"; ctx.lineWidth = 2; ctx.strokeRect(46, 46, W-92, H-92);
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#d4a017"; ctx.font = "bold 96px serif";
+  ctx.shadowColor = "rgba(212,160,23,0.9)"; ctx.shadowBlur = 34;
+  ctx.fillText("♞", cx, 165); ctx.shadowBlur = 0;
+  ctx.fillStyle = "#f4f6f8"; ctx.font = "bold 58px system-ui, sans-serif";
+  ctx.fillText("KNIGHTTRADER", cx, 278);
+  ctx.fillStyle = "#4ade80"; ctx.font = "bold 38px system-ui, sans-serif";
+  ctx.fillText("— MUSE —", cx, 335);
+  var stratName = b.strategy === "bb" ? "BLOBROWSER" : b.strategy === "h7" ? "H7" : "WHOLE ACCOUNT";
+  ctx.fillStyle = "#e8eef3"; ctx.font = "bold 52px system-ui, sans-serif";
+  ctx.fillText(stratName, cx, 420);
+  ctx.fillStyle = "#9aa4ad"; ctx.font = "34px system-ui, sans-serif";
+  ctx.fillText(b.label, cx, 472);
+  var pnlCol = b.pnl >= 0 ? "#4ade80" : "#f87171";
+  ctx.fillStyle = pnlCol; ctx.font = "bold 120px system-ui, sans-serif";
+  ctx.shadowColor = pnlCol; ctx.shadowBlur = 42;
+  ctx.fillText(fmtSigned(b.pnl), cx, 600); ctx.shadowBlur = 0;
+  ctx.fillStyle = pnlCol; ctx.font = "bold 84px system-ui, sans-serif";
+  ctx.fillText(fmtPct(b.pct, 1), cx, 705);
+  ctx.fillStyle = "#f4f6f8"; ctx.font = "bold 46px system-ui, sans-serif";
+  ctx.fillText("Leverage: " + b.lev, cx, 795);
+  ctx.fillStyle = "#9aa4ad"; ctx.font = "32px system-ui, sans-serif";
+  ctx.fillText(b.trades + (b.trades === 1 ? " trade" : " trades") + " · " + b.wins + "W / " + b.losses + "L" + (b.fees ? " · fees " + fmtUSD(b.fees) : ""), cx, 855);
+  ctx.fillStyle = "#8b95a0"; ctx.font = "28px system-ui, sans-serif";
+  ctx.fillText("PnL on margin from leveraged perps — not a spot return.", cx, 915);
+  ctx.fillStyle = "#6b7680"; ctx.font = "26px system-ui, sans-serif";
+  ctx.fillText("Live · Hyperliquid · " + new Date().toLocaleString("en-US",{timeZone:"America/New_York"}), cx, 960);
+  ctx.fillText("knighttrader-muse · not financial advice", cx, 1000);
+  return true;
+}
+function badgeRenderNums(b){
+  var stratName = b.strategy === "bb" ? "BloBrowser (5× isolated)" : b.strategy === "h7" ? "H7 (10× isolated)" : "Whole account (5×–10× isolated)";
+  $("badgeNums").innerHTML =
+    "<div class='row'><span class='k'>Strategy</span><span class='v'>" + esc(stratName) + "</span></div>" +
+    "<div class='row'><span class='k'>Timeframe</span><span class='v'>" + esc(b.label) + "</span></div>" +
+    "<div class='row'><span class='k'>PnL</span><span class='v " + cls(b.pnl) + "'>" + fmtSigned(b.pnl) + "</span></div>" +
+    "<div class='row'><span class='k'>Return</span><span class='v " + cls(b.pct) + "'>" + fmtPct(b.pct, 1) + "</span></div>" +
+    "<div class='row'><span class='k'>Leverage</span><span class='v'>" + esc(b.lev) + "</span></div>" +
+    "<div class='row'><span class='k'>Trades</span><span class='v'>" + b.trades + " (" + b.wins + "W / " + b.losses + "L)" + "</span></div>" +
+    "<div class='row'><span class='k'>Basis</span><span class='v'>" + esc(b.note) + "</span></div>";
+}
+function badgeStatus(msg, ok){
+  var el = $("badgeStatus"); if (!el) return;
+  el.textContent = msg;
+  el.className = "share-status " + (ok ? "ok" : "err");
+}
+var badgeCurrent = null, badgePosCoin = null;
+function badgeGenerate(){
+  var strategy = $("badgeStrategy").value;
+  var tf = $("badgeTf").value;
+  var b = badgeCompute(strategy, tf, badgePosCoin);
+  badgeCurrent = b;
+  var drawn = badgeDraw(b);
+  badgeRenderNums(b);
+  if (drawn !== false) badgeStatus("Badge generated: " + (strategy === "bb" ? "BloBrowser" : strategy === "h7" ? "H7" : "Whole account") + " · " + b.label + " · " + fmtSigned(b.pnl) + " (" + fmtPct(b.pct, 1) + ") · " + b.lev + ".", true);
+  return b;
+}
+function badgeDownload(){
+  if (!badgeCurrent) badgeGenerate();
+  var btn = $("badgeDownload");
+  try {
+    $("badgeCanvas").toBlob(function(blob){
+      try {
+        if (!blob){ badgeStatus("Download failed: no image.", false); return; }
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        var strat = badgeCurrent.strategy === "bb" ? "blobrowser" : badgeCurrent.strategy === "h7" ? "h7" : "account";
+        a.download = "pnl-" + strat + "-" + badgeCurrent.tf + ".png";
+        document.body.appendChild(a); a.click(); a.remove();
+        var orig = btn.textContent; btn.textContent = "Downloaded!"; btn.disabled = true;
+        setTimeout(function(){ btn.textContent = orig; btn.disabled = false; }, 2000);
+        badgeStatus("Badge downloaded as PNG (" + a.download + ").", true);
+      } catch(e2){ badgeStatus("Download failed: " + e2.message, false); }
+    }, "image/png");
+  } catch(e){ badgeStatus("Download failed: " + e.message, false); }
+}
+function badgeCopy(){
+  if (!badgeCurrent) badgeGenerate();
+  var btn = $("badgeCopy");
+  try {
+    $("badgeCanvas").toBlob(function(blob){
+      try {
+        if (!blob){ badgeStatus("Copy failed: no image.", false); return; }
+        var item = new ClipboardItem({ "image/png": blob });
+        navigator.clipboard.write([item]).then(function(){
+          var orig = btn.textContent; btn.textContent = "Copied!"; btn.disabled = true;
+          setTimeout(function(){ btn.textContent = orig; btn.disabled = false; }, 2000);
+          badgeStatus("Badge copied to clipboard.", true);
+        }, function(){ badgeStatus("Copy failed: clipboard blocked.", false); });
+      } catch(e2){ badgeStatus("Copy failed: " + e2.message, false); }
+    }, "image/png");
+  } catch(e){ badgeStatus("Copy failed: " + e.message, false); }
+}
+function badgeShare(){
+  if (!badgeCurrent) badgeGenerate();
+  var btn = $("badgeShare");
+  try {
+    $("badgeCanvas").toBlob(function(blob){
+      try {
+        if (!blob){ badgeStatus("Share failed: no image.", false); return; }
+        var strat = badgeCurrent.strategy === "bb" ? "blobrowser" : badgeCurrent.strategy === "h7" ? "h7" : "account";
+        var file = new File([blob], "pnl-" + strat + "-" + badgeCurrent.tf + ".png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })){
+          navigator.share({ files: [file], title: "PnL badge — " + strat }).then(function(){
+            var orig = btn.textContent; btn.textContent = "Shared!"; btn.disabled = true;
+            setTimeout(function(){ btn.textContent = orig; btn.disabled = false; }, 2000);
+            badgeStatus("Badge shared.", true);
+          }, function(){ badgeStatus("Share cancelled.", false); });
+        } else { badgeStatus("Native share isn't available here — use Download PNG instead.", false); }
+      } catch(e2){ badgeStatus("Share failed: " + e2.message, false); }
+    }, "image/png");
+  } catch(e){ badgeStatus("Share failed: " + e.message, false); }
+}
+function badgeForPosition(coin){
+  var p = curPositions[coin]; if (!p) return;
+  badgePosCoin = coin;
+  $("badgeStrategy").value = p.source === "H7" ? "h7" : "bb";
+  var tfSel = $("badgeTf");
+  var opt = tfSel.querySelector("option[value='position']");
+  if (opt) opt.disabled = false;
+  tfSel.value = "position";
+  badgeGenerate();
+  var badgeEl = document.getElementById("badgeH");
+  if (badgeEl && badgeEl.scrollIntoView) badgeEl.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ---- Voice announcing: only NEW closes / opens ---- */
@@ -779,7 +1004,7 @@ var voiceOn = false, voices = [], voiceSeen = { closes: new Set(), opens: new Se
 function speak(text){
   try {
     if (!("speechSynthesis" in window)) return;
-    loadVoices(); /* refresh the list: iOS loads voices async, so pick up Samantha even if she was not there at toggle time */
+    loadVoices();
     if (speechSynthesis.speaking) speechSynthesis.cancel();
     var u = new SpeechSynthesisUtterance(text);
     u.pitch = 0.9; u.rate = 0.95;
@@ -797,129 +1022,145 @@ function pickVoice(){
   }
   return voices.find(function(v){ return /samantha|zira|karen|moira|tessa|female|google us english/i.test(v.name); }) || voices[0];
 }
-function loadVoices(){
-  try { voices = speechSynthesis.getVoices() || []; } catch(e){}
-}
-function announceUpdates(snap){
-  if (!snap) return;
-  var closes = snap.closed || [], fills = snap.fills || [], positions = snap.positions || [];
+function loadVoices(){ try { voices = speechSynthesis.getVoices() || []; } catch(e){} }
+function announceUpdates(fills, positions){
   if (!voiceSeeded){
-    closes.forEach(function(c){ voiceSeen.closes.add(c.close_ms + "|" + c.coin); });
-    fills.forEach(function(f){ voiceSeen.opens.add(f.time + "|" + f.coin); });
-    positions.forEach(function(p){ voiceSeen.opens.add(num(p.open_ms) + "|" + p.coin); voiceSeen.openCoins.add(p.coin); });
+    (fills || []).forEach(function(f){ voiceSeen.opens.add(f.time + "|" + f.coin); if (isClose(f)) voiceSeen.closes.add(f.time + "|" + f.coin); });
+    (positions || []).forEach(function(p){ voiceSeen.openCoins.add(p.coin); });
     voiceSeeded = true;
     return;
   }
   if (!voiceOn) return;
-  closes.forEach(function(c){
-    var k = c.close_ms + "|" + c.coin;
-    if (!voiceSeen.closes.has(k)){
-      voiceSeen.closes.add(k);
-      speak(c.coin + " closed: " + (c.win ? "winner" : "loser") + ", " + fmtR(c.r) + ".");
-    }
-  });
-  fills.forEach(function(f){
+  (fills || []).forEach(function(f){
     var k = f.time + "|" + f.coin;
-    if (!voiceSeen.opens.has(k)){
+    if (isClose(f) && !voiceSeen.closes.has(k)){
+      voiceSeen.closes.add(k);
+      speak(f.coin + " closed: " + (num(f.pnl) > 0 ? "winner" : "loser") + ", " + fmtSigned(f.pnl) + ".");
+    } else if (!isClose(f) && !voiceSeen.opens.has(k)){
       voiceSeen.opens.add(k);
-      if ((f.dir || "").indexOf("Open") === 0){
-        voiceSeen.openCoins.add(f.coin);
-        speak(f.coin + " opened: " + f.dir + ", " + num(f.sz) + " units at " + fmtPx(f.px) + ".");
-      }
-    }
-  });
-  /* Open positions whose entry fill was never recorded in the snapshot
-     (seen live: a WLFI short opened with no entry fill observed, so the
-     fill-only path would never announce that open at all). Announce the
-     position itself so the open is not missed entirely. The openCoins
-     check keeps this from double-announcing a trade the fill already
-     announced; coins drop out of openCoins once they are no longer open,
-     so a later re-open of the same coin can announce again. */
-  positions.forEach(function(p){
-    var k = num(p.open_ms) + "|" + p.coin;
-    if (!voiceSeen.opens.has(k) && !voiceSeen.openCoins.has(p.coin)){
-      voiceSeen.opens.add(k);
-      voiceSeen.openCoins.add(p.coin);
-      var d = p.side === "LONG" ? "Open Long" : "Open Short";
-      speak(p.coin + " opened: " + d + ", " + num(p.size) + " units at " + fmtPx(p.entry) + ".");
+      speak(f.coin + " opened: " + f.dir + ", " + num(f.sz) + " units at " + fmtPx(f.px) + ".");
     }
   });
   var stillOpen = {};
-  positions.forEach(function(p){ stillOpen[p.coin] = true; });
-  voiceSeen.openCoins.forEach(function(coin){
-    if (!stillOpen[coin]) voiceSeen.openCoins.delete(coin);
+  (positions || []).forEach(function(p){ stillOpen[p.coin] = true; });
+  voiceSeen.openCoins.forEach(function(coin){ if (!stillOpen[coin]) voiceSeen.openCoins.delete(coin); });
+}
+
+/* ---- Fetching / refresh ---- */
+function setConn(mode){
+  var badge = $("connBadge"), text = $("connText");
+  badge.className = "live-badge" + (mode === "ok" ? "" : " " + mode);
+  if (mode === "ok") text.textContent = "LIVE";
+  else if (mode === "stale") text.textContent = "STALE";
+  else text.textContent = "CONNECTING";
+}
+function applySnap(snap){
+  snapCache = snap;
+  fillsCache = (snap.fills || []).slice();
+  renderKpis(snap, null);
+  renderBots(snap, null);
+  renderPositions(snap, null);
+  renderFills(fillsCache);
+  renderLedger(snap);
+  renderDaily(snap);
+  renderMarket();
+  tickPopulate();
+  carBuildSlides(snap, null);
+  carDraw();
+  /* The badge must never block the dashboard boot: if canvas is
+     unavailable the badge degrades, the page does not. */
+  try { if (!badgeCurrent) badgeGenerate(); } catch(e){ badgeStatus("Badge unavailable: " + e.message, false); }
+}
+function refresh(){
+  if (paused) return;
+  return Promise.allSettled([
+    post({ type: "clearinghouseState", user: ADDR }),
+    post({ type: "openOrders", user: ADDR }),
+    post({ type: "userFills", user: ADDR }),
+    post({ type: "allMids" }),
+    post({ type: "metaAndAssetCtxs" })
+  ]).then(function(res){
+    var st = res[0], oo = res[1], fl = res[2], mids = res[3], ctx = res[4];
+    if (st.status === "fulfilled" && st.value){
+      lastOk = Date.now();
+      failCount = 0;
+      var snap = snapCache || BAKED_SNAP;
+      var ms = st.value.marginSummary || {};
+      var eq = num(ms.accountValue);
+      var prevEq = window.__liveEquity;
+      window.__liveEquity = eq;
+      var bbCoins = (snap && snap.bb && snap.bb.coins) || [];
+      var h7Coins = (snap && snap.h7_coins) || [];
+      var positions = (st.value.assetPositions || []).map(function(ap){
+        var p = ap.position;
+        var coin = p.coin, lev = p.leverage.value;
+        var src = bbCoins.indexOf(coin) >= 0 ? "BloBrowser" : h7Coins.indexOf(coin) >= 0 ? "H7" : lev === 5 ? "BloBrowser" : lev === 10 ? "H7" : "—";
+        return { coin: coin, side: parseFloat(p.szi) > 0 ? "LONG" : "SHORT", size: Math.abs(parseFloat(p.szi)),
+          entry: parseFloat(p.entryPx), mark: parseFloat(p.markPx || p.entryPx), upnl: parseFloat(p.unrealizedPnl),
+          notional: parseFloat(p.positionValue), leverage: lev, margin: parseFloat(p.marginUsed), source: src };
+      });
+      var live = { equity: eq, withdrawable: num(st.value.withdrawable), marginUsed: num(ms.totalMarginUsed),
+        positions: positions, prevEquity: prevEq,
+        trueProfit: (eq - BASELINE_EQUITY) - num(snap.net_deposits),
+        trueProfitPct: 100 * ((eq - BASELINE_EQUITY) - num(snap.net_deposits)) / BASELINE_EQUITY };
+      renderKpis(snap, live);
+      renderPositions(snap, live);
+      carBuildSlides(snap, live);
+      announceUpdates(fl.status === "fulfilled" ? tagFills(fl.value, snap) : [], positions);
+      if (fl.status === "fulfilled" && fl.value){
+        var tagged = tagFills(fl.value, snap);
+        fillsCache = tagged;
+        renderFills(tagged);
+      }
+      $("updatedAt").textContent = "Live · " + fmtClockET(Date.now()) + " ET · refreshes every 15s";
+      setConn("ok");
+      var b = $("kPos"); if (b) carDraw();
+    } else {
+      failCount += 1;
+      $("updatedAt").textContent = "Live feed failed (" + failCount + ") — showing last good snapshot · retrying";
+      setConn("stale");
+    }
+    if (mids.status === "fulfilled" && mids.value) liveMids = mids.value;
+    if (ctx.status === "fulfilled" && ctx.value){
+      var meta = ctx.value[0], ctxs = ctx.value[1] || [];
+      marketCtx = (meta.universe || []).map(function(u, i){
+        var c = ctxs[i] || {};
+        var mark = num(c.markPx), prev = num(c.prevDayPx);
+        return { coin: u.name, mark: mark, chg24: prev ? 100 * (mark - prev) / prev : 0,
+          vol24: num(c.dayNtlVlm), funding: num(c.funding), oi: num(c.openInterest) };
+      });
+      renderMarket();
+      carBuildSlides(snapCache || BAKED_SNAP, null);
+    }
   });
 }
-
-/* ---- PnL share badge ---- */
-function drawBadge(){
-  var c = $("shareCanvas"); if (!c) return;
-  var ctx = c.getContext("2d");
-  var W = 1080, H = 1080, cx = W/2;
-  var showDollars = $("shareDollars") && $("shareDollars").checked;
-  var p = curPositions[shareCoin];
-  var g = ctx.createRadialGradient(cx, 300, 60, cx, H/2, 700);
-  g.addColorStop(0, "#0c2b18"); g.addColorStop(0.55, "#071610"); g.addColorStop(1, "#05080a");
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = "#d4a017"; ctx.lineWidth = 6; ctx.strokeRect(26, 26, W-52, H-52);
-  ctx.strokeStyle = "rgba(212,160,23,0.45)"; ctx.lineWidth = 2; ctx.strokeRect(46, 46, W-92, H-92);
-  ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.fillStyle = "#d4a017"; ctx.font = "bold 96px serif";
-  ctx.shadowColor = "rgba(212,160,23,0.9)"; ctx.shadowBlur = 34;
-  ctx.fillText("♞", cx, 170); ctx.shadowBlur = 0;
-  ctx.fillStyle = "#f4f6f8"; ctx.font = "bold 64px system-ui, sans-serif";
-  ctx.fillText("KNIGHTTRADER", cx, 285);
-  ctx.fillStyle = "#4ade80"; ctx.font = "bold 40px system-ui, sans-serif";
-  ctx.fillText("— MUSE —", cx, 345);
-  var isWin = p && num(p.unrealizedPnl) >= 0;
-  ctx.fillStyle = "#e8eef3"; ctx.font = "bold 96px system-ui, sans-serif";
-  ctx.fillText(shareCoin || "", cx, 470);
-  var dir = p ? (num(p.szi) > 0 ? "LONG" : "SHORT") : "";
-  ctx.fillStyle = dir === "LONG" ? "#4ade80" : "#f87171"; ctx.font = "bold 44px system-ui, sans-serif";
-  ctx.fillText(dir, cx, 545);
-  var badgePct = 0, badgeDollars = "$0.00", pnlTxt = "—", pnlCol = "#e8eef3";
-  if (p){
-    badgePct = num(p.marginUsed) ? 100 * num(p.unrealizedPnl) / num(p.marginUsed) : 0;
-    badgeDollars = fmtSigned(p.unrealizedPnl);
-    pnlTxt = fmtPct(badgePct, 1);
-    pnlCol = isWin ? "#4ade80" : "#f87171";
-  }
-  ctx.fillStyle = pnlCol; ctx.font = "bold 130px system-ui, sans-serif";
-  ctx.shadowColor = pnlCol; ctx.shadowBlur = 46;
-  ctx.fillText(pnlTxt, cx, 700); ctx.shadowBlur = 0;
-  if (showDollars && p){
-    ctx.fillStyle = pnlCol; ctx.font = "bold 64px system-ui, sans-serif";
-    ctx.fillText(badgeDollars, cx, 810);
-  }
-  ctx.fillStyle = "#9aa4ad"; ctx.font = "34px system-ui, sans-serif";
-  ctx.fillText("Unrealized PnL on margin · live on BloFin", cx, 880);
-  ctx.fillStyle = "#8b95a0"; ctx.font = "30px system-ui, sans-serif";
-  ctx.fillText("Live · BloFin · " + new Date().toLocaleString("en-US",{timeZone:"America/New_York"}), cx, 940);
-  ctx.fillStyle = "#6b7680"; ctx.font = "26px system-ui, sans-serif";
-  ctx.fillText("knighttrader-muse · not financial advice", cx, 990);
+function tagFills(fills, snap){
+  var h7set = {};
+  var h7f = (snap && snap.h7 && snap.h7.fills) || [];
+  h7f.forEach(function(f){ h7set[f.coin + "|" + f.time] = true; });
+  return (fills || []).map(function(f){
+    var t = num(f.time);
+    var src = h7set[f.coin + "|" + t] ? "H7" : t >= BASELINE_MS ? "BloBrowser" : "earlier";
+    if (src === "BloBrowser" && (f.dir || "").indexOf("Close") === 0 && etDateStr(t) === "2026-11-15" &&
+        ((f.coin === "CRV" && num(f.sz) === 88.3) || (f.coin === "XRP" && num(f.sz) === 11.0))) src = "manual";
+    return { coin: f.coin, time: t, dir: f.dir || "", px: num(f.px), sz: num(f.sz),
+      pnl: num(f.closedPnl), fee: num(f.fee), source: src };
+  }).sort(function(a,b){ return b.time - a.time; });
 }
-function setStatus(msg, ok){
-  var el = $("shareStatus"); if (!el) return;
-  el.textContent = msg;
-  el.style.color = ok ? "var(--up)" : "var(--down)";
-  el.style.fontWeight = "700";
+function etDateStr(ms){
+  try {
+    var parts = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(ms));
+    var y = "", m = "", d = "";
+    parts.forEach(function(p){ if (p.type === "year") y = p.value; if (p.type === "month") m = p.value; if (p.type === "day") d = p.value; });
+    return y + "-" + m + "-" + d;
+  } catch(e){ return ""; }
 }
-function flashBtn(el, label){
-  var orig = el.textContent; el.textContent = label; el.disabled = true;
-  setTimeout(function(){ el.textContent = orig; el.disabled = false; }, 2000);
+function startLoop(){
+  if (timer) clearInterval(timer);
+  timer = setInterval(function(){ if (!paused) refresh(); }, 15000);
 }
-function openShare(coin){
-  shareCoin = coin;
-  $("shareTitle").textContent = coin + " · PnL badge";
-  var p = curPositions[coin];
-  $("shareSub").textContent = p ? ("Unrealized PnL " + fmtSigned(p.unrealizedPnl) + " on " + fmtUSD(p.marginUsed) + " margin · " + (num(p.szi) > 0 ? "LONG" : "SHORT") + " · entry " + fmtPx(p.entryPx) + " · " + (p.leverage && p.leverage.value ? p.leverage.value + "× cross" : "")) : "";
-  $("shareOverlay").hidden = false;
-  drawBadge();
-}
-function closeShare(){ $("shareOverlay").hidden = true; shareCoin = null; }
 
 /* ---- Controls ---- */
-var closesOnly = false;
 function setupControls(){
   $("pauseBtn").addEventListener("click", function(){
     paused = !paused;
@@ -933,66 +1174,56 @@ function setupControls(){
     this.textContent = "Voice: " + (voiceOn ? "on" : "off");
     if (voiceOn){ loadVoices(); speak("Voice announcements on."); }
   });
-  $("fAll").addEventListener("click", function(){ closesOnly = false; this.className = "seg active"; $("fCloses").className = "seg"; renderFills(snapCache ? snapCache.fills : []); });
-  $("fCloses").addEventListener("click", function(){ closesOnly = true; this.className = "seg active"; $("fAll").className = "seg"; renderFills(snapCache ? snapCache.fills : []); });
+  $("copyAddr").addEventListener("click", function(){
+    var b = this;
+    try { navigator.clipboard.writeText(ADDR).then(function(){ b.textContent = "Copied!"; setTimeout(function(){ b.textContent = "Copy address"; }, 1500); }); } catch(e){}
+  });
+  $("fAll").addEventListener("click", function(){ closesOnly = false; this.setAttribute("aria-pressed","true"); $("fCloses").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
+  $("fCloses").addEventListener("click", function(){ closesOnly = true; this.setAttribute("aria-pressed","true"); $("fAll").setAttribute("aria-pressed","false"); renderFills(fillsCache); });
+  $("carPrev").addEventListener("click", function(){ if (carSlides.length){ carIdx = (carIdx - 1 + carSlides.length) % carSlides.length; carDraw(); } });
+  $("carNext").addEventListener("click", function(){ if (carSlides.length){ carIdx = (carIdx + 1) % carSlides.length; carDraw(); } });
+  $("carPause").addEventListener("click", function(){
+    carPaused = !carPaused;
+    this.textContent = carPaused ? "▶ Resume" : "Pause";
+    this.setAttribute("aria-pressed", carPaused ? "true" : "false");
+  });
+  $("tickSearch").addEventListener("input", tickPopulate);
+  $("tickSelect").addEventListener("change", function(){ tickCoin = this.value; tickDraw(); });
+  $("tickGo").addEventListener("click", function(){ tickCoin = $("tickSelect").value; tickDraw(); });
+  document.querySelectorAll("#tickTf button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      document.querySelectorAll("#tickTf button").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      btn.setAttribute("aria-pressed","true");
+      tickTf = btn.getAttribute("data-tf");
+      tickDraw();
+    });
+  });
+  $("mktSearch").addEventListener("input", function(){ mktFilter = this.value; renderMarket(); });
+  $("badgeGenerate").addEventListener("click", function(){ badgePosCoin = null; var opt = $("badgeTf").querySelector("option[value='position']"); if (opt && $("badgeTf").value === "position"){ $("badgeTf").value = "all"; } badgeGenerate(); });
+  $("badgeStrategy").addEventListener("change", function(){ badgeGenerate(); });
+  $("badgeTf").addEventListener("change", function(){ badgeGenerate(); });
+  $("badgeDownload").addEventListener("click", badgeDownload);
+  $("badgeCopy").addEventListener("click", badgeCopy);
+  $("badgeShare").addEventListener("click", badgeShare);
   document.addEventListener("click", function(e){
     var b = e.target.closest(".share-btn");
-    if (b && b.dataset.coin) openShare(b.dataset.coin);
-    var d = e.target.closest("#pcDots button");
-    if (d){ pcIdx = num(d.dataset.idx); pcDraw(); }
-    if (e.target.closest("#snapNote")) refresh();
+    if (b && b.dataset.coin) badgeForPosition(b.dataset.coin);
+    var d = e.target.closest("#carDots button");
+    if (d){ carIdx = num(d.dataset.idx); carDraw(); }
   });
-  $("shareClose").addEventListener("click", closeShare);
-  $("shareOverlay").addEventListener("click", function(e){ if (e.target === this) closeShare(); });
-  $("shareDollars").addEventListener("change", drawBadge);
-  $("shareCopy").addEventListener("click", function(){
-    var btn = this;
-    try {
-      $("shareCanvas").toBlob(function(blob){
-        if (!blob){ setStatus("Copy failed: no image.", false); return; }
-        var item = new ClipboardItem({ "image/png": blob });
-        navigator.clipboard.write([item]).then(function(){ flashBtn(btn, "Copied!"); setStatus("Badge copied to clipboard.", true); }, function(){ setStatus("Copy failed: clipboard blocked.", false); });
-      }, "image/png");
-    } catch(e){ setStatus("Copy failed: " + e.message, false); }
-  });
-  $("shareDownload").addEventListener("click", function(){
-    var btn = this;
-    try {
-      $("shareCanvas").toBlob(function(blob){
-        if (!blob){ setStatus("Download failed.", false); return; }
-        var a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "pnl-" + (shareCoin || "trade").toLowerCase() + ".png";
-        document.body.appendChild(a); a.click(); a.remove();
-        flashBtn(btn, "Downloaded!"); setStatus("Badge downloaded as PNG.", true);
-      }, "image/png");
-    } catch(e){ setStatus("Download failed: " + e.message, false); }
-  });
-  $("shareNative").addEventListener("click", function(){
-    var btn = this;
-    try {
-      $("shareCanvas").toBlob(function(blob){
-        if (!blob){ setStatus("Share failed: no image.", false); return; }
-        var file = new File([blob], "pnl-" + (shareCoin || "trade").toLowerCase() + ".png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })){
-          navigator.share({ files: [file], title: (shareCoin || "") + " PnL badge" }).then(function(){ flashBtn(btn, "Shared!"); setStatus("Badge shared.", true); }, function(){ setStatus("Share cancelled.", false); });
-        } else { setStatus("Native share isn't available here — use Download PNG instead.", false); }
-      }, "image/png");
-    } catch(e){ setStatus("Share failed: " + e.message, false); }
-  });
-  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !$("shareOverlay").hidden) closeShare(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && carPaused){ carPaused = false; $("carPause").textContent = "Pause"; } });
   if ("speechSynthesis" in window){ loadVoices(); try { speechSynthesis.onvoiceschanged = loadVoices; } catch(e){} }
 }
 
 /* ---- First paint (baked snapshot) then live refresh ---- */
-renderChips();
 setupControls();
 if (BAKED_SNAP){
-  applyAll(BAKED_SNAP);
+  applySnap(BAKED_SNAP);
   $("updatedAt").textContent = "Snapshot from page build (" + fmtTimeET(num(BAKED_SNAP.updated_at_ms)) + " ET) — connecting to live feed…";
   setConn("connecting");
 }
-pcStart();
+carStart();
+tickDraw();
 refresh();
 startLoop();
 
